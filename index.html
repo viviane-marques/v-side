@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="favicon" href="assets/logos/monograma-fundo-escuro.svg">
+
+    <title>V-Side | Música de outro ângulo</title>
+
+    <!-- CSS global: cores, fontes, header e footer -->
+    <link rel="stylesheet" href="css/global.css">
+
+    <!-- CSS específico da página inicial -->
+    <link rel="stylesheet" href="css/index.css">
+</head>
+
+<body>
+
+    <!-- =====================================
+         HEADER
+    ====================================== -->
+
+    <header class="header-sem-login">
+
+        <!-- LOGO -->
+        <a href="index.html">
+            <img
+                class="logo-header"
+                src="assets/logos/logo-fundo-escuro-v2.svg"
+                alt="Logo V-Side">
+        </a>
+
+
+        <!-- NAVEGAÇÃO -->
+        <nav class="navegacao-header">
+
+            <!-- MENU INÍCIO -->
+            <div class="menu-inicio">
+
+                <a href="index.html" class="botao-inicio">
+                    Início
+
+                    <img
+                        class="seta-menu"
+                        src="assets/icons/seta-para-baixo.png"
+                        alt="">
+                </a>
+
+                <!-- MENU SUSPENSO -->
+                <div class="menu-suspenso">
+
+                    <a href="favoritos.html">
+                        Favoritos
+                    </a>
+
+                    <a href="sobre.html">
+                        Sobre
+                    </a>
+
+                </div>
+
+            </div>
+
+            <a href="jogar.html">Jogar</a>
+
+            <a href="playlists.html">Playlists</a>
+
+        </nav>
+
+
+        <!-- BARRA DE PESQUISA -->
+        <div class="barra-de-pesquisa">
+
+            <img
+                src="assets/icons/search.png"
+                alt="Pesquisar">
+
+            <input
+                type="search"
+                placeholder="Buscar álbuns, artistas...">
+
+        </div>
+
+
+        <!-- LOGIN E CADASTRO -->
+        <div class="login-cadastro">
+
+            <a href="login.html" class="botao-entrar">
+                Entrar
+            </a>
+
+            <a href="cadastro.html" class="botao-cadastrar">
+                Cadastre-se
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================
+         CONTEÚDO PRINCIPAL
+    ====================================== -->
+
+    <main class="homepage-escuro">
+
+
+        <!-- BANNER PRINCIPAL -->
+        <section class="banner-inicio">
+
+            <!-- ALTERE AQUI A IMAGEM DO BANNER PRINCIPAL -->
+            <img
+                src="assets/banners/banner-clean.png"
+                alt="Banner principal"
+                class="imagem-banner">
+
+            <div class="banner-texto">
+
+                <h1>Ouvir é só o começo</h1>
+
+                <p>
+                    Um espaço para descobrir, compartilhar e explorar
+                    o universo da música sob diferentes perspectivas.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- BANNERS DE AVALIAÇÕES E FAVORITOS -->
+        <section class="banners-acesso">
+
+
+            <!-- AVALIAÇÕES -->
+            <a href="avaliacoes.html" class="banner-card">
+
+                <!-- ALTERE AQUI A IMAGEM DE AVALIAÇÕES -->
+                <img
+                    src="assets/banners/banner-avaliacoes.png"
+                    alt="Banner de avaliações">
+
+                <h2>Avaliações</h2>
+
+            </a>
+
+
+            <!-- FAVORITOS -->
+            <a href="favoritos.html" class="banner-card">
+
+                <!-- ALTERE AQUI A IMAGEM DE FAVORITOS -->
+                <img
+                    src="assets/banners/banner-favoritos.png"
+                    alt="Banner de favoritos">
+
+                <h2>Favoritos</h2>
+
+            </a>
+
+        </section>
+
+
+        <!-- =====================================
+             DESTAQUES
+        ====================================== -->
+
+        <section class="banner-destaques">
+
+            <!-- ALTERE AQUI O BANNER DE FUNDO -->
+            <img
+                src="assets/banners/banner-clean.png"
+                alt=""
+                class="imagem-banner">
+
+            <div class="destaques-conteudo">
+
+                <div class="destaques-titulo">
+                    <h2>Destaques</h2>
+                </div>
+
+
+                <div class="destaques-cards">
+
+
+                    <!-- DESCOBERTA DO MÊS -->
+                    <article class="destaque-card">
+
+                        <!-- ALTERE AQUI A IMAGEM DA DESCOBERTA -->
+                        <img
+                            src="assets/rectangle-11.png"
+                            alt="Descoberta do mês">
+
+                        <h3>Descoberta do mês</h3>
+
+                    </article>
+
+
+                    <!-- LANÇAMENTO DO MÊS -->
+                    <article class="destaque-card">
+
+                        <!-- ALTERE AQUI A IMAGEM DO LANÇAMENTO -->
+                        <img
+                            src="assets/rectangle-10.png"
+                            alt="Lançamento do mês">
+
+                        <h3>Lançamento do mês</h3>
+
+                    </article>
+
+
+                    <!-- ÁLBUM FAVORITO -->
+                    <article class="destaque-card">
+
+                        <!-- ALTERE AQUI A IMAGEM DO ÁLBUM -->
+                        <img
+                            src="assets/rectangle-9.png"
+                            alt="Álbum favorito">
+
+                        <h3>Álbum Favorito</h3>
+
+                    </article>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================
+             PLAYLISTS
+        ====================================== -->
+
+        <a href="playlists.html" class="banner-link">
+
+            <!-- ALTERE AQUI A IMAGEM DO BANNER -->
+            <img
+                src="assets/banners/banner-playlists.png"
+                alt="Banner de playlists">
+
+            <h2>Playlists</h2>
+
+        </a>
+
+
+        <!-- =====================================
+             JOGO
+        ====================================== -->
+
+        <a href="jogar.html" class="banner-link">
+
+            <!-- ALTERE AQUI A IMAGEM DO BANNER -->
+            <img
+                src="assets/banners/banner-game.png"
+                alt="Banner do jogo">
+
+            <h2>Jogar</h2>
+
+        </a>
+
+
+    </main>
+
+
+    <!-- =====================================
+         FOOTER
+    ====================================== -->
+
+    <footer class="footer">
+
+        <div class="footer-conteudo">
+
+
+            <!-- LOGO E DESCRIÇÃO -->
+            <div class="footer-coluna">
+
+                <img
+                    class="footer-logo"
+                    src="assets/logos/logo-slogan.svg"
+                    alt="Logo V-Side">
+
+                <p class="footer-descricao">
+                    Avaliações, ideias e opiniões sobre o mundo da música.
+                </p>
+
+            </div>
+
+
+            <!-- SEÇÕES -->
+            <div class="footer-coluna">
+
+                <h3>Seções</h3>
+
+                <ul>
+                    <li><a href="jogar.html">Jogar</a></li>
+                    <li><a href="avaliacoes.html">Avaliações</a></li>
+                    <li><a href="favoritos.html">Favoritos</a></li>
+                    <li><a href="playlists.html">Playlists</a></li>
+                    <li><a href="sobre.html">Sobre o V-Side</a></li>
+                    <li><a href="index.html">Início</a></li>
+                </ul>
+
+            </div>
+
+
+            <!-- FAQ E SUPORTE -->
+            <div class="footer-coluna">
+
+                <h3>FAQ & Suporte</h3>
+
+                <ul>
+                    <li><a href="#">Política de privacidade</a></li>
+                    <li><a href="#">Como entro em contato?</a></li>
+                    <li><a href="#">Não consigo fazer login</a></li>
+                    <li><a href="#">Posso enviar uma avaliação?</a></li>
+                </ul>
+
+            </div>
+
+
+            <!-- CONTATO -->
+            <div class="footer-coluna">
+
+                <h3>Entre em contato</h3>
+
+                <a href="mailto:contato@vside.com">
+                    contato@vside.com
+                </a>
+
+                <h3 class="titulo-redes">Redes Sociais</h3>
+
+                <div class="footer-redes">
+
+                    <a href="#" aria-label="Instagram">
+                        <img src="assets/icons/ic-instagram.png" alt="">
+                    </a>
+
+                    <a href="#" aria-label="TikTok">
+                        <img src="assets/icons/ic-tiktok.png" alt="">
+                    </a>
+
+                    <a href="#" aria-label="Spotify">
+                        <img src="assets/icons/ic-spotify.png" alt="">
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- LINHA DIVISÓRIA -->
+        <div class="footer-linha"></div>
+
+
+        <!-- DIREITOS AUTORAIS -->
+        <p class="footer-direitos">
+            © Todos os direitos reservados V-Side. 2026
+        </p>
+
+    </footer>
+
+</body>
+</html>
