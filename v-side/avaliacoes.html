@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Avaliações e Resenhas | V-Side</title>
+
+    <link rel="icon" href="assets/logos/monograma-fundo-escuro.svg">
+
+    <!-- CSS compartilhado: header, footer, fontes e cores -->
+    <link rel="stylesheet" href="css/global.css">
+
+    <!-- CSS exclusivo desta página -->
+    <link rel="stylesheet" href="css/avaliacoes.css">
+</head>
+
+<body>
+
+    <!-- =========================================
+         1. HEADER
+         Mantém o mesmo padrão da página inicial
+    ========================================== -->
+
+    <header class="header-sem-login">
+
+        <!-- LOGO: troque o caminho caso utilize outro arquivo -->
+        <a href="index.html">
+            <img
+                class="logo-header"
+                src="assets/logos/logo-fundo-escuro-v2.svg"
+                alt="Logo V-Side">
+        </a>
+
+        <!-- MENU DE NAVEGAÇÃO -->
+        <nav class="navegacao-header">
+
+            <div class="menu-inicio">
+                <a href="index.html" class="botao-inicio">
+                    Início
+                    <img
+                        class="seta-menu"
+                        src="assets/icons/seta-para-baixo.png"
+                        alt="">
+                </a>
+
+                <!-- MENU SUSPENSO -->
+                <div class="menu-suspenso">
+                    <a href="favoritos.html">Favoritos</a>
+                    <a href="sobre.html">Sobre</a>
+                </div>
+            </div>
+
+            <a href="playlists.html">Playlists</a>
+            <a href="jogar.html">Jogar</a>
+
+        </nav>
+
+        <!-- PESQUISA -->
+        <div class="barra-de-pesquisa">
+            <img src="assets/icons/search.png" alt="Pesquisar">
+
+            <input
+                type="search"
+                placeholder="Buscar álbuns, artistas...">
+        </div>
+
+        <!-- LOGIN E CADASTRO -->
+        <div class="login-cadastro">
+            <a href="login.html" class="botao-entrar">Entrar</a>
+            <a href="cadastro.html" class="botao-cadastrar">Cadastre-se</a>
+        </div>
+
+    </header>
+
+
+    <!-- =========================================
+         2. CONTEÚDO PRINCIPAL
+    ========================================== -->
+
+    <main class="pagina-avaliacoes">
+
+        <!-- BANNER DO TÍTULO -->
+        <section class="banner-avaliacoes">
+
+            <!-- TROQUE A IMAGEM DE FUNDO NESTE SRC -->
+            <img
+                class="banner-avaliacoes-imagem"
+                src="assets/banners/banner-avaliacoes.png"
+                alt="">
+
+            <div class="banner-avaliacoes-fundo">
+                <h1>Avaliações e Resenhas</h1>
+            </div>
+
+        </section>
+
+
+        <!-- =====================================
+             3. LISTA DE AVALIAÇÕES
+        ====================================== -->
+
+        <section class="lista-avaliacoes">
+
+            <!-- CARD 1: EGO DEATH AT A BACHELORETTE PARTY -->
+            <article class="card-avaliacao">
+
+                <div class="avaliacao-principal">
+
+                    <!-- CAPA DO ÁLBUM/MÚSICA: TROQUE O SRC -->
+                    <img
+                        class="capa-avaliacao"
+                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSapZ4uGm5mpOoqkK4NwItCu381KfCvugWH34Rcsa2k3g&s=10"
+                        alt="Capa de Ego Death At A Bachelorette Party">
+
+                    <!-- NOME DA MÚSICA E ARTISTA -->
+                    <div class="avaliacao-informacoes">
+                        <h2>Ego Death At A Bachelorette Party</h2>
+                        <p>Hayley Williams</p>
+                    </div>
+
+                    <!-- LADO DIREITO DO CARD -->
+                    <div class="avaliacao-acoes">
+
+                        <!-- LINK DO SPOTIFY: TROQUE O HREF -->
+                        <a
+                            class="botao-spotify"
+                            href="https://open.spotify.com/"
+                            target="_blank"
+                            rel="noopener noreferrer">
+
+                            <!-- ÍCONE DO SPOTIFY -->
+                            <img
+                                src="assets/icons/ic-spotify.png"
+                                alt="">
+
+                            Ouça no Spotify
+                        </a>
+
+                        <!-- NOTA E BOTÃO PARA EXPANDIR -->
+                        <div class="avaliacao-nota">
+                            <span class="estrelas">★★★★★</span>
+
+                            <button
+                                class="botao-resenha"
+                                type="button"
+                                aria-expanded="false"
+                                aria-controls="resenha-1">
+
+                                Clique para ver a resenha
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- TEXTO EXPANSÍVEL DA RESENHA -->
+                <div class="resenha-detalhe" id="resenha-1">
+                    <div class="resenha-detalhe-interno">
+                        <div class="resenha-texto">
+
+                            <!-- SUBSTITUA ESTE TEXTO PELA SUA RESENHA -->
+                            <p>
+                                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ipsum vero ipsam, sed similique excepturi 
+                                molestiae repellendus eos explicabo ut aliquid obcaecati quasi impedit corrupti incidunt sequi, aut 
+                                architecto doloribus voluptatum.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </article>
+
+
+            <!-- CARD 2: YOU SEEM PRETTY SAD FOR A GIRL SO IN LOVE -->
+            <article class="card-avaliacao">
+
+                <div class="avaliacao-principal">
+
+                    <!-- TROQUE O SRC PELA CAPA CORRETA -->
+                    <img
+                        class="capa-avaliacao"
+                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjHMzKGfvJiU0iosUqylOT26e2HlcvAid1MYR82af6VA&s=10"
+                        alt="Capa de You Seem Pretty Sad for a Girl So in Love">
+
+                    <div class="avaliacao-informacoes">
+                        <h2>You Seem Pretty Sad for a Girl So in Love</h2>
+                        <p>Olivia Rodrigo</p>
+                    </div>
+
+                    <div class="avaliacao-acoes">
+
+                        <!-- TROQUE O HREF PELO LINK DA MÚSICA -->
+                        <a
+                            class="botao-spotify"
+                            href="https://open.spotify.com/"
+                            target="_blank"
+                            rel="noopener noreferrer">
+
+                            <img src="assets/icons/ic-spotify.png" alt="">
+                            Ouça no Spotify
+                        </a>
+
+                        <div class="avaliacao-nota">
+                            <span class="estrelas">★★★★<span class="estrela-vazia">☆</span></span>
+
+                            <button
+                                class="botao-resenha"
+                                type="button"
+                                aria-expanded="false"
+                                aria-controls="resenha-2">
+
+                                Clique para ver a resenha
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="resenha-detalhe" id="resenha-2">
+                    <div class="resenha-detalhe-interno">
+                        <div class="resenha-texto">
+                            <h3>Minha resenha</h3>
+
+                            <!-- SUBSTITUA PELA SUA RESENHA -->
+                            <p>
+                                Escreva aqui sua análise da música de
+                                Olivia Rodrigo. Conte o que achou da
+                                melodia, da interpretação vocal e da
+                                mensagem transmitida pela letra.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </article>
+
+
+            <!-- CARD 3: BREACH -->
+            <article class="card-avaliacao">
+
+                <div class="avaliacao-principal">
+
+                    <!-- TROQUE O SRC PELA CAPA CORRETA -->
+                    <img
+                        class="capa-avaliacao"
+                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFpmHP10YvrCL64eSVG4UqAnv2xidZjfhhcNl5DtRO7t9lDpHsOOm_HZnN&s=10"
+                        alt="Capa de Breach">
+
+                    <div class="avaliacao-informacoes">
+                        <h2>Breach</h2>
+                        <p>Twenty One Pilots</p>
+                    </div>
+
+                    <div class="avaliacao-acoes">
+
+                        <!-- TROQUE O HREF PELO LINK DA MÚSICA -->
+                        <a
+                            class="botao-spotify"
+                            href="https://open.spotify.com/"
+                            target="_blank"
+                            rel="noopener noreferrer">
+
+                            <img src="assets/icons/ic-spotify.png" alt="">
+                            Ouça no Spotify
+                        </a>
+
+                        <div class="avaliacao-nota">
+                            <span class="estrelas">★★★★<span class="estrela-vazia">☆</span></span>
+
+                            <button
+                                class="botao-resenha"
+                                type="button"
+                                aria-expanded="false"
+                                aria-controls="resenha-3">
+
+                                Clique para ver a resenha
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="resenha-detalhe" id="resenha-3">
+                    <div class="resenha-detalhe-interno">
+                        <div class="resenha-texto">
+                            <h3>Minha resenha</h3>
+
+                            <!-- SUBSTITUA PELA SUA RESENHA -->
+                            <p>
+                                Escreva aqui sua avaliação de Breach.
+                                Comente sobre a identidade sonora do
+                                álbum, os arranjos e os elementos que
+                                mais chamaram sua atenção.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </article>
+
+
+            <!-- CARD 4: MEMÓRIAS PÓSTUMAS -->
+            <article class="card-avaliacao">
+
+                <div class="avaliacao-principal">
+
+                    <!-- TROQUE O SRC PELA CAPA CORRETA -->
+                    <img
+                        class="capa-avaliacao"
+                        src="https://i.scdn.co/image/ab67616d0000b27326110f06ccf587b0a465f873"
+                        alt="Capa de Memórias Póstumas">
+
+                    <div class="avaliacao-informacoes">
+                        <h2>Memórias Póstumas</h2>
+                        <p>Jão</p>
+                    </div>
+
+                    <div class="avaliacao-acoes">
+
+                        <!-- TROQUE O HREF PELO LINK DA MÚSICA -->
+                        <a
+                            class="botao-spotify"
+                            href="https://open.spotify.com/"
+                            target="_blank"
+                            rel="noopener noreferrer">
+
+                            <img src="assets/icons/ic-spotify.png" alt="">
+                            Ouça no Spotify
+                        </a>
+
+                        <div class="avaliacao-nota">
+                            <span class="estrelas">★★★<span class="estrela-vazia">☆☆</span></span>
+
+                            <button
+                                class="botao-resenha"
+                                type="button"
+                                aria-expanded="false"
+                                aria-controls="resenha-4">
+
+                                Clique para ver a resenha
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="resenha-detalhe" id="resenha-4">
+                    <div class="resenha-detalhe-interno">
+                        <div class="resenha-texto">
+                            <h3>Minha resenha</h3>
+
+                            <!-- SUBSTITUA PELA SUA RESENHA -->
+                            <p>
+                                Escreva aqui sua opinião sobre Memórias
+                                Póstumas. Você pode falar sobre a
+                                construção da música, a letra e a
+                                experiência de ouvir a faixa.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </article>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================================
+         4. FOOTER GLOBAL
+    ========================================== -->
+
+    <footer class="footer">
+
+        <div class="footer-conteudo">
+
+            <!-- LOGO E DESCRIÇÃO -->
+            <div class="footer-coluna">
+
+                <img
+                    class="footer-logo"
+                    src="assets/logos/logo-slogan.svg"
+                    alt="Logo V-Side">
+
+                <p class="footer-descricao">
+                    Avaliações, ideias e opiniões sobre o mundo da música.
+                </p>
+
+            </div>
+
+            <!-- LINKS DAS SEÇÕES -->
+            <div class="footer-coluna">
+                <h3>Seções</h3>
+
+                <ul>
+                    <li><a href="index.html">Início</a></li>
+                    <li><a href="sobre.html">Sobre o V-Side</a></li>
+                    <li><a href="playlists.html">Playlists</a></li>
+                    <li><a href="favoritos.html">Favoritos</a></li>
+                    <li><a href="avaliacoes.html">Avaliações</a></li>
+                    <li><a href="jogar.html">Jogar</a></li>
+                </ul>
+            </div>
+
+            <!-- FAQ E SUPORTE -->
+            <div class="footer-coluna">
+                <h3>FAQ & Suporte</h3>
+
+                <ul>
+                    <li><a href="#">Posso enviar uma avaliação?</a></li>
+                    <li><a href="#">Não consigo fazer login</a></li>
+                    <li><a href="#">Como entro em contato?</a></li>
+                    <li><a href="#">Política de privacidade</a></li>
+                </ul>
+            </div>
+
+            <!-- CONTATO E REDES SOCIAIS -->
+            <div class="footer-coluna">
+                <h3>Entre em contato</h3>
+
+                <a href="mailto:contato@vside.com">
+                    contato@vside.com
+                </a>
+
+                <h3 class="titulo-redes">Redes Sociais</h3>
+
+                <div class="footer-redes">
+                    <a href="#" aria-label="Instagram">
+                        <img src="assets/icons/ic-instagram.png" alt="">
+                    </a>
+
+                    <a href="#" aria-label="TikTok">
+                        <img src="assets/icons/ic-tiktok.png" alt="">
+                    </a>
+
+                    <a href="#" aria-label="Spotify">
+                        <img src="assets/icons/ic-spotify.png" alt="">
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- DIVISÓRIA DO FOOTER -->
+        <div class="footer-linha"></div>
+
+        <!-- DIREITOS AUTORAIS -->
+        <p class="footer-direitos">
+            © Todos os direitos reservados V-Side. 2026
+        </p>
+
+    </footer>
+
+
+    <!-- JAVASCRIPT RESPONSÁVEL PELA EXPANSÃO DOS CARDS -->
+    <script src="js/avaliacoes.js"></script>
+
+</body>
+</html>
