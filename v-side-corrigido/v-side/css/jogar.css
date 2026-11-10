@@ -636,3 +636,222 @@
     }
 
 }
+
+
+/* =========================================
+   V-SIDE - JOGO SEM SCROLL
+========================================= */
+
+/* A página ocupa a altura da janela */
+
+html,
+body {
+    min-height: 100%;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+}
+
+/* O conteúdo principal ocupa o espaço
+   disponível entre header e footer */
+
+.pagina-jogar {
+    flex: 1;
+    min-height: 0;
+    height: auto;
+
+    padding: 12px 0;
+
+    gap: 12px;
+}
+
+/* Banner mais compacto */
+
+.banner-jogo {
+    height: clamp(90px, 19vh, 180px);
+    min-height: 90px;
+
+    flex-shrink: 0;
+}
+
+.banner-jogo h1 {
+    font-size: clamp(35px, 5vw, 65px);
+}
+
+/* Card principal */
+
+.area-jogo {
+    flex: 1;
+    min-height: 0;
+
+    width: 95%;
+
+    padding: 18px 35px;
+
+    gap: 18px;
+
+    justify-content: space-between;
+}
+
+/* Capa e informações */
+
+.jogo-cabecalho {
+    grid-template-columns:
+        minmax(150px, 240px)
+        minmax(0, 1fr)
+        auto;
+
+    align-items: center;
+
+    gap: 18px;
+}
+
+.capa-misterio {
+    width: 100%;
+    height: clamp(130px, 25vh, 230px);
+    aspect-ratio: 1 / 1;
+}
+
+.capa-misterio span {
+    font-size: 85px;
+}
+
+.informacoes-misterio h2 {
+    font-size: clamp(25px, 3vw, 42px);
+}
+
+.informacoes-misterio p {
+    font-size: clamp(15px, 1.5vw, 20px);
+}
+
+/* Botão de dica */
+
+.botao-dica {
+    min-width: 150px;
+    font-size: clamp(16px, 1.8vw, 23px);
+}
+
+/* Player */
+
+.player-musica {
+    gap: 5px;
+}
+
+.marcadores-tempo {
+    font-size: clamp(12px, 1.5vw, 17px);
+}
+
+#barraAudio {
+    height: 19px;
+}
+
+/* Campo de resposta */
+
+.formulario-resposta {
+    min-height: 48px;
+    flex-shrink: 0;
+}
+
+.formulario-resposta input {
+    font-size: clamp(16px, 2vw, 23px);
+}
+
+/* Evita que mensagens e resultados
+   aumentem desnecessariamente o card */
+
+.mensagem-jogo {
+    padding: 8px 12px;
+}
+
+.resultado-jogo {
+    padding: 12px;
+    gap: 6px;
+}
+
+.resultado-jogo h2 {
+    font-size: 22px;
+}
+
+
+/* =========================================
+   TELAS COM POUCA ALTURA
+========================================= */
+
+@media (max-height: 750px) {
+
+    .pagina-jogar {
+        padding: 8px 0;
+        gap: 8px;
+    }
+
+    .banner-jogo {
+        height: 100px;
+        min-height: 100px;
+    }
+
+    .area-jogo {
+        padding: 12px 25px;
+        gap: 10px;
+    }
+
+    .capa-misterio {
+        height: 145px;
+    }
+
+    .jogo-cabecalho {
+        grid-template-columns:
+            145px minmax(0, 1fr) auto;
+    }
+
+    .botao-dica {
+        padding: 6px 9px;
+    }
+
+}
+
+
+/* =========================================
+   CELULARES
+========================================= */
+
+@media (max-width: 600px) {
+
+    body {
+        overflow-y: auto;
+    }
+
+    .pagina-jogar {
+        flex: initial;
+        height: auto;
+        padding: 10px 0;
+    }
+
+    .banner-jogo {
+        height: 130px;
+    }
+
+    .area-jogo {
+        flex: initial;
+        min-height: 0;
+        padding: 18px 15px;
+        gap: 20px;
+    }
+
+    .jogo-cabecalho {
+        grid-template-columns: 1fr;
+    }
+
+    .capa-misterio {
+        width: min(55vw, 190px);
+        height: min(55vw, 190px);
+    }
+
+    .botao-dica {
+        grid-column: auto;
+    }
+
+}
