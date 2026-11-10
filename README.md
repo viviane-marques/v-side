@@ -2,7 +2,7 @@
 ### Música de outro ângulo.
 
 <p align="center">
-  <img src="assets/logos/logo-fundo-escuro-v2.svg" alt="Logo V-Side" width="280">
+  <img src="v-side/v-side-corrigido/v-side/assets/logos/logo-fundo-escuro-v2.svg" alt="Logo V-Side" width="280">
 </p>
 
 <p align="center">
