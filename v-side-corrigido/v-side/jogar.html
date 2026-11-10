@@ -8,6 +8,7 @@
     <link rel="icon" href="assets/logos/monograma-fundo-escuro.svg">
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/formularios.css">
+    <link rel="stylesheet" href="css/jogar.css">
 </head>
 
 <body>
@@ -127,19 +128,156 @@
         </div>
 
     </header>
-    <main class="pagina-formulario">
-        <section class="banner-formulario">
+
+    <!-- =========================================
+     PÁGINA JOGAR - V-SIDE
+========================================== -->
+
+    <main class="pagina-jogar">
+
+        <!-- BANNER -->
+
+        <section class="banner-jogo">
+
             <h1>Vamos jogar?</h1>
+
         </section>
-        <section class="cartao-dashboard">
-            <h2>Descubra o artista!</h2>
-            <p style="margin:15px 0">Adivinhe o artista ou a música a partir das dicas e teste seus conhecimentos
-                musicais.</p>
-            <div class="kpi"><strong>?</strong><span>Artista misterioso</span></div>
-            <p style="margin:15px 0">Dica: pense em seus álbuns e músicas mais conhecidos.</p><a
-                class="botao-formulario" href="playlists.html">Explorar músicas</a>
+
+
+        <!-- ÁREA PRINCIPAL DO JOGO -->
+
+        <section class="area-jogo">
+
+            <!-- PARTE SUPERIOR -->
+
+            <div class="jogo-cabecalho">
+
+                <!-- CAPA DA MÚSICA -->
+
+                <div class="capa-misterio" id="areaCapa">
+
+                    <span id="interrogacaoCapa">?</span>
+
+                    <img src="" alt="Capa do álbum" id="capaAlbum" hidden>
+
+                </div>
+
+
+                <!-- ARTISTA -->
+
+                <div class="informacoes-misterio">
+
+                    <h2>
+                        Artista:
+                        <span id="artistaRevelado">????</span>
+                    </h2>
+
+                    <p id="albumRevelado" hidden>
+                        Álbum:
+                        <span id="nomeAlbumRevelado"></span>
+                    </p>
+
+                </div>
+
+
+                <!-- BOTÃO DE DICAS -->
+
+                <button type="button" class="botao-dica" id="botaoDica">
+
+                    <span class="icone-dica" id="iconeDica">💡</span>
+
+                    <span id="textoBotaoDica">Pedir dica</span>
+
+                </button>
+
+            </div>
+
+
+            <!-- CONTROLES DE ÁUDIO -->
+
+            <div class="player-musica">
+
+                <div class="controles-player">
+
+                    <button type="button" id="botaoPlay" class="botao-play" aria-label="Reproduzir música">
+                        ▶
+                    </button>
+
+                    <div class="linha-tempo">
+
+                        <div class="marcadores-tempo">
+
+                            <span>0:00</span>
+                            <span>0:05</span>
+                            <span>0:10</span>
+                            <span>0:15</span>
+                            <span>0:20</span>
+                            <span>0:30</span>
+
+                        </div>
+
+                        <input type="range" id="barraAudio" min="0" max="30" value="0" step="0.1"
+                            aria-label="Progresso da música">
+
+                    </div>
+
+                </div>
+
+
+                <div class="informacoes-tempo">
+
+                    <span id="tempoDecorrido">Tempo: 0:00</span>
+
+                    <span id="tempoRestante">Restam: 0:30</span>
+
+                </div>
+
+                <audio id="audioMusica" preload="none"></audio>
+
+            </div>
+
+
+            <!-- CAMPO PARA ADIVINHAR A MÚSICA -->
+
+            <form class="formulario-resposta" id="formResposta">
+
+                <span class="icone-pesquisa">⌕</span>
+
+                <input type="text" id="respostaMusica" placeholder="Buscar música..." autocomplete="off"
+                    aria-label="Digite o nome da música">
+
+                <button type="submit" class="botao-responder">
+                    Adivinhar
+                </button>
+
+            </form>
+
+
+            <!-- MENSAGEM DO JOGO -->
+
+            <div class="mensagem-jogo" id="mensagemJogo" aria-live="polite" hidden>
+
+            </div>
+
+
+            <!-- RESULTADO -->
+
+            <div class="resultado-jogo" id="resultadoJogo" hidden>
+
+                <h2 id="tituloResultado"></h2>
+
+                <p id="descricaoResultado"></p>
+
+                <button type="button" id="botaoProximaRodada">
+                    Próxima música
+                </button>
+
+            </div>
+
         </section>
+
     </main>
+
     <footer class="footer">
         <div class="footer-conteudo">
             <div class="footer-coluna"><a href="index.html"><img class="footer-logo" src="assets/logos/logo-slogan.svg"
@@ -177,6 +315,7 @@
         <p class="footer-direitos">© Todos os direitos reservados V-Side. 2026</p>
     </footer>
     <script src="js/global.js"></script>
+    <script src="js/jogar.js"></script>
 </body>
 
 </html>

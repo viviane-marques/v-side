@@ -1,0 +1,638 @@
+
+/* =========================================
+   1. CONFIGURAÇÕES DA PÁGINA
+========================================= */
+
+.pagina-jogar {
+    width: 100%;
+    min-height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+
+    padding-bottom: 25px;
+}
+
+
+/* =========================================
+   2. BANNER
+========================================= */
+
+.banner-jogo {
+    width: 100%;
+    height: 335px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: relative;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(rgba(15, 22, 42, 0.60),
+                        rgba(15, 22, 42, 0.60)),
+        url("../assets/banners/banner-jogar.png");
+
+    background-size: cover;
+    background-position: center;
+
+    border-radius: 0 0 8px 8px;
+}
+
+.banner-jogo h1 {
+    padding: 0 25px;
+
+    background-color: rgba(103, 48, 59, 0.78);
+
+    border-radius: 9px;
+
+    color: #F1E1CB;
+
+    font-family: var(--fonte-titulos);
+    font-size: clamp(45px, 7vw, 85px);
+
+    font-weight: 700;
+    font-style: italic;
+
+    text-align: center;
+}
+
+
+/* =========================================
+   3. CARD PRINCIPAL DO JOGO
+========================================= */
+
+.area-jogo {
+    width: 95%;
+
+    min-height: 565px;
+
+    margin: 0 auto;
+
+    padding: 26px 40px 40px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 35px;
+
+    background-color: #722F37;
+
+    border-radius: 10px;
+}
+
+
+/* =========================================
+   4. CABEÇALHO DO JOGO
+========================================= */
+
+.jogo-cabecalho {
+    display: grid;
+
+    grid-template-columns: 310px minmax(0, 1fr) auto;
+
+    align-items: start;
+
+    gap: 15px;
+}
+
+
+/* =========================================
+   5. CAPA MISTERIOSA
+========================================= */
+
+.capa-misterio {
+    width: 310px;
+    height: 295px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    background-color: #E8D9C2;
+
+    border-radius: 9px;
+}
+
+.capa-misterio span {
+    color: #171E32;
+
+    font-family: var(--fonte-titulos);
+    font-size: 115px;
+    font-weight: 700;
+}
+
+.capa-misterio img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+.capa-misterio img[hidden] {
+    display: none;
+}
+
+
+/* =========================================
+   6. INFORMAÇÕES DA MÚSICA
+========================================= */
+
+.informacoes-misterio {
+    padding-top: 5px;
+
+    min-width: 0;
+}
+
+.informacoes-misterio h2 {
+    color: #FFFFFF;
+
+    font-family: var(--fonte-principal);
+    font-size: clamp(25px, 4vw, 50px);
+
+    font-weight: 600;
+}
+
+.informacoes-misterio h2 span {
+    font-weight: 700;
+}
+
+.informacoes-misterio p {
+    margin-top: 20px;
+
+    color: #F1E1CB;
+
+    font-family: var(--fonte-principal);
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.informacoes-misterio p[hidden] {
+    display: none;
+}
+
+
+/* =========================================
+   7. BOTÃO DE DICAS
+========================================= */
+
+.botao-dica {
+    min-width: 195px;
+
+    padding: 8px 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    border: none;
+    border-radius: 10px;
+
+    background-color: #E8D9C2;
+
+    color: #722F37;
+
+    font-family: var(--fonte-principal);
+    font-size: 26px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.botao-dica:hover {
+    background-color: #F8EBDD;
+
+    transform: translateY(-2px);
+}
+
+.icone-dica {
+    font-size: 30px;
+    line-height: 1;
+}
+
+
+/* BOTÃO DE DESISTIR */
+
+.botao-dica.desistir {
+    background-color: #171E32;
+    color: #F8F4EE;
+}
+
+.botao-dica.desistir:hover {
+    background-color: #29334E;
+}
+
+
+/* =========================================
+   8. PLAYER DE MÚSICA
+========================================= */
+
+.player-musica {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+.controles-player {
+    display: flex;
+    align-items: end;
+
+    gap: 12px;
+}
+
+.botao-play {
+    width: 42px;
+    height: 42px;
+
+    flex-shrink: 0;
+
+    border: none;
+    border-radius: 50%;
+
+    background-color: #E8D9C2;
+    color: #722F37;
+
+    font-size: 19px;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.botao-play:hover {
+    transform: scale(1.08);
+}
+
+.linha-tempo {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+.marcadores-tempo {
+    display: flex;
+    justify-content: space-between;
+
+    color: #FFFFFF;
+
+    font-family: var(--fonte-principal);
+    font-size: 19px;
+    font-weight: 600;
+    font-style: italic;
+}
+
+
+/* BARRA DE PROGRESSO */
+
+#barraAudio {
+    width: 100%;
+    height: 23px;
+
+    appearance: none;
+    -webkit-appearance: none;
+
+    background-color: #A35C67;
+
+    border: 4px solid #C48D91;
+    border-radius: 20px;
+
+    cursor: pointer;
+}
+
+#barraAudio::-webkit-slider-thumb {
+    appearance: none;
+    -webkit-appearance: none;
+
+    width: 0;
+    height: 0;
+}
+
+#barraAudio::-moz-range-thumb {
+    width: 0;
+    height: 0;
+
+    border: none;
+}
+
+#barraAudio::-webkit-slider-runnable-track {
+    height: 100%;
+
+    background: linear-gradient(
+        to right,
+        #E8D9C2 var(--progresso, 0%),
+        transparent var(--progresso, 0%)
+    );
+
+    border-radius: 20px;
+}
+
+
+/* TEMPO */
+
+.informacoes-tempo {
+    display: flex;
+    justify-content: space-between;
+
+    color: #F1E1CB;
+
+    font-family: var(--fonte-principal);
+    font-size: 14px;
+}
+
+
+/* =========================================
+   9. CAMPO DE RESPOSTA
+========================================= */
+
+.formulario-resposta {
+    width: 100%;
+    min-height: 50px;
+
+    padding: 0 15px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    background-color: #171E32;
+
+    border-radius: 10px;
+}
+
+.icone-pesquisa {
+    color: #E8D9C2;
+
+    font-size: 42px;
+    line-height: 1;
+}
+
+.formulario-resposta input {
+    width: 100%;
+    min-width: 0;
+
+    padding: 10px 0;
+
+    border: none;
+    outline: none;
+
+    background-color: transparent;
+
+    color: #F8F4EE;
+
+    font-family: var(--fonte-principal);
+    font-size: 25px;
+    font-weight: 600;
+}
+
+.formulario-resposta input::placeholder {
+    color: #92939B;
+}
+
+.botao-responder {
+    padding: 8px 14px;
+
+    border: none;
+    border-radius: 7px;
+
+    background-color: #E8D9C2;
+    color: #722F37;
+
+    font-family: var(--fonte-principal);
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.botao-responder:hover {
+    background-color: #F8EBDD;
+}
+
+
+/* =========================================
+   10. MENSAGENS
+========================================= */
+
+.mensagem-jogo {
+    padding: 12px 15px;
+
+    border-radius: 8px;
+
+    background-color: rgba(23, 30, 50, 0.7);
+
+    color: #F8F4EE;
+
+    font-family: var(--fonte-principal);
+    font-size: 16px;
+    text-align: center;
+}
+
+.mensagem-jogo[hidden] {
+    display: none;
+}
+
+
+/* =========================================
+   11. RESULTADO
+========================================= */
+
+.resultado-jogo {
+    padding: 20px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    gap: 12px;
+
+    background-color: #E8D9C2;
+
+    border-radius: 10px;
+
+    text-align: center;
+}
+
+.resultado-jogo[hidden] {
+    display: none;
+}
+
+.resultado-jogo h2 {
+    color: #722F37;
+
+    font-family: var(--fonte-titulos);
+    font-size: 28px;
+}
+
+.resultado-jogo p {
+    color: #171E32;
+
+    font-family: var(--fonte-principal);
+    font-size: 17px;
+}
+
+#botaoProximaRodada {
+    padding: 12px 25px;
+
+    border: none;
+    border-radius: 8px;
+
+    background-color: #171E32;
+    color: #F8F4EE;
+
+    font-size: 17px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+#botaoProximaRodada:hover {
+    background-color: #29334E;
+}
+
+
+/* =========================================
+   12. RESPONSIVIDADE - TABLETS
+========================================= */
+
+@media (max-width: 900px) {
+
+    .banner-jogo {
+        height: 260px;
+    }
+
+    .area-jogo {
+        padding: 25px;
+    }
+
+    .jogo-cabecalho {
+        grid-template-columns: 220px minmax(0, 1fr);
+    }
+
+    .capa-misterio {
+        width: 220px;
+        height: 220px;
+    }
+
+    .botao-dica {
+        grid-column: 2;
+        justify-self: start;
+    }
+
+}
+
+
+/* =========================================
+   13. RESPONSIVIDADE - CELULARES
+========================================= */
+
+@media (max-width: 600px) {
+
+    .pagina-jogar {
+        gap: 18px;
+    }
+
+    .banner-jogo {
+        height: 180px;
+    }
+
+    .banner-jogo h1 {
+        font-size: 40px;
+    }
+
+    .area-jogo {
+        width: 94%;
+
+        padding: 20px 15px;
+
+        gap: 25px;
+    }
+
+    .jogo-cabecalho {
+        grid-template-columns: 1fr;
+
+        justify-items: center;
+
+        gap: 15px;
+    }
+
+    .capa-misterio {
+        width: min(75vw, 260px);
+        height: min(75vw, 260px);
+    }
+
+    .informacoes-misterio {
+        width: 100%;
+
+        text-align: center;
+    }
+
+    .informacoes-misterio h2 {
+        font-size: 27px;
+    }
+
+    .informacoes-misterio p {
+        font-size: 18px;
+    }
+
+    .botao-dica {
+        grid-column: auto;
+
+        justify-self: center;
+
+        min-width: 180px;
+
+        font-size: 21px;
+    }
+
+    .controles-player {
+        gap: 7px;
+    }
+
+    .botao-play {
+        width: 35px;
+        height: 35px;
+    }
+
+    .marcadores-tempo {
+        font-size: 12px;
+    }
+
+    #barraAudio {
+        height: 19px;
+    }
+
+    .formulario-resposta {
+        padding: 0 10px;
+    }
+
+    .icone-pesquisa {
+        font-size: 30px;
+    }
+
+    .formulario-resposta input {
+        font-size: 17px;
+    }
+
+    .botao-responder {
+        padding: 8px;
+        font-size: 12px;
+    }
+
+}
