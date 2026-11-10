@@ -172,7 +172,7 @@ input {
     top: calc(100% + 15px);
     left: 0;
 
-    width: 150px;
+    width: 200px;
 
     background-color: var(--cor-fundo-secundario);
 
@@ -225,6 +225,11 @@ input {
 .menu-suspenso a:hover {
     background-color: var(--cor-destaque);
     color: var(--cor-branco);
+}
+
+/* Padronização dos textos da navegação */
+.header-global .navegacao-header .botao-menu {
+    font-size: 20px;
 }
 
 
@@ -502,9 +507,16 @@ input {
 .header-global .logo-header { width: clamp(125px, 14vw, 190px); }
 .navegacao-header { display:flex; align-items:center; gap:22px; flex:0 0 auto; }
 .navegacao-header > a, .botao-menu {
-    display:flex; align-items:center; gap:7px;
-    color:var(--cor-texto); font-size:16px; font-weight:600;
-    background:transparent; border:0; cursor:pointer; white-space:nowrap;
+    display:flex; 
+    align-items:center; 
+    gap:7px;
+    color:var(--cor-texto); 
+    font-size:20px; 
+    font-weight:600;
+    background:transparent; 
+    border:0; 
+    cursor:pointer; 
+    white-space:nowrap;
     transition:var(--transicao);
 }
 .navegacao-header > a:hover, .botao-menu:hover { color:var(--cor-destaque); }
@@ -556,3 +568,5 @@ body.usuario-logado .somente-logado { display:block; }
 
 .item-menu.menu-aberto .menu-suspenso{opacity:1;visibility:visible;transform:translateY(0)}
 .item-menu.menu-aberto .seta-menu{transform:rotate(180deg)}
+
+

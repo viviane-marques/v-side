@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -8,106 +9,194 @@
     <title>Favoritos | V-side</title>
     <link rel="icon" href="assets/logos/monograma-fundo-escuro.svg">
 
-    <!-- CSS global: header, footer, fontes, cores e configurações gerais -->
     <link rel="stylesheet" href="css/global.css">
-
-    <!-- CSS exclusivo desta página -->
     <link rel="stylesheet" href="css/favoritos.css">
 </head>
 
 <body>
 
     <!-- =========================================
-         1. HEADER GLOBAL
-         Mantenha a mesma estrutura utilizada no index.html.
+        HEADER GLOBAL - V-SIDE
     ========================================== -->
-    <!-- HEADER GLOBAL: alterna automaticamente conforme a sessão -->
-<header class="header-global">
-    <a class="link-logo-header" href="index.html" aria-label="V-Side - início">
-        <img class="logo-header" src="assets/logos/logo-fundo-escuro-v2.svg" alt="V-Side">
-    </a>
 
-    <nav class="navegacao-header" aria-label="Navegação principal">
-        <div class="item-menu menu-inicio">
-            <a href="index.html" class="botao-menu">Início <img class="seta-menu" src="assets/icons/seta-para-baixo.png" alt=""></a>
-            <div class="menu-suspenso">
-                <a href="sobre.html">Sobre</a>
-                <a class="somente-logado" href="favoritos.html">Favoritos</a>
+    <header class="header-global">
+
+        <!-- LOGO -->
+        <a class="link-logo-header" href="index.html"
+            aria-label="V-Side - início">
+
+            <img
+                class="logo-header"
+                src="assets/logos/logo-fundo-escuro-v2.svg"
+                alt="V-Side">
+
+        </a>
+
+
+        <!-- NAVEGAÇÃO -->
+        <nav class="navegacao-header" aria-label="Navegação principal">
+
+            <!-- MENU INÍCIO -->
+            <div class="item-menu menu-inicio">
+
+                <a href="index.html" class="botao-menu">
+
+                    Início
+
+                    <img
+                        class="seta-menu"
+                        src="assets/icons/seta-para-baixo.png"
+                        alt="">
+
+                </a>
+
+                <div class="menu-suspenso">
+
+                    <a href="sobre.html">Sobre</a>
+
+                    <a class="somente-logado"
+                        href="favoritos.html">
+                        Favoritos
+                    </a>
+
+                </div>
+
             </div>
+
+
+            <!-- MENU MÚSICAS -->
+            <div class="item-menu menu-musicas">
+
+                <button
+                    class="botao-menu"
+                    type="button"
+                    aria-expanded="false">
+
+                    Músicas
+
+                    <img
+                        class="seta-menu"
+                        src="assets/icons/seta-para-baixo.png"
+                        alt="">
+
+                </button>
+
+                <div class="menu-suspenso">
+
+                    <a href="playlists.html">
+                        Playlists Recomendadas
+                    </a>
+
+                    <a class="somente-logado"
+                        href="avaliacoes.html">
+                        Minhas Avaliações
+                    </a>
+
+                    <a class="somente-logado"
+                        href="cadastro-musica.html">
+                        Cadastrar Música
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- JOGO -->
+            <a href="jogar.html">Jogar</a>
+
+        </nav>
+
+
+        <!-- BARRA DE PESQUISA -->
+        <form
+            class="barra-de-pesquisa"
+            role="search"
+            action="playlists.html">
+
+            <img
+                src="assets/icons/search.png"
+                alt="">
+
+            <input
+                type="search"
+                name="busca"
+                placeholder="Buscar álbuns, artistas..."
+                aria-label="Buscar álbuns e artistas">
+
+        </form>
+
+
+        <!-- BOTÕES PARA VISITANTES -->
+        <div class="acoes-header estado-visitante">
+
+            <a href="login.html" class="botao-entrar">
+                Entrar
+            </a>
+
+            <a href="cadastro.html" class="botao-cadastrar">
+                Cadastre-se
+            </a>
+
         </div>
 
-        <div class="item-menu menu-musicas">
-            <button class="botao-menu" type="button" aria-expanded="false">Músicas <img class="seta-menu" src="assets/icons/seta-para-baixo.png" alt=""></button>
-            <div class="menu-suspenso">
-                <a href="playlists.html">Playlists Recomendadas</a>
-                <a class="somente-logado" href="avaliacoes.html">Minhas Avaliações</a>
-            </div>
+
+        <!-- BOTÕES PARA USUÁRIOS LOGADOS -->
+        <div class="acoes-header estado-logado">
+
+            <a href="nova-avaliacao.html" class="botao-entrar">
+                Nova Avaliação
+            </a>
+
+            <a href="dashboard.html" class="botao-cadastrar">
+                Dashboard
+            </a>
+
         </div>
 
-        <a href="jogar.html">Jogar</a>
-    </nav>
-
-    <form class="barra-de-pesquisa" role="search" action="playlists.html">
-        <img src="assets/icons/search.png" alt="">
-        <input type="search" name="busca" placeholder="Buscar álbuns, artistas..." aria-label="Buscar álbuns e artistas">
-    </form>
-
-    <div class="acoes-header estado-visitante">
-        <a href="login.html" class="botao-entrar">Entrar</a>
-        <a href="cadastro.html" class="botao-cadastrar">Cadastre-se</a>
-    </div>
-    <div class="acoes-header estado-logado">
-        <a href="cadastro-musica.html" class="botao-entrar">Cadastrar Música</a>
-        <a href="dashboard.html" class="botao-cadastrar">Dashboard</a>
-    </div>
-</header>
+    </header>
 
 
     <!-- =========================================
-         2. CONTEÚDO PRINCIPAL DA PÁGINA
+         2. CONTEÚDO PRINCIPAL
     ========================================== -->
+
     <main class="pagina-favoritos">
 
-        <!-- =====================================
-             2.1 BANNER DO TÍTULO
-             Troque a imagem de fundo pelo banner
-             com as mãos formando um coração.
-        ====================================== -->
+        <!-- BANNER -->
         <section class="banner-favoritos">
 
-            <!-- IMAGEM DE FUNDO DO BANNER -->
             <img
                 class="imagem-banner-favoritos"
                 src="assets/banners/banner-favoritos.png"
-                alt=""
-            >
+                alt="">
 
-            <!-- Fundo transparente atrás do título -->
             <div class="fundo-titulo-favoritos"></div>
 
-            <!-- Título principal -->
             <h1>Favoritos</h1>
 
         </section>
 
 
         <!-- =====================================
-             2.2 LISTA DE ÁLBUNS FAVORITOS
+             3. LISTA DE ARTISTAS FAVORITOS
         ====================================== -->
+
         <section class="lista-favoritos">
 
-            <!-- ÁLBUM 1: TWENTY ONE PILOTS -->
-            <article class="card-favorito">
 
-                <!-- CAPA DO ÁLBUM
-                     Troque o caminho pela imagem da capa desejada. -->
+            <!-- =================================
+                 ARTISTA 1: TWENTY ONE PILOTS
+            ================================== -->
+
+            <article class="card-favorito"
+                data-favorito-id="twenty-one-pilots">
+
                 <img
                     class="capa-album"
                     src="https://i.scdn.co/image/ab6761610000517461a7ea26d33ded218cd1e59d"
-                    alt="Capa do álbum de Twenty One Pilots"
-                >
+                    alt="Twenty One Pilots">
 
-                <!-- INFORMAÇÕES DO ÁLBUM -->
                 <div class="informacoes-album">
 
                     <h2>Twenty One Pilots</h2>
@@ -116,40 +205,84 @@
                         Tyler Joseph &amp; Joshua Dun
                     </p>
 
-                    <!-- Altere o href para a página da resenha -->
-                    <a href="#" class="link-resenha">
+                    <button class="link-resenha"
+                        type="button"
+                        aria-expanded="false"
+                        aria-controls="resenha-twenty-one-pilots">
+
                         Clique para ver a resenha
+
+                    </button>
+
+                </div>
+
+                <!-- RESENHA EXPANSÍVEL -->
+
+                <div class="painel-resenha"
+                    id="resenha-twenty-one-pilots"
+                    aria-hidden="true">
+
+                    <div class="conteudo-resenha">
+
+                        <h3>Resenha</h3>
+
+                        <p>
+                            A dupla combina rock alternativo, elementos
+                            eletrônicos, rap e letras introspectivas.
+                            O resultado é uma identidade sonora própria,
+                            marcada por contrastes entre momentos intensos
+                            e refrões que ficam na memória. É uma escolha
+                            interessante para quem gosta de músicas que
+                            misturam energia e reflexão.
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <!-- BOTÕES DE AÇÃO -->
+
+                <div class="acoes-favorito">
+
+                    <button class="botao-remover-favorito"
+                        type="button"
+                        aria-label="Remover Twenty One Pilots dos favoritos"
+                        title="Remover dos favoritos">
+
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/>
+                        </svg>
+
+                    </button>
+
+                    <a
+                        class="botao-spotify"
+                        href="https://open.spotify.com/intl-pt/artist/3YQKmKGau1PzlVlkL1iodx?si=c423d519daed4a3f"
+                        target="_blank"
+                        rel="noopener noreferrer">
+
+                        <img src="assets/icons/ic-spotify.png" alt="">
+
+                        Ouça no Spotify
+
                     </a>
 
                 </div>
 
-                <!-- LINK PARA O SPOTIFY
-                     Substitua o # pelo link real do álbum. -->
-                <a
-                    class="botao-spotify"
-                    href="https://open.spotify.com/intl-pt/artist/3YQKmKGau1PzlVlkL1iodx?si=c423d519daed4a3f"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    <img
-                        src="assets/icons/ic-spotify.png"
-                        alt=""
-                    >
-                    Ouça no Spotify
-                </a>
-
             </article>
 
 
-            <!-- ÁLBUM 2: PARAMORE -->
-            <article class="card-favorito">
+            <!-- =================================
+                 ARTISTA 2: PARAMORE
+            ================================== -->
 
-                <!-- CAPA DO ÁLBUM PARAMORE -->
+            <article class="card-favorito"
+                data-favorito-id="paramore">
+
                 <img
                     class="capa-album"
                     src="https://i.scdn.co/image/ab6761610000e5ebb10c34546a4ca2d7faeb8865"
-                    alt="Capa do álbum de Paramore"
-                >
+                    alt="Paramore">
 
                 <div class="informacoes-album">
 
@@ -159,37 +292,79 @@
                         Hayley Williams, Zac Farro &amp; Taylor York
                     </p>
 
-                    <a href="#" class="link-resenha">
+                    <button class="link-resenha"
+                        type="button"
+                        aria-expanded="false"
+                        aria-controls="resenha-paramore">
+
                         Clique para ver a resenha
+
+                    </button>
+
+                </div>
+
+                <div class="painel-resenha"
+                    id="resenha-paramore"
+                    aria-hidden="true">
+
+                    <div class="conteudo-resenha">
+
+                        <h3>Resenha</h3>
+
+                        <p>
+                            Com uma trajetória que passa pelo pop punk,
+                            rock alternativo e pop, o Paramore se destaca
+                            pela energia das guitarras e pela expressividade
+                            dos vocais. A banda também mostra versatilidade
+                            ao explorar novas sonoridades sem perder
+                            sua personalidade.
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div class="acoes-favorito">
+
+                    <button class="botao-remover-favorito"
+                        type="button"
+                        aria-label="Remover Paramore dos favoritos"
+                        title="Remover dos favoritos">
+
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/>
+                        </svg>
+
+                    </button>
+
+                    <a
+                        class="botao-spotify"
+                        href="https://open.spotify.com/intl-pt/artist/74XFHRwlV6OrjEM0A2NCMF?si=def24adfcbbc45d0"
+                        target="_blank"
+                        rel="noopener noreferrer">
+
+                        <img src="assets/icons/ic-spotify.png" alt="">
+
+                        Ouça no Spotify
+
                     </a>
 
                 </div>
 
-                <a
-                    class="botao-spotify"
-                    href="https://open.spotify.com/intl-pt/artist/74XFHRwlV6OrjEM0A2NCMF?si=def24adfcbbc45d0"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    <img
-                        src="assets/icons/ic-spotify.png"
-                        alt=""
-                    >
-                    Ouça no Spotify
-                </a>
-
             </article>
 
 
-            <!-- ÁLBUM 3: THE 1975 -->
-            <article class="card-favorito">
+            <!-- =================================
+                 ARTISTA 3: THE 1975
+            ================================== -->
 
-                <!-- CAPA DO ÁLBUM THE 1975 -->
+            <article class="card-favorito"
+                data-favorito-id="the-1975">
+
                 <img
                     class="capa-album"
                     src="https://i.scdn.co/image/ab6761610000e5eb0c6e752cbb1e6d1416970f5a"
-                    alt="Capa do álbum de The 1975"
-                >
+                    alt="The 1975">
 
                 <div class="informacoes-album">
 
@@ -200,27 +375,73 @@
                         &amp; Ross MacDonald
                     </p>
 
-                    <a href="#" class="link-resenha">
+                    <button class="link-resenha"
+                        type="button"
+                        aria-expanded="false"
+                        aria-controls="resenha-the-1975">
+
                         Clique para ver a resenha
+
+                    </button>
+
+                </div>
+
+                <div class="painel-resenha"
+                    id="resenha-the-1975"
+                    aria-hidden="true">
+
+                    <div class="conteudo-resenha">
+
+                        <h3>Resenha</h3>
+
+                        <p>
+                            The 1975 transita entre indie rock, pop e
+                            synth-pop, criando faixas que alternam
+                            atmosferas nostálgicas, dançantes e
+                            contemplativas. A produção costuma trazer
+                            camadas eletrônicas e guitarras que ajudam
+                            a construir uma sonoridade reconhecível.
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div class="acoes-favorito">
+
+                    <button class="botao-remover-favorito"
+                        type="button"
+                        aria-label="Remover The 1975 dos favoritos"
+                        title="Remover dos favoritos">
+
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/>
+                        </svg>
+
+                    </button>
+
+                    <a
+                        class="botao-spotify"
+                        href="https://open.spotify.com/intl-pt/artist/3mIj9lX2MWuHmhNCA7LSCW?si=fd12f5bc14f5439e"
+                        target="_blank"
+                        rel="noopener noreferrer">
+
+                        <img src="assets/icons/ic-spotify.png" alt="">
+
+                        Ouça no Spotify
+
                     </a>
 
                 </div>
 
-                <a
-                    class="botao-spotify"
-                    href="https://open.spotify.com/intl-pt/artist/3mIj9lX2MWuHmhNCA7LSCW?si=fd12f5bc14f5439e
-                    "
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    <img
-                        src="assets/icons/ic-spotify.png"
-                        alt=""
-                    >
-                    Ouça no Spotify
-                </a>
-
             </article>
+
+
+            <!-- MENSAGEM QUANDO NÃO HOUVER FAVORITOS -->
+
+            <p class="mensagem-favoritos-vazia" hidden>
+                Você ainda não adicionou artistas aos favoritos.
+            </p>
 
         </section>
 
@@ -228,22 +449,20 @@
 
 
     <!-- =========================================
-         3. FOOTER GLOBAL
-         Reutiliza a estrutura do rodapé das outras páginas.
+         4. FOOTER GLOBAL
     ========================================== -->
+
     <footer class="footer">
 
         <div class="footer-conteudo">
 
-            <!-- COLUNA 1: LOGO E DESCRIÇÃO -->
             <div class="footer-coluna">
 
                 <a href="index.html">
                     <img
                         class="footer-logo"
-                        src="assets/logos/logo-fundo-escuro-v2.svg"
-                        alt="Logo V-side"
-                    >
+                        src="assets/logos/logo-slogan.svg"
+                        alt="Logo V-side">
                 </a>
 
                 <p class="footer-descricao">
@@ -253,8 +472,6 @@
 
             </div>
 
-
-            <!-- COLUNA 2: SEÇÕES -->
             <div class="footer-coluna">
 
                 <h3>Seções</h3>
@@ -270,8 +487,6 @@
 
             </div>
 
-
-            <!-- COLUNA 3: FAQ E SUPORTE -->
             <div class="footer-coluna">
 
                 <h3>FAQ &amp; Suporte</h3>
@@ -285,8 +500,6 @@
 
             </div>
 
-
-            <!-- COLUNA 4: CONTATO E REDES SOCIAIS -->
             <div class="footer-coluna">
 
                 <h3>Entre em contato</h3>
@@ -302,24 +515,16 @@
                 <div class="footer-redes">
 
                     <a href="#" aria-label="Instagram">
-                        <img
-                            src="assets/icons/ic-instagram.png"
-                            alt="Instagram"
-                        >
+                        <img src="assets/icons/ic-instagram.png" alt="">
                     </a>
 
                     <a href="#" aria-label="TikTok">
-                        <img
-                            src="assets/icons/ic-tiktok.png"
-                            alt="TikTok"
-                        >
+                        <img src="assets/icons/ic-tiktok.png" alt="">
                     </a>
 
-                    <a href="https://open.spotify.com/user/5amzx5o0wdbb4kps5hy1jp0ky?si=f62477e0e1d541b7" aria-label="Spotify">
-                        <img
-                            src="assets/icons/ic-spotify.png"
-                            alt="Spotify"
-                        >
+                    <a href="https://open.spotify.com/user/5amzx5o0wdbb4kps5hy1jp0ky?si=f62477e0e1d541b7"
+                        aria-label="Spotify">
+                        <img src="assets/icons/ic-spotify.png" alt="">
                     </a>
 
                 </div>
@@ -328,16 +533,19 @@
 
         </div>
 
-        <!-- LINHA DIVISÓRIA -->
         <div class="footer-linha"></div>
 
-        <!-- DIREITOS AUTORAIS -->
         <p class="footer-direitos">
             © Todos os direitos reservados V-side. 2026
         </p>
 
     </footer>
 
+
+    <!-- JAVASCRIPT -->
+
+    <script src="js/favoritos.js"></script>
     <script src="js/global.js"></script>
+
 </body>
 </html>

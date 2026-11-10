@@ -7,46 +7,146 @@
 <link rel="stylesheet" href="css/global.css"><link rel="stylesheet" href="css/formularios.css">
 </head>
 <body>
-<!-- HEADER GLOBAL: alterna automaticamente conforme a sessão -->
-<header class="header-global">
-    <a class="link-logo-header" href="index.html" aria-label="V-Side - início">
-        <img class="logo-header" src="assets/logos/logo-fundo-escuro-v2.svg" alt="V-Side">
-    </a>
+    <!-- =========================================
+        HEADER GLOBAL - V-SIDE
+    ========================================== -->
 
-    <nav class="navegacao-header" aria-label="Navegação principal">
-        <div class="item-menu menu-inicio">
-            <a href="index.html" class="botao-menu">Início <img class="seta-menu" src="assets/icons/seta-para-baixo.png" alt=""></a>
-            <div class="menu-suspenso">
-                <a href="sobre.html">Sobre</a>
-                <a class="somente-logado" href="favoritos.html">Favoritos</a>
+    <header class="header-global">
+
+        <!-- LOGO -->
+        <a class="link-logo-header" href="index.html"
+            aria-label="V-Side - início">
+
+            <img
+                class="logo-header"
+                src="assets/logos/logo-fundo-escuro-v2.svg"
+                alt="V-Side">
+
+        </a>
+
+
+        <!-- NAVEGAÇÃO -->
+        <nav class="navegacao-header" aria-label="Navegação principal">
+
+            <!-- MENU INÍCIO -->
+            <div class="item-menu menu-inicio">
+
+                <a href="index.html" class="botao-menu">
+
+                    Início
+
+                    <img
+                        class="seta-menu"
+                        src="assets/icons/seta-para-baixo.png"
+                        alt="">
+
+                </a>
+
+                <div class="menu-suspenso">
+
+                    <a href="sobre.html">Sobre</a>
+
+                    <a class="somente-logado"
+                        href="favoritos.html">
+                        Favoritos
+                    </a>
+
+                </div>
+
             </div>
+
+
+            <!-- MENU MÚSICAS -->
+            <div class="item-menu menu-musicas">
+
+                <button
+                    class="botao-menu"
+                    type="button"
+                    aria-expanded="false">
+
+                    Músicas
+
+                    <img
+                        class="seta-menu"
+                        src="assets/icons/seta-para-baixo.png"
+                        alt="">
+
+                </button>
+
+                <div class="menu-suspenso">
+
+                    <a href="playlists.html">
+                        Playlists Recomendadas
+                    </a>
+
+                    <a class="somente-logado"
+                        href="avaliacoes.html">
+                        Minhas Avaliações
+                    </a>
+
+                    <a class="somente-logado"
+                        href="cadastro-musica.html">
+                        Cadastrar Música
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- JOGO -->
+            <a href="jogar.html">Jogar</a>
+
+        </nav>
+
+
+        <!-- BARRA DE PESQUISA -->
+        <form
+            class="barra-de-pesquisa"
+            role="search"
+            action="playlists.html">
+
+            <img
+                src="assets/icons/search.png"
+                alt="">
+
+            <input
+                type="search"
+                name="busca"
+                placeholder="Buscar álbuns, artistas..."
+                aria-label="Buscar álbuns e artistas">
+
+        </form>
+
+
+        <!-- BOTÕES PARA VISITANTES -->
+        <div class="acoes-header estado-visitante">
+
+            <a href="login.html" class="botao-entrar">
+                Entrar
+            </a>
+
+            <a href="cadastro.html" class="botao-cadastrar">
+                Cadastre-se
+            </a>
+
         </div>
 
-        <div class="item-menu menu-musicas">
-            <button class="botao-menu" type="button" aria-expanded="false">Músicas <img class="seta-menu" src="assets/icons/seta-para-baixo.png" alt=""></button>
-            <div class="menu-suspenso">
-                <a href="playlists.html">Playlists Recomendadas</a>
-                <a class="somente-logado" href="avaliacoes.html">Minhas Avaliações</a>
-            </div>
+
+        <!-- BOTÕES PARA USUÁRIOS LOGADOS -->
+        <div class="acoes-header estado-logado">
+
+            <a href="nova-avaliacao.html" class="botao-entrar">
+                Nova Avaliação
+            </a>
+
+            <a href="dashboard.html" class="botao-cadastrar">
+                Dashboard
+            </a>
+
         </div>
 
-        <a href="jogar.html">Jogar</a>
-    </nav>
-
-    <form class="barra-de-pesquisa" role="search" action="playlists.html">
-        <img src="assets/icons/search.png" alt="">
-        <input type="search" name="busca" placeholder="Buscar álbuns, artistas..." aria-label="Buscar álbuns e artistas">
-    </form>
-
-    <div class="acoes-header estado-visitante">
-        <a href="login.html" class="botao-entrar">Entrar</a>
-        <a href="cadastro.html" class="botao-cadastrar">Cadastre-se</a>
-    </div>
-    <div class="acoes-header estado-logado">
-        <a href="cadastro-musica.html" class="botao-entrar">Cadastrar Música</a>
-        <a href="dashboard.html" class="botao-cadastrar">Dashboard</a>
-    </div>
-</header>
+    </header>
 <main class="pagina-formulario">
 <section class="banner-formulario"><h1>Cadastro de músicas</h1></section>
 <form class="formulario-vside" id="formMusica">

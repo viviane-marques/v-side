@@ -1,16 +1,13 @@
+
 /* =========================================
    1. CONFIGURAÇÕES GERAIS DA PÁGINA
 ========================================= */
 
 .pagina-favoritos {
     width: 100%;
-
     display: flex;
     flex-direction: column;
-
     gap: 25px;
-
-    /* Espaçamento lateral dos cards */
     padding: 0 2.4% 25px;
 }
 
@@ -20,11 +17,8 @@
 ========================================= */
 
 .banner-favoritos {
-    /* Faz o banner ocupar toda a largura da tela,
-       inclusive as margens laterais da página */
     width: calc(100% + 4.92%);
     margin-left: -2.46%;
-
     height: 296px;
 
     position: relative;
@@ -37,34 +31,24 @@
     border-radius: 0 0 var(--raio-borda) var(--raio-borda);
 }
 
-/* Imagem de fundo do banner */
 .imagem-banner-favoritos {
     position: absolute;
     inset: 0;
-
     width: 100%;
     height: 100%;
-
     object-fit: cover;
-
-    /* Ajuste a transparência da imagem aqui */
     opacity: 0.65;
 }
 
-/* Retângulo rosa atrás do título */
 .fundo-titulo-favoritos {
     position: absolute;
     z-index: 1;
-
     width: 66%;
     height: 31%;
-
     background-color: var(--cor-destaque-transparente);
-
     border-radius: var(--raio-borda);
 }
 
-/* Título Favoritos */
 .banner-favoritos h1 {
     position: relative;
     z-index: 2;
@@ -72,29 +56,25 @@
     font-family: var(--fonte-titulos);
     font-size: clamp(40px, 6vw, 70px);
     font-weight: 700;
-
     color: var(--cor-texto);
-
     text-align: center;
 }
 
 
 /* =========================================
-   3. LISTA DE ÁLBUNS FAVORITOS
+   3. LISTA DE FAVORITOS
 ========================================= */
 
 .lista-favoritos {
     width: 100%;
-
     display: flex;
     flex-direction: column;
-
     gap: 25px;
 }
 
 
 /* =========================================
-   4. CARD DE CADA ÁLBUM
+   4. CARD DE CADA ARTISTA
 ========================================= */
 
 .card-favorito {
@@ -103,17 +83,15 @@
 
     display: grid;
 
-    /* Capa | Informações | Botão Spotify */
+    /* Capa | Informações | Ações */
     grid-template-columns: 196px minmax(0, 1fr) auto;
 
     align-items: start;
-
     gap: 15px;
 
     padding: 20px 20px 20px 28px;
 
     background-color: #793039;
-
     border-radius: 9px;
 
     position: relative;
@@ -121,69 +99,66 @@
 
 
 /* =========================================
-   5. CAPA DO ÁLBUM
+   5. CAPA DO ARTISTA
 ========================================= */
 
 .capa-album {
     width: 196px;
     height: 196px;
-
     object-fit: cover;
-
     border-radius: 9px;
 }
 
 
 /* =========================================
-   6. INFORMAÇÕES DO ÁLBUM
+   6. INFORMAÇÕES DO ARTISTA
 ========================================= */
 
 .informacoes-album {
     display: flex;
     flex-direction: column;
-
     gap: 5px;
-
     min-width: 0;
 }
 
-/* Nome do álbum ou artista */
 .informacoes-album h2 {
     font-family: var(--fonte-titulos);
-
     font-size: clamp(28px, 3.5vw, 46px);
     font-weight: 700;
-
     color: var(--cor-texto);
-
     line-height: 1.15;
 }
 
-/* Integrantes ou artistas */
 .artistas-album {
     font-family: var(--fonte-principal);
-
     font-size: clamp(16px, 2vw, 24px);
     font-weight: 600;
-
     color: var(--cor-branco);
-
     line-height: 1.35;
 }
 
-/* Link para a resenha */
+
+/* =========================================
+   7. BOTÃO VER RESENHA
+========================================= */
+
 .link-resenha {
     width: fit-content;
-
     margin-top: 2px;
+    padding: 0;
+
+    border: 0;
+    background: transparent;
 
     font-family: var(--fonte-principal);
-
     font-size: 15px;
     font-weight: 600;
     font-style: italic;
 
     color: rgba(248, 244, 238, 0.7);
+
+    cursor: pointer;
+    text-align: left;
 
     transition: var(--transicao);
 }
@@ -195,7 +170,128 @@
 
 
 /* =========================================
-   7. BOTÃO OUVIR NO SPOTIFY
+   8. PAINEL DA RESENHA EXPANSÍVEL
+========================================= */
+
+.painel-resenha {
+    grid-column: 1 / -1;
+
+    min-width: 0;
+    max-height: 0;
+
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+
+    margin-top: 0;
+
+    transition:
+        max-height 0.4s ease,
+        opacity 0.3s ease,
+        margin 0.3s ease;
+}
+
+/* Quando o card recebe a classe resenha-aberta */
+.card-favorito.resenha-aberta .painel-resenha {
+    max-height: 420px;
+    opacity: 1;
+    visibility: visible;
+    margin-top: 5px;
+}
+
+/* Conteúdo interno da resenha */
+.conteudo-resenha {
+    padding: 17px 20px;
+
+    border-left: 4px solid var(--cor-destaque);
+    border-radius: 7px;
+
+    background: rgba(20, 24, 39, 0.42);
+
+    color: var(--cor-texto);
+}
+
+.conteudo-resenha h3 {
+    margin-bottom: 8px;
+
+    font-family: var(--fonte-titulos);
+    font-size: 21px;
+
+    color: var(--cor-texto);
+}
+
+.conteudo-resenha p {
+    color: var(--cor-branco);
+
+    font-family: var(--fonte-principal);
+    font-size: 15px;
+    line-height: 1.65;
+}
+
+
+/* =========================================
+   9. BOTÕES DE AÇÃO
+========================================= */
+
+.acoes-favorito {
+    grid-column: 3;
+    grid-row: 1;
+
+    align-self: center;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 9px;
+}
+
+
+/* =========================================
+   10. BOTÃO DE CORAÇÃO
+========================================= */
+
+.botao-remover-favorito {
+    width: 46px;
+    height: 46px;
+    flex: 0 0 46px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid rgba(248, 244, 238, 0.65);
+    border-radius: 9px;
+
+    background: transparent;
+    color: var(--cor-texto);
+
+    cursor: pointer;
+
+    transition: var(--transicao);
+}
+
+.botao-remover-favorito svg {
+    width: 23px;
+    height: 23px;
+
+    fill: currentColor;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.botao-remover-favorito:hover {
+    color: #fff;
+    background: #a9475a;
+    border-color: #a9475a;
+    transform: translateY(-2px);
+}
+
+
+/* =========================================
+   11. BOTÃO OUVIR NO SPOTIFY
 ========================================= */
 
 .botao-spotify {
@@ -204,11 +300,9 @@
     justify-content: center;
 
     gap: 7px;
-
     padding: 7px 12px;
 
     background-color: var(--cor-texto);
-
     color: var(--cor-destaque-hover);
 
     border-radius: 9px;
@@ -222,15 +316,12 @@
     transition: var(--transicao);
 }
 
-/* Ícone do Spotify */
 .botao-spotify img {
     width: 32px;
     height: 32px;
-
     object-fit: contain;
 }
 
-/* Efeito ao passar o mouse */
 .botao-spotify:hover {
     background-color: var(--cor-branco);
     transform: translateY(-2px);
@@ -238,7 +329,38 @@
 
 
 /* =========================================
-   8. RESPONSIVIDADE - TABLETS
+   12. MENSAGEM DE FAVORITOS VAZIOS
+========================================= */
+
+.mensagem-favoritos-vazia {
+    padding: 25px;
+
+    color: var(--cor-texto);
+    text-align: center;
+    font-size: 17px;
+
+    background: rgba(20, 24, 39, 0.65);
+    border-radius: 9px;
+}
+
+.mensagem-favoritos-vazia[hidden] {
+    display: none;
+}
+
+
+/* =========================================
+   13. EFEITO DE REMOÇÃO
+========================================= */
+
+.card-removendo {
+    opacity: 0;
+    transform: translateX(25px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+
+/* =========================================
+   14. RESPONSIVIDADE - TABLETS
 ========================================= */
 
 @media (max-width: 900px) {
@@ -250,7 +372,6 @@
     .card-favorito {
         grid-template-columns: 150px minmax(0, 1fr);
         min-height: 190px;
-
         padding: 18px;
     }
 
@@ -259,23 +380,27 @@
         height: 150px;
     }
 
-    .botao-spotify {
+    .informacoes-album h2 {
+        font-size: clamp(26px, 4vw, 38px);
+    }
+
+    .acoes-favorito {
         grid-column: 2;
         grid-row: 2;
 
-        width: fit-content;
+        justify-content: flex-start;
         margin-top: 5px;
     }
 
-    .informacoes-album h2 {
-        font-size: clamp(26px, 4vw, 38px);
+    .painel-resenha {
+        grid-column: 1 / -1;
     }
 
 }
 
 
 /* =========================================
-   9. RESPONSIVIDADE - CELULARES
+   15. RESPONSIVIDADE - CELULARES
 ========================================= */
 
 @media (max-width: 600px) {
@@ -288,7 +413,6 @@
     .banner-favoritos {
         width: calc(100% + 8.34%);
         margin-left: -4.17%;
-
         height: 180px;
     }
 
@@ -309,7 +433,6 @@
         grid-template-columns: 105px minmax(0, 1fr);
 
         gap: 12px;
-
         padding: 15px;
 
         min-height: auto;
@@ -332,16 +455,62 @@
         font-size: 12px;
     }
 
-    .botao-spotify {
+    .acoes-favorito {
         grid-column: 1 / -1;
         grid-row: auto;
 
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .botao-remover-favorito {
+        width: 42px;
+        height: 42px;
+        flex-basis: 42px;
+    }
+
+    .botao-spotify {
         font-size: 13px;
     }
 
     .botao-spotify img {
         width: 25px;
         height: 25px;
+    }
+
+    .conteudo-resenha {
+        padding: 14px;
+    }
+
+    .conteudo-resenha h3 {
+        font-size: 18px;
+    }
+
+    .conteudo-resenha p {
+        font-size: 13px;
+    }
+
+}
+
+
+/* =========================================
+   16. ACESSIBILIDADE
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .painel-resenha,
+    .botao-remover-favorito,
+    .card-removendo {
+        transition: none;
+    }
+
+}
+
+@media (min-width: 601px) and (max-width: 900px) {
+
+    .painel-resenha {
+        grid-row: 3;
     }
 
 }
