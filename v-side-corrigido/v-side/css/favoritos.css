@@ -1,0 +1,347 @@
+/* =========================================
+   1. CONFIGURAÇÕES GERAIS DA PÁGINA
+========================================= */
+
+.pagina-favoritos {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 25px;
+
+    /* Espaçamento lateral dos cards */
+    padding: 0 2.4% 25px;
+}
+
+
+/* =========================================
+   2. BANNER PRINCIPAL
+========================================= */
+
+.banner-favoritos {
+    /* Faz o banner ocupar toda a largura da tela,
+       inclusive as margens laterais da página */
+    width: calc(100% + 4.92%);
+    margin-left: -2.46%;
+
+    height: 296px;
+
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+    border-radius: 0 0 var(--raio-borda) var(--raio-borda);
+}
+
+/* Imagem de fundo do banner */
+.imagem-banner-favoritos {
+    position: absolute;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    /* Ajuste a transparência da imagem aqui */
+    opacity: 0.65;
+}
+
+/* Retângulo rosa atrás do título */
+.fundo-titulo-favoritos {
+    position: absolute;
+    z-index: 1;
+
+    width: 66%;
+    height: 31%;
+
+    background-color: var(--cor-destaque-transparente);
+
+    border-radius: var(--raio-borda);
+}
+
+/* Título Favoritos */
+.banner-favoritos h1 {
+    position: relative;
+    z-index: 2;
+
+    font-family: var(--fonte-titulos);
+    font-size: clamp(40px, 6vw, 70px);
+    font-weight: 700;
+
+    color: var(--cor-texto);
+
+    text-align: center;
+}
+
+
+/* =========================================
+   3. LISTA DE ÁLBUNS FAVORITOS
+========================================= */
+
+.lista-favoritos {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 25px;
+}
+
+
+/* =========================================
+   4. CARD DE CADA ÁLBUM
+========================================= */
+
+.card-favorito {
+    width: 100%;
+    min-height: 240px;
+
+    display: grid;
+
+    /* Capa | Informações | Botão Spotify */
+    grid-template-columns: 196px minmax(0, 1fr) auto;
+
+    align-items: start;
+
+    gap: 15px;
+
+    padding: 20px 20px 20px 28px;
+
+    background-color: #793039;
+
+    border-radius: 9px;
+
+    position: relative;
+}
+
+
+/* =========================================
+   5. CAPA DO ÁLBUM
+========================================= */
+
+.capa-album {
+    width: 196px;
+    height: 196px;
+
+    object-fit: cover;
+
+    border-radius: 9px;
+}
+
+
+/* =========================================
+   6. INFORMAÇÕES DO ÁLBUM
+========================================= */
+
+.informacoes-album {
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+
+    min-width: 0;
+}
+
+/* Nome do álbum ou artista */
+.informacoes-album h2 {
+    font-family: var(--fonte-titulos);
+
+    font-size: clamp(28px, 3.5vw, 46px);
+    font-weight: 700;
+
+    color: var(--cor-texto);
+
+    line-height: 1.15;
+}
+
+/* Integrantes ou artistas */
+.artistas-album {
+    font-family: var(--fonte-principal);
+
+    font-size: clamp(16px, 2vw, 24px);
+    font-weight: 600;
+
+    color: var(--cor-branco);
+
+    line-height: 1.35;
+}
+
+/* Link para a resenha */
+.link-resenha {
+    width: fit-content;
+
+    margin-top: 2px;
+
+    font-family: var(--fonte-principal);
+
+    font-size: 15px;
+    font-weight: 600;
+    font-style: italic;
+
+    color: rgba(248, 244, 238, 0.7);
+
+    transition: var(--transicao);
+}
+
+.link-resenha:hover {
+    color: var(--cor-texto);
+    text-decoration: underline;
+}
+
+
+/* =========================================
+   7. BOTÃO OUVIR NO SPOTIFY
+========================================= */
+
+.botao-spotify {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    padding: 7px 12px;
+
+    background-color: var(--cor-texto);
+
+    color: var(--cor-destaque-hover);
+
+    border-radius: 9px;
+
+    font-family: var(--fonte-principal);
+    font-size: 15px;
+    font-weight: 600;
+
+    white-space: nowrap;
+
+    transition: var(--transicao);
+}
+
+/* Ícone do Spotify */
+.botao-spotify img {
+    width: 32px;
+    height: 32px;
+
+    object-fit: contain;
+}
+
+/* Efeito ao passar o mouse */
+.botao-spotify:hover {
+    background-color: var(--cor-branco);
+    transform: translateY(-2px);
+}
+
+
+/* =========================================
+   8. RESPONSIVIDADE - TABLETS
+========================================= */
+
+@media (max-width: 900px) {
+
+    .banner-favoritos {
+        height: 240px;
+    }
+
+    .card-favorito {
+        grid-template-columns: 150px minmax(0, 1fr);
+        min-height: 190px;
+
+        padding: 18px;
+    }
+
+    .capa-album {
+        width: 150px;
+        height: 150px;
+    }
+
+    .botao-spotify {
+        grid-column: 2;
+        grid-row: 2;
+
+        width: fit-content;
+        margin-top: 5px;
+    }
+
+    .informacoes-album h2 {
+        font-size: clamp(26px, 4vw, 38px);
+    }
+
+}
+
+
+/* =========================================
+   9. RESPONSIVIDADE - CELULARES
+========================================= */
+
+@media (max-width: 600px) {
+
+    .pagina-favoritos {
+        padding: 0 4% 20px;
+        gap: 20px;
+    }
+
+    .banner-favoritos {
+        width: calc(100% + 8.34%);
+        margin-left: -4.17%;
+
+        height: 180px;
+    }
+
+    .fundo-titulo-favoritos {
+        width: 85%;
+        height: 38%;
+    }
+
+    .banner-favoritos h1 {
+        font-size: clamp(35px, 9vw, 48px);
+    }
+
+    .lista-favoritos {
+        gap: 18px;
+    }
+
+    .card-favorito {
+        grid-template-columns: 105px minmax(0, 1fr);
+
+        gap: 12px;
+
+        padding: 15px;
+
+        min-height: auto;
+    }
+
+    .capa-album {
+        width: 105px;
+        height: 105px;
+    }
+
+    .informacoes-album h2 {
+        font-size: 25px;
+    }
+
+    .artistas-album {
+        font-size: 14px;
+    }
+
+    .link-resenha {
+        font-size: 12px;
+    }
+
+    .botao-spotify {
+        grid-column: 1 / -1;
+        grid-row: auto;
+
+        font-size: 13px;
+    }
+
+    .botao-spotify img {
+        width: 25px;
+        height: 25px;
+    }
+
+}

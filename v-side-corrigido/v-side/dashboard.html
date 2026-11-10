@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard | V-Side</title>
+<link rel="icon" href="assets/logos/monograma-fundo-escuro.svg">
+<link rel="stylesheet" href="css/global.css"><link rel="stylesheet" href="css/formularios.css">
+</head>
+<body>
+<!-- HEADER GLOBAL: alterna automaticamente conforme a sessão -->
+<header class="header-global">
+    <a class="link-logo-header" href="index.html" aria-label="V-Side - início">
+        <img class="logo-header" src="assets/logos/logo-fundo-escuro-v2.svg" alt="V-Side">
+    </a>
+
+    <nav class="navegacao-header" aria-label="Navegação principal">
+        <div class="item-menu menu-inicio">
+            <a href="index.html" class="botao-menu">Início <img class="seta-menu" src="assets/icons/seta-para-baixo.png" alt=""></a>
+            <div class="menu-suspenso">
+                <a href="sobre.html">Sobre</a>
+                <a class="somente-logado" href="favoritos.html">Favoritos</a>
+            </div>
+        </div>
+
+        <div class="item-menu menu-musicas">
+            <button class="botao-menu" type="button" aria-expanded="false">Músicas <img class="seta-menu" src="assets/icons/seta-para-baixo.png" alt=""></button>
+            <div class="menu-suspenso">
+                <a href="playlists.html">Playlists Recomendadas</a>
+                <a class="somente-logado" href="avaliacoes.html">Minhas Avaliações</a>
+            </div>
+        </div>
+
+        <a href="jogar.html">Jogar</a>
+    </nav>
+
+    <form class="barra-de-pesquisa" role="search" action="playlists.html">
+        <img src="assets/icons/search.png" alt="">
+        <input type="search" name="busca" placeholder="Buscar álbuns, artistas..." aria-label="Buscar álbuns e artistas">
+    </form>
+
+    <div class="acoes-header estado-visitante">
+        <a href="login.html" class="botao-entrar">Entrar</a>
+        <a href="cadastro.html" class="botao-cadastrar">Cadastre-se</a>
+    </div>
+    <div class="acoes-header estado-logado">
+        <a href="cadastro-musica.html" class="botao-entrar">Cadastrar Música</a>
+        <a href="dashboard.html" class="botao-cadastrar">Dashboard</a>
+    </div>
+</header>
+<main class="pagina-formulario">
+<section class="banner-formulario"><h1>Minha Dashboard</h1></section>
+<section class="cartao-dashboard"><h2>Visão geral</h2><p>Acompanhe sua atividade musical no V-Side.</p><div class="grade-kpis"><div class="kpi"><strong>0</strong>Avaliações</div><div class="kpi"><strong>0</strong>Favoritos</div><div class="kpi"><strong>0</strong>Playlists</div></div><a class="botao-formulario" href="avaliacoes.html">Ver minhas avaliações</a>
+<button class="botao-formulario" type="button" id="botaoSair">Sair da conta</button></section>
+</main>
+<footer class="footer">
+<div class="footer-conteudo">
+ <div class="footer-coluna"><a href="index.html"><img class="footer-logo" src="assets/logos/logo-slogan.svg" alt="V-Side"></a><p class="footer-descricao">Avaliações, ideias e opiniões sobre o mundo da música.</p></div>
+ <div class="footer-coluna"><h3>Seções</h3><ul><li><a href="index.html">Início</a></li><li><a href="sobre.html">Sobre</a></li><li><a href="playlists.html">Playlists recomendadas</a></li><li><a href="favoritos.html">Favoritos</a></li><li><a href="avaliacoes.html">Minhas avaliações</a></li><li><a href="jogar.html">Jogar</a></li></ul></div>
+ <div class="footer-coluna"><h3>FAQ &amp; Suporte</h3><ul><li><a href="#">Política de privacidade</a></li><li><a href="mailto:contato@vside.com">Como entro em contato?</a></li></ul></div>
+ <div class="footer-coluna"><h3>Entre em contato</h3><a href="mailto:contato@vside.com">contato@vside.com</a><h3 class="titulo-redes">Redes Sociais</h3><div class="footer-redes"><a href="#" aria-label="Instagram"><img src="assets/icons/ic-instagram.png" alt=""></a><a href="#" aria-label="TikTok"><img src="assets/icons/ic-tiktok.png" alt=""></a><a href="https://open.spotify.com/" aria-label="Spotify"><img src="assets/icons/ic-spotify.png" alt=""></a></div></div>
+</div><div class="footer-linha"></div><p class="footer-direitos">© Todos os direitos reservados V-Side. 2026</p>
+</footer>
+<script src="js/global.js"></script>
+</body></html>

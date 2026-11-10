@@ -1,0 +1,24 @@
+V-SIDE - PROJETO ORGANIZADO
+
+Páginas disponíveis:
+- index.html: página inicial
+- sobre.html: sobre o projeto
+- favoritos.html: favoritos
+- playlists.html: playlists recomendadas
+- avaliacoes.html: minhas avaliações
+- login.html e cadastro.html: autenticação demonstrativa
+- jogar.html: área do jogo
+- cadastro-musica.html: formulário de cadastro de música
+- dashboard.html: painel do usuário
+- criar-playlist.html: formulário de criação de playlist
+
+NAVEGAÇÃO E SESSÃO
+A navegação global fica em css/global.css e é incluída em todas as páginas.
+js/global.js alterna a header de visitante e a header de usuário logado.
+Para testar o estado logado, abra cadastro.html ou login.html e envie o formulário.
+A sessão demonstrativa é guardada em localStorage com a chave "vsideUsuario".
+Para sair, use o botão "Sair da conta" na dashboard.
+
+IMPORTANTE
+A autenticação, o cadastro de músicas e a criação de playlists ainda não estão conectados a um backend.
+Os formulários demonstram a navegação e a interface; os dados reais precisam ser enviados à API/banco de dados.
