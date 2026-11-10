@@ -507,3 +507,185 @@
     }
 
 }
+
+
+/* =========================================
+   11. MENSAGEM DE LISTA VAZIA
+========================================= */
+
+.mensagem-avaliacoes-vazia {
+    width: 100%;
+
+    padding: 55px 25px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    gap: 15px;
+
+    text-align: center;
+
+    background-color: #722f37;
+
+    border-radius: var(--raio-borda);
+}
+
+.mensagem-avaliacoes-vazia h2 {
+    font-family: var(--fonte-titulos);
+    font-size: clamp(25px, 4vw, 36px);
+
+    color: var(--cor-texto);
+}
+
+.mensagem-avaliacoes-vazia p {
+    max-width: 600px;
+
+    font-family: var(--fonte-principal);
+    font-size: 16px;
+
+    line-height: 1.6;
+
+    color: var(--cor-texto-claro);
+}
+
+.botao-nova-avaliacao {
+    padding: 12px 22px;
+
+    background-color: var(--cor-texto);
+    color: #722f37;
+
+    border-radius: 8px;
+
+    font-weight: 700;
+
+    transition: var(--transicao);
+}
+
+.botao-nova-avaliacao:hover {
+    background-color: var(--cor-branco);
+    transform: translateY(-2px);
+}
+
+
+/* =========================================
+   12. AÇÕES SUPERIORES DOS CARDS
+   Coração + Spotify
+========================================= */
+
+.avaliacao-acoes {
+    width: 235px;
+    min-width: 210px;
+}
+
+.linha-acoes-superior {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 10px;
+}
+
+
+/* =========================================
+   13. BOTÃO DE FAVORITAR ARTISTA
+========================================= */
+
+.botao-favoritar-artista {
+    width: 42px;
+    height: 42px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid rgba(248, 244, 238, 0.7);
+    border-radius: 9px;
+
+    background-color: transparent;
+
+    cursor: pointer;
+
+    transition: var(--transicao);
+}
+
+.botao-favoritar-artista svg {
+    width: 24px;
+    height: 24px;
+
+    fill: transparent;
+
+    stroke: var(--cor-texto);
+    stroke-width: 1.8;
+
+    transition: var(--transicao);
+}
+
+/* Efeito ao passar o mouse */
+
+.botao-favoritar-artista:hover {
+    background-color: rgba(248, 244, 238, 0.12);
+
+    transform: scale(1.06);
+}
+
+/* Artista favoritado */
+
+.botao-favoritar-artista.favoritado svg {
+    fill: #E66B82;
+    stroke: #E66B82;
+}
+
+.botao-favoritar-artista.favoritado {
+    border-color: #E66B82;
+}
+
+
+/* =========================================
+   14. RESPONSIVIDADE DAS AÇÕES
+========================================= */
+
+@media (max-width: 900px) {
+
+    .avaliacao-acoes {
+        width: 210px;
+        min-width: 190px;
+    }
+
+    .linha-acoes-superior {
+        gap: 7px;
+    }
+
+    .botao-favoritar-artista {
+        width: 38px;
+        height: 38px;
+    }
+
+}
+
+@media (max-width: 650px) {
+
+    .avaliacao-acoes {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .linha-acoes-superior {
+        justify-content: flex-start;
+        gap: 8px;
+    }
+
+    .botao-favoritar-artista {
+        width: 36px;
+        height: 36px;
+    }
+
+    .mensagem-avaliacoes-vazia {
+        padding: 40px 18px;
+    }
+
+}
