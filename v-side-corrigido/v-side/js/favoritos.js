@@ -1,44 +1,37 @@
 
 /* =========================================
-   FAVORITOS - INTERAÇÕES DA PÁGINA
+   V-SIDE - PÁGINA DE FAVORITOS
 
-   1. Abrir e fechar resenhas
-   2. Remover artistas dos favoritos
-   3. Guardar remoções no navegador
+   1. Recuperar artistas favoritados
+   2. Exibir artistas vindos das avaliações
+   3. Remover artistas dos favoritos
+   4. Expandir resenhas
 ========================================= */
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    // Chave utilizada para guardar os favoritos removidos.
-    const CHAVE_FAVORITOS_REMOVIDOS = "vside_favoritos_removidos";
+    const CHAVE_ARTISTAS = "vside_artistas_favoritos";
 
-    const listaFavoritos = document.querySelector(".lista-favoritos");
+    const CHAVE_REMOVIDOS = "vside_favoritos_removidos";
 
-    const mensagemVazia = document.querySelector(
-        ".mensagem-favoritos-vazia"
-    );
+    const lista = document.querySelector(".lista-favoritos");
 
-    if (!listaFavoritos) return;
+    if (!lista) return;
 
 
     // =========================================
-    // 1. RECUPERAR FAVORITOS REMOVIDOS
+    // 1. RECUPERAR DADOS
     // =========================================
 
-    function obterRemovidos() {
+    function recuperar(chave) {
 
         try {
 
             return JSON.parse(
-                localStorage.getItem(CHAVE_FAVORITOS_REMOVIDOS) || "[]"
+                localStorage.getItem(chave) || "[]"
             );
 
         } catch (erro) {
-
-            console.warn(
-                "Não foi possível recuperar os favoritos.",
-                erro
-            );
 
             return [];
 
@@ -48,163 +41,272 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     // =========================================
-    // 2. SALVAR FAVORITOS REMOVIDOS
+    // 2. SALVAR DADOS
     // =========================================
 
-    function salvarRemovidos(ids) {
+    function salvar(chave, dados) {
 
-        try {
-
-            localStorage.setItem(
-                CHAVE_FAVORITOS_REMOVIDOS,
-                JSON.stringify(ids)
-            );
-
-        } catch (erro) {
-
-            console.warn(
-                "Não foi possível salvar os favoritos.",
-                erro
-            );
-
-        }
+        localStorage.setItem(
+            chave,
+            JSON.stringify(dados)
+        );
 
     }
 
 
     // =========================================
-    // 3. ESCONDER ARTISTAS JÁ REMOVIDOS
+    // 3. MOSTRAR ARTISTAS FAVORITADOS
     // =========================================
 
-    const removidos = obterRemovidos();
+    function renderizarArtistasFavoritos() {
 
-    listaFavoritos.querySelectorAll(".card-favorito").forEach((card) => {
+        // Evita duplicar os cards ao atualizar a lista.
+        lista.querySelectorAll(
+            '[data-origem="avaliacoes"]'
+        ).forEach(card => card.remove());
 
-        if (removidos.includes(card.dataset.favoritoId)) {
 
-            card.remove();
+        const artistas = recuperar(CHAVE_ARTISTAS);
 
-        }
+        artistas.forEach(artista => {
+
+            const card = document.createElement("article");
+
+            card.className = "card-favorito";
+
+            card.dataset.favoritoId = artista.id;
+
+            card.dataset.origem = "avaliacoes";
+
+
+            // CAPA
+
+            const capa = document.createElement("img");
+
+            capa.className = "capa-album";
+
+            capa.src = artista.capa ||
+                "assets/logos/monograma-fundo-escuro.svg";
+
+            capa.alt = "Artista " + artista.nome;
+
+
+            // INFORMAÇÕES
+
+            const informacoes = document.createElement("div");
+
+            informacoes.className = "informacoes-album";
+
+            const nome = document.createElement("h2");
+
+            nome.textContent = artista.nome;
+
+            const descricao = document.createElement("p");
+
+            descricao.className = "artistas-album";
+
+            descricao.textContent =
+                "Artista adicionado pelas suas avaliações";
+
+            informacoes.append(nome, descricao);
+
+
+            // AÇÕES
+
+            const acoes = document.createElement("div");
+
+            acoes.className = "acoes-favorito";
+
+
+            // BOTÃO PARA REMOVER
+
+            const botaoRemover = document.createElement("button");
+
+            botaoRemover.type = "button";
+
+            botaoRemover.className =
+                "botao-remover-favorito";
+
+            botaoRemover.title = "Remover dos favoritos";
+
+            botaoRemover.setAttribute(
+                "aria-label",
+                "Remover " + artista.nome + " dos favoritos"
+            );
+
+            botaoRemover.innerHTML = `
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/>
+                </svg>
+            `;
+
+
+            // LINK DO SPOTIFY DO ARTISTA
+
+            const spotify = document.createElement("a");
+
+            spotify.className = "botao-spotify";
+
+            spotify.href = artista.spotifyUrl ||
+                "https://open.spotify.com/search/" +
+                encodeURIComponent(artista.nome);
+
+            spotify.target = "_blank";
+
+            spotify.rel = "noopener noreferrer";
+
+            const icone = document.createElement("img");
+
+            icone.src = "assets/icons/ic-spotify.png";
+
+            icone.alt = "";
+
+            spotify.append(
+                icone,
+                document.createTextNode("Ouça no Spotify")
+            );
+
+
+            acoes.append(botaoRemover, spotify);
+
+            card.append(capa, informacoes, acoes);
+
+            lista.appendChild(card);
+
+        });
+
+    }
+
+
+    // =========================================
+    // 4. ESCONDER FAVORITOS REMOVIDOS
+    // =========================================
+
+    function esconderRemovidos() {
+
+        const removidos = recuperar(CHAVE_REMOVIDOS);
+
+        lista.querySelectorAll(".card-favorito").forEach(card => {
+
+            const id = card.dataset.favoritoId;
+
+            if (id && removidos.includes(id)) {
+
+                card.remove();
+
+            }
+
+        });
+
+    }
+
+
+    // =========================================
+    // 5. EXPANDIR RESENHAS
+    // =========================================
+
+    lista.addEventListener("click", (evento) => {
+
+        const botaoResenha = evento.target.closest(
+            ".link-resenha"
+        );
+
+        if (!botaoResenha) return;
+
+        const card = botaoResenha.closest(".card-favorito");
+
+        const painelId = botaoResenha.getAttribute(
+            "aria-controls"
+        );
+
+        const painel = document.getElementById(painelId);
+
+        if (!card || !painel) return;
+
+        const vaiAbrir = !card.classList.contains(
+            "resenha-aberta"
+        );
+
+        card.classList.toggle("resenha-aberta", vaiAbrir);
+
+        botaoResenha.setAttribute(
+            "aria-expanded",
+            String(vaiAbrir)
+        );
+
+        painel.setAttribute(
+            "aria-hidden",
+            String(!vaiAbrir)
+        );
+
+        botaoResenha.textContent = vaiAbrir
+            ? "Ocultar resenha"
+            : "Clique para ver a resenha";
 
     });
 
 
     // =========================================
-    // 4. ATUALIZAR MENSAGEM DE LISTA VAZIA
+    // 6. REMOVER ARTISTA DOS FAVORITOS
     // =========================================
 
-    function atualizarEstadoDaLista() {
-
-        const cards = listaFavoritos.querySelectorAll(
-            ".card-favorito"
-        );
-
-        if (mensagemVazia) {
-
-            mensagemVazia.hidden = cards.length !== 0;
-
-        }
-
-    }
-
-    atualizarEstadoDaLista();
-
-
-    // =========================================
-    // 5. ABRIR E FECHAR AS RESENHAS
-    // =========================================
-
-    listaFavoritos.addEventListener("click", (evento) => {
-
-        const botaoResenha = evento.target.closest(".link-resenha");
-
-        if (botaoResenha) {
-
-            const card = botaoResenha.closest(".card-favorito");
-
-            const painelId = botaoResenha.getAttribute(
-                "aria-controls"
-            );
-
-            const painel = document.getElementById(painelId);
-
-            if (!card || !painel) return;
-
-            // Verifica se a resenha está fechada.
-            const vaiAbrir = !card.classList.contains(
-                "resenha-aberta"
-            );
-
-            // Adiciona ou remove a classe responsável pela expansão.
-            card.classList.toggle("resenha-aberta", vaiAbrir);
-
-            // Atualiza os atributos de acessibilidade.
-            botaoResenha.setAttribute(
-                "aria-expanded",
-                String(vaiAbrir)
-            );
-
-            painel.setAttribute(
-                "aria-hidden",
-                String(!vaiAbrir)
-            );
-
-            // Altera o texto do botão.
-            botaoResenha.textContent = vaiAbrir
-                ? "Ocultar resenha"
-                : "Clique para ver a resenha";
-
-            return;
-
-        }
-
-
-        // =====================================
-        // 6. REMOVER ARTISTA DOS FAVORITOS
-        // =====================================
+    lista.addEventListener("click", (evento) => {
 
         const botaoRemover = evento.target.closest(
             ".botao-remover-favorito"
         );
 
-        if (botaoRemover) {
+        if (!botaoRemover) return;
 
-            const card = botaoRemover.closest(
-                ".card-favorito"
+        const card = botaoRemover.closest(".card-favorito");
+
+        if (!card) return;
+
+        const id = card.dataset.favoritoId;
+
+        if (!id) return;
+
+
+        // ARTISTA ADICIONADO PELA PÁGINA DE AVALIAÇÕES
+
+        if (card.dataset.origem === "avaliacoes") {
+
+            const artistas = recuperar(CHAVE_ARTISTAS);
+
+            const atualizados = artistas.filter(
+                artista => artista.id !== id
             );
 
-            if (!card) return;
+            salvar(CHAVE_ARTISTAS, atualizados);
 
-            const id = card.dataset.favoritoId;
+        } else {
 
-            if (!id) return;
+            // FAVORITOS QUE JÁ EXISTIAM NA PÁGINA
 
-            // Recupera a lista atual de artistas removidos.
-            const idsRemovidos = obterRemovidos();
+            const removidos = recuperar(CHAVE_REMOVIDOS);
 
-            // Adiciona o artista à lista, caso ainda não esteja nela.
-            if (!idsRemovidos.includes(id)) {
+            if (!removidos.includes(id)) {
 
-                idsRemovidos.push(id);
+                removidos.push(id);
 
-                salvarRemovidos(idsRemovidos);
+                salvar(CHAVE_REMOVIDOS, removidos);
 
             }
 
-            // Aplica o efeito visual de remoção.
-            card.classList.add("card-removendo");
-
-            // Aguarda a animação antes de retirar o card.
-            setTimeout(() => {
-
-                card.remove();
-
-                atualizarEstadoDaLista();
-
-            }, 250);
-
         }
 
+
+        card.remove();
+
     });
+
+
+    // =========================================
+    // 7. INICIALIZAR
+    // =========================================
+
+    renderizarArtistasFavoritos();
+
+    esconderRemovidos();
 
 });
