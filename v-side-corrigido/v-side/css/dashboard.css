@@ -1,0 +1,421 @@
+
+/* =========================================
+   V-SIDE - DASHBOARD
+========================================= */
+
+/* CORES DA DASHBOARD */
+
+:root {
+    --dash-fundo: #171E32;
+    --dash-claro: #F8F4EE;
+    --dash-rosa: #A95D6B;
+    --dash-vinho: #722F37;
+    --dash-texto: #171E32;
+}
+
+
+/* =========================================
+   1. ESTRUTURA PRINCIPAL
+========================================= */
+
+.pagina-dashboard {
+    width: 100%;
+    max-width: 1700px;
+
+    margin: 0 auto;
+
+    padding: 22px 2%;
+
+    display: grid;
+
+    grid-template-columns: 19% minmax(0, 1fr);
+
+    gap: 18px;
+
+    background: var(--dash-fundo);
+}
+
+
+/* =========================================
+   2. PERFIL
+========================================= */
+
+.perfil-dashboard {
+    background: var(--dash-claro);
+
+    border-radius: 10px;
+
+    padding: 18px;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+
+    min-height: 100%;
+}
+
+.foto-perfil {
+    width: min(100%, 170px);
+
+    aspect-ratio: 1 / 1;
+
+    object-fit: cover;
+
+    border-radius: 50%;
+
+    background: var(--dash-rosa);
+}
+
+.nome-perfil {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    margin-top: 8px;
+}
+
+.nome-perfil h2 {
+    font-size: clamp(20px, 2.2vw, 32px);
+
+    color: var(--dash-texto);
+}
+
+.nome-perfil button {
+    background: transparent;
+
+    border: none;
+
+    font-size: 25px;
+
+    cursor: pointer;
+
+    color: var(--dash-texto);
+}
+
+
+/* =========================================
+   3. CONTEÚDO DA DASHBOARD
+========================================= */
+
+.conteudo-dashboard {
+    background: var(--dash-claro);
+
+    border-radius: 10px;
+
+    padding: 20px;
+
+    min-width: 0;
+}
+
+.conteudo-dashboard > h1 {
+    font-size: clamp(24px, 2.5vw, 34px);
+
+    color: #090909;
+
+    margin-bottom: 2px;
+}
+
+
+/* =========================================
+   4. KPIs
+========================================= */
+
+.grade-kpis {
+    display: grid;
+
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+
+    gap: 10px;
+
+    margin-bottom: 10px;
+}
+
+.kpi {
+    background: var(--dash-rosa);
+
+    border-radius: 10px;
+
+    min-height: 150px;
+
+    padding: 14px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-start;
+
+    gap: 8px;
+
+    color: white;
+}
+
+.kpi-icone {
+    color: var(--dash-vinho);
+
+    font-size: clamp(30px, 4vw, 55px);
+
+    font-weight: bold;
+}
+
+.kpi-info {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-end;
+
+    text-align: right;
+
+    height: 100%;
+
+    justify-content: space-between;
+
+    gap: 8px;
+}
+
+.kpi-info span {
+    font-size: clamp(12px, 1.4vw, 20px);
+
+    font-weight: 600;
+}
+
+.kpi-info strong {
+    font-size: clamp(35px, 5vw, 75px);
+
+    line-height: 1;
+
+    color: white;
+}
+
+
+/* =========================================
+   5. ÁREA INFERIOR
+========================================= */
+
+.dashboard-inferior {
+    display: grid;
+
+    grid-template-columns: minmax(0, 1fr) 215px;
+
+    gap: 16px;
+}
+
+
+/* =========================================
+   6. GRÁFICO
+========================================= */
+
+.card-grafico {
+    background: var(--dash-rosa);
+
+    border-radius: 10px;
+
+    padding: 18px;
+
+    min-width: 0;
+
+    color: white;
+
+    display: flex;
+
+    flex-direction: column;
+}
+
+.card-grafico h2 {
+    font-size: clamp(16px, 1.5vw, 21px);
+
+    margin-bottom: 12px;
+}
+
+.container-grafico {
+    position: relative;
+
+    width: 100%;
+
+    height: 430px;
+
+    min-height: 250px;
+}
+
+.mensagem-dashboard {
+    color: white;
+
+    text-align: center;
+
+    font-size: 14px;
+
+    margin-top: 12px;
+}
+
+
+/* =========================================
+   7. ATIVIDADES RECENTES
+========================================= */
+
+.card-atividades {
+    background: var(--dash-rosa);
+
+    border-radius: 10px;
+
+    padding: 14px;
+
+    color: white;
+
+    min-width: 0;
+}
+
+.card-atividades h2 {
+    font-size: 16px;
+
+    margin-bottom: 14px;
+}
+
+.lista-atividades {
+    display: flex;
+
+    flex-direction: column;
+}
+
+.atividade {
+    display: flex;
+
+    gap: 9px;
+
+    align-items: flex-start;
+
+    padding: 12px 0;
+
+    border-top: 1px solid rgba(255,255,255,.18);
+}
+
+.atividade-icone {
+    width: 30px;
+
+    height: 30px;
+
+    min-width: 30px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: rgba(255,255,255,.17);
+
+    border-radius: 50%;
+
+    color: white;
+}
+
+.atividade-info {
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+.atividade-info strong {
+    font-size: 12px;
+}
+
+.atividade-info span {
+    font-size: 11px;
+
+    color: #F0DDE0;
+
+    overflow-wrap: anywhere;
+}
+
+.atividade-info small {
+    font-size: 10px;
+
+    color: #E5C3C7;
+}
+
+.sem-atividades {
+    padding: 15px 0;
+
+    font-size: 13px;
+
+    color: #F0DDE0;
+}
+
+
+/* =========================================
+   8. TABLETS
+========================================= */
+
+@media (max-width: 1000px) {
+
+    .pagina-dashboard {
+        grid-template-columns: 1fr;
+    }
+
+    .perfil-dashboard {
+        flex-direction: row;
+
+        justify-content: flex-start;
+
+        gap: 15px;
+
+        min-height: auto;
+    }
+
+    .foto-perfil {
+        width: 90px;
+    }
+
+    .nome-perfil {
+        margin-top: 0;
+    }
+
+    .dashboard-inferior {
+        grid-template-columns: minmax(0, 1fr) 200px;
+    }
+
+}
+
+
+/* =========================================
+   9. CELULARES
+========================================= */
+
+@media (max-width: 650px) {
+
+    .pagina-dashboard {
+        padding: 12px;
+
+        gap: 12px;
+    }
+
+    .conteudo-dashboard {
+        padding: 14px;
+    }
+
+    .grade-kpis {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .kpi {
+        min-height: 115px;
+    }
+
+    .dashboard-inferior {
+        grid-template-columns: 1fr;
+    }
+
+    .container-grafico {
+        height: 280px;
+    }
+
+}

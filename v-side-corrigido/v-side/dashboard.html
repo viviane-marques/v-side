@@ -8,6 +8,9 @@
     <link rel="icon" href="assets/logos/monograma-fundo-escuro.svg">
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/formularios.css">
+
+    <!-- CSS ESPECÍFICO DA DASHBOARD -->
+    <link rel="stylesheet" href="css/dashboard.css">
 </head>
 
 <body>
@@ -127,21 +130,159 @@
         </div>
 
     </header>
-    <main class="pagina-formulario">
-        <section class="banner-formulario">
-            <h1>Minha Dashboard</h1>
-        </section>
-        <section class="cartao-dashboard">
-            <h2>Visão geral</h2>
-            <p>Acompanhe sua atividade musical no V-Side.</p>
+
+    <main class="pagina-dashboard">
+
+        <!-- =====================================
+         1. PERFIL DO USUÁRIO
+    ====================================== -->
+
+        <aside class="perfil-dashboard">
+
+            <!-- FOTO DO USUÁRIO
+             ALTERE O SRC PARA SUA IMAGEM PADRÃO -->
+            <img src="assets/images/avatar-padrao.png" alt="Foto do usuário" id="fotoPerfil" class="foto-perfil">
+
+            <div class="nome-perfil">
+                <h2 id="nomeUsuario">Usuário</h2>
+
+                <!-- BOTÃO PARA EDITAR PERFIL -->
+                <button type="button" id="editarPerfil" aria-label="Editar perfil">
+                    ✎
+                </button>
+            </div>
+
+        </aside>
+
+
+        <!-- =====================================
+         2. CONTEÚDO DA DASHBOARD
+    ====================================== -->
+
+        <section class="conteudo-dashboard">
+
+            <h1>Sua jornada musical</h1>
+
+
+            <!-- =================================
+             3. INDICADORES (KPIs)
+        ================================== -->
+
             <div class="grade-kpis">
-                <div class="kpi"><strong>0</strong>Avaliações</div>
-                <div class="kpi"><strong>0</strong>Favoritos</div>
-                <div class="kpi"><strong>0</strong>Playlists</div>
-            </div><a class="botao-formulario" href="avaliacoes.html">Ver minhas avaliações</a>
-            <button class="botao-formulario" type="button" id="botaoSair">Sair da conta</button>
+
+                <!-- AVALIAÇÕES -->
+
+                <article class="kpi">
+                    <div class="kpi-icone">★</div>
+
+                    <div class="kpi-info">
+                        <span>Avaliações</span>
+                        <strong id="totalAvaliacoes">0</strong>
+                    </div>
+                </article>
+
+
+                <!-- MÉDIA DAS NOTAS -->
+
+                <article class="kpi">
+                    <div class="kpi-icone">▥</div>
+
+                    <div class="kpi-info">
+                        <span>Média das notas</span>
+                        <strong id="mediaNotas">0</strong>
+                    </div>
+                </article>
+
+
+                <!-- COMENTÁRIOS -->
+
+                <article class="kpi">
+                    <div class="kpi-icone">●</div>
+
+                    <div class="kpi-info">
+                        <span>Comentários</span>
+                        <strong id="totalComentarios">0</strong>
+                    </div>
+                </article>
+
+
+                <!-- PLAYLISTS -->
+
+                <article class="kpi">
+                    <div class="kpi-icone">♫</div>
+
+                    <div class="kpi-info">
+                        <span>Playlists</span>
+                        <strong id="totalPlaylists">0</strong>
+                    </div>
+                </article>
+
+            </div>
+
+
+            <!-- =================================
+             4. GRÁFICO DE AVALIAÇÕES
+        ================================== -->
+
+            <div class="dashboard-inferior">
+
+                <section class="card-grafico">
+
+                    <h2>Suas avaliações ao longo do tempo</h2>
+
+                    <div class="container-grafico">
+
+                        <canvas id="graficoAvaliacoes"></canvas>
+
+                    </div>
+
+                    <p id="mensagemGrafico" class="mensagem-dashboard" hidden>
+                        Você ainda não possui avaliações suficientes
+                        para gerar seu gráfico.
+                    </p>
+
+                </section>
+
+
+                <!-- =================================
+                 5. ATIVIDADES RECENTES
+            ================================== -->
+
+                <aside class="card-atividades">
+
+                    <h2>Atividades Recentes</h2>
+
+                    <div id="listaAtividades" class="lista-atividades">
+
+                        <!-- AS ATIVIDADES SERÃO INSERIDAS
+                         AUTOMATICAMENTE PELO JAVASCRIPT -->
+
+                        <p class="sem-atividades">
+                            Carregando atividades...
+                        </p>
+
+                    </div>
+
+                </aside>
+
+            </div>
+
         </section>
+
     </main>
+
+
+    <!-- =========================================
+     CHART.JS
+     Biblioteca responsável pelo gráfico
+========================================= -->
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- JAVASCRIPT DA DASHBOARD -->
+
+    <script src="js/dashboard.js"></script>
+
     <footer class="footer">
         <div class="footer-conteudo">
             <div class="footer-coluna"><a href="index.html"><img class="footer-logo" src="assets/logos/logo-slogan.svg"
