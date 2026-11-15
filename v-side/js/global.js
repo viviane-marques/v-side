@@ -1,451 +1,308 @@
-
 /* =========================================
    CONFIGURAÇÕES GERAIS DO V-SIDE
 ========================================= */
 
 (function () {
+  const API_URL = "http://localhost:3333";
 
-    const API_URL = "http://localhost:3333";
+  const STORAGE_KEY = "vsideUsuario";
+  const TOKEN_KEY = "vsideToken";
 
-    const STORAGE_KEY = "vsideUsuario";
-    const TOKEN_KEY = "vsideToken";
-
-
-    /* =========================================
+  /* =========================================
        CONTROLE DE SESSÃO
     ========================================= */
 
-    function obterUsuario() {
+  function obterUsuario() {
+    const usuario = localStorage.getItem(STORAGE_KEY);
 
-        const usuario = localStorage.getItem(STORAGE_KEY);
+    if (!usuario) return null;
 
-        if (!usuario) return null;
-
-        try {
-            return JSON.parse(usuario);
-        } catch (erro) {
-            localStorage.removeItem(STORAGE_KEY);
-            return null;
-        }
+    try {
+      return JSON.parse(usuario);
+    } catch (erro) {
+      localStorage.removeItem(STORAGE_KEY);
+      return null;
     }
+  }
 
-    function obterToken() {
-        return localStorage.getItem(TOKEN_KEY);
-    }
+  function obterToken() {
+    return localStorage.getItem(TOKEN_KEY);
+  }
 
-    function usuarioEstaLogado() {
-        return Boolean(obterUsuario() && obterToken());
-    }
+  function usuarioEstaLogado() {
+    return Boolean(obterUsuario() && obterToken());
+  }
 
-    function atualizarHeader() {
+  function atualizarHeader() {
+    document.body.classList.toggle("usuario-logado", usuarioEstaLogado());
 
-        document.body.classList.toggle(
-            "usuario-logado",
-            usuarioEstaLogado()
-        );
+    document.body.classList.toggle("usuario-visitante", !usuarioEstaLogado());
+  }
 
-        document.body.classList.toggle(
-            "usuario-visitante",
-            !usuarioEstaLogado()
-        );
-    }
+  function salvarSessao(dados) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(dados.usuario));
 
-    function salvarSessao(dados) {
+    localStorage.setItem(TOKEN_KEY, dados.token);
 
-        localStorage.setItem(
-            STORAGE_KEY,
-            JSON.stringify(dados.usuario)
-        );
+    atualizarHeader();
+  }
 
-        localStorage.setItem(
-            TOKEN_KEY,
-            dados.token
-        );
+  function encerrarSessao() {
+    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(TOKEN_KEY);
 
-        atualizarHeader();
-    }
+    atualizarHeader();
 
-    function encerrarSessao() {
+    window.location.href = "index.html";
+  }
 
-        localStorage.removeItem(STORAGE_KEY);
-        localStorage.removeItem(TOKEN_KEY);
-
-        atualizarHeader();
-
-        window.location.href = "index.html";
-    }
-
-
-    /* =========================================
+  /* =========================================
        MENSAGENS DOS FORMULÁRIOS
     ========================================= */
 
-    function mostrarMensagem(formulario, mensagem, sucesso) {
+  function mostrarMensagem(formulario, mensagem, sucesso) {
+    let retorno = formulario.querySelector(".mensagem-formulario");
 
-        let retorno = formulario.querySelector(".mensagem-formulario");
+    if (!retorno) {
+      retorno = document.createElement("p");
 
-        if (!retorno) {
+      retorno.className = "mensagem-formulario";
 
-            retorno = document.createElement("p");
+      retorno.setAttribute("role", "status");
 
-            retorno.className = "mensagem-formulario";
-
-            retorno.setAttribute("role", "status");
-
-            formulario.appendChild(retorno);
-        }
-
-        retorno.textContent = mensagem;
-
-        retorno.style.color = sucesso ? "#2e9d63" : "#d9534f";
-        retorno.style.marginTop = "12px";
-        retorno.style.textAlign = "center";
+      formulario.appendChild(retorno);
     }
 
+    retorno.textContent = mensagem;
 
-    /* =========================================
+    retorno.style.color = sucesso ? "#2e9d63" : "#d9534f";
+    retorno.style.marginTop = "12px";
+    retorno.style.textAlign = "center";
+  }
+
+  /* =========================================
+   VALIDAÇÃO DE FORÇA DA SENHA
+========================================= */
+
+  function validarForcaSenha(senha) {
+    const senhaForte =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_\-+=\[\]{};:'",.<>/?\\|`~]).{8,}$/;
+
+    return senhaForte.test(senha);
+  }
+
+  /* =========================================
        REQUISIÇÕES PARA A API
     ========================================= */
 
-    async function requisicaoAPI(endpoint, dados) {
+  async function requisicaoAPI(endpoint, dados) {
+    const resposta = await fetch(API_URL + endpoint, {
+      method: "POST",
 
-        const resposta = await fetch(API_URL + endpoint, {
+      headers: {
+        "Content-Type": "application/json",
+      },
 
-            method: "POST",
+      body: JSON.stringify(dados),
+    });
 
-            headers: {
-                "Content-Type": "application/json"
-            },
+    const resultado = await resposta.json();
 
-            body: JSON.stringify(dados)
-
-        });
-
-        const resultado = await resposta.json();
-
-        if (!resposta.ok) {
-
-            throw new Error(
-                resultado.mensagem || "Não foi possível realizar a operação."
-            );
-        }
-
-        return resultado;
+    if (!resposta.ok) {
+      throw new Error(
+        resultado.mensagem || "Não foi possível realizar a operação.",
+      );
     }
 
+    return resultado;
+  }
 
-    /* =========================================
+  /* =========================================
        LOGIN
     ========================================= */
 
-    async function realizarLogin(evento) {
+  async function realizarLogin(evento) {
+    evento.preventDefault();
 
-        evento.preventDefault();
+    const formulario = evento.currentTarget;
 
-        const formulario = evento.currentTarget;
+    const email = document.getElementById("emailLogin").value.trim();
 
-        const email = document.getElementById("emailLogin").value.trim();
+    const senha = document.getElementById("senhaLogin").value;
 
-        const senha = document.getElementById("senhaLogin").value;
+    if (!email || !senha) {
+      mostrarMensagem(formulario, "Preencha seu e-mail e sua senha.", false);
 
-        if (!email || !senha) {
-
-            mostrarMensagem(
-                formulario,
-                "Preencha seu e-mail e sua senha.",
-                false
-            );
-
-            return;
-        }
-
-        const botao = formulario.querySelector('button[type="submit"]');
-
-        botao.disabled = true;
-        botao.textContent = "ENTRANDO...";
-
-        try {
-
-            const resultado = await requisicaoAPI(
-                "/usuarios/autenticar",
-                {
-                    emailServer: email,
-                    senhaServer: senha
-                }
-            );
-
-            salvarSessao(resultado);
-
-            window.location.href = "index.html";
-
-        } catch (erro) {
-
-            mostrarMensagem(
-                formulario,
-                erro.message,
-                false
-            );
-
-        } finally {
-
-            botao.disabled = false;
-            botao.textContent = "ENTRAR";
-        }
+      return;
     }
 
+    const botao = formulario.querySelector('button[type="submit"]');
 
-    /* =========================================
+    botao.disabled = true;
+    botao.textContent = "ENTRANDO...";
+
+    try {
+      const resultado = await requisicaoAPI("/usuarios/autenticar", {
+        emailServer: email,
+        senhaServer: senha,
+      });
+
+      salvarSessao(resultado);
+
+      window.location.href = "index.html";
+    } catch (erro) {
+      mostrarMensagem(formulario, erro.message, false);
+    } finally {
+      botao.disabled = false;
+      botao.textContent = "ENTRAR";
+    }
+  }
+
+  /* =========================================
        CADASTRO
     ========================================= */
 
-    async function realizarCadastro(evento) {
+  /* VALIDAR SE AS SENHAS COINCIDEM */
 
-        evento.preventDefault();
+  if (senha !== confirmar) {
+    mostrarMensagem(formulario, "As senhas não coincidem.", false);
 
-        const formulario = evento.currentTarget;
+    return;
+  }
 
-        const nome = document.getElementById("nomeCadastro").value.trim();
+  /* VALIDAR FORÇA DA SENHA */
 
-        const email = document.getElementById("emailCadastro").value.trim();
+  if (!validarForcaSenha(senha)) {
+    mostrarMensagem(
+      formulario,
+      "A senha precisa ter pelo menos 8 caracteres, uma letra maiúscula, uma minúscula, um número e um caractere especial.",
+      false,
+    );
 
-        const senha = document.getElementById("senhaCadastro").value;
+    return;
+  }
 
-        const confirmar = document.getElementById("confirmarSenha").value;
-
-        if (!nome || !email || !senha || !confirmar) {
-
-            mostrarMensagem(
-                formulario,
-                "Preencha todos os campos.",
-                false
-            );
-
-            return;
-        }
-
-        if (senha !== confirmar) {
-
-            mostrarMensagem(
-                formulario,
-                "As senhas não coincidem.",
-                false
-            );
-
-            return;
-        }
-
-        if (senha.length < 8) {
-
-            mostrarMensagem(
-                formulario,
-                "A senha precisa ter pelo menos 8 caracteres.",
-                false
-            );
-
-            return;
-        }
-
-        const botao = formulario.querySelector('button[type="submit"]');
-
-        botao.disabled = true;
-        botao.textContent = "CADASTRANDO...";
-
-        try {
-
-            const resultado = await requisicaoAPI(
-                "/usuarios/cadastrar",
-                {
-                    nomeServer: nome,
-                    emailServer: email,
-                    senhaServer: senha
-                }
-            );
-
-            salvarSessao(resultado);
-
-            window.location.href = "index.html";
-
-        } catch (erro) {
-
-            mostrarMensagem(
-                formulario,
-                erro.message,
-                false
-            );
-
-        } finally {
-
-            botao.disabled = false;
-            botao.textContent = "CADASTRE-SE";
-        }
-    }
-
-
-    /* =========================================
+  /* =========================================
        MENU SUSPENSO DE MÚSICAS
     ========================================= */
 
-    function configurarMenus() {
+  function configurarMenus() {
+    document
+      .querySelectorAll(".menu-musicas > .botao-menu")
+      .forEach(function (botao) {
+        botao.addEventListener("click", function (evento) {
+          evento.preventDefault();
 
-        document.querySelectorAll(
-            ".menu-musicas > .botao-menu"
-        ).forEach(function (botao) {
+          const item = botao.closest(".item-menu");
 
-            botao.addEventListener("click", function (evento) {
+          const aberto = item.classList.toggle("menu-aberto");
 
-                evento.preventDefault();
-
-                const item = botao.closest(".item-menu");
-
-                const aberto = item.classList.toggle("menu-aberto");
-
-                botao.setAttribute(
-                    "aria-expanded",
-                    String(aberto)
-                );
-
-            });
-
+          botao.setAttribute("aria-expanded", String(aberto));
         });
+      });
 
-        document.addEventListener("click", function (evento) {
+    document.addEventListener("click", function (evento) {
+      document.querySelectorAll(".menu-musicas").forEach(function (item) {
+        if (!item.contains(evento.target)) {
+          item.classList.remove("menu-aberto");
 
-            document.querySelectorAll(".menu-musicas").forEach(function (item) {
+          const botao = item.querySelector(".botao-menu");
 
-                if (!item.contains(evento.target)) {
+          if (botao) {
+            botao.setAttribute("aria-expanded", "false");
+          }
+        }
+      });
+    });
+  }
 
-                    item.classList.remove("menu-aberto");
-
-                    const botao = item.querySelector(".botao-menu");
-
-                    if (botao) {
-                        botao.setAttribute("aria-expanded", "false");
-                    }
-                }
-
-            });
-
-        });
-    }
-
-
-    /* =========================================
+  /* =========================================
        FORMULÁRIO DE CADASTRO DE MÚSICA
     ========================================= */
 
-    function configurarFormularioMusica() {
+  function configurarFormularioMusica() {
+    const formulario = document.getElementById("formCadastroCatalogo");
 
-        const formulario = document.getElementById("formCadastroCatalogo");
+    if (!formulario) return;
 
-        if (!formulario) return;
+    formulario.addEventListener("submit", function (evento) {
+      evento.preventDefault();
 
-        formulario.addEventListener("submit", function (evento) {
+      document.getElementById("retornoMusica").textContent =
+        "Formulário preenchido! A integração com o backend ainda precisa ser implementada.";
+    });
+  }
 
-            evento.preventDefault();
-
-            document.getElementById("retornoMusica").textContent =
-                "Formulário preenchido! A integração com o backend ainda precisa ser implementada.";
-
-        });
-    }
-
-
-    /* =========================================
+  /* =========================================
        FORMULÁRIO DE PLAYLIST
     ========================================= */
 
-    function configurarFormularioPlaylist() {
+  function configurarFormularioPlaylist() {
+    const formulario = document.getElementById("formPlaylist");
 
-        const formulario = document.getElementById("formPlaylist");
+    if (!formulario) return;
 
-        if (!formulario) return;
+    formulario.addEventListener("submit", function (evento) {
+      evento.preventDefault();
 
-        formulario.addEventListener("submit", function (evento) {
+      document.getElementById("retornoPlaylist").textContent =
+        "Formulário preenchido! A integração com o backend ainda precisa ser implementada.";
+    });
+  }
 
-            evento.preventDefault();
-
-            document.getElementById("retornoPlaylist").textContent =
-                "Formulário preenchido! A integração com o backend ainda precisa ser implementada.";
-
-        });
-    }
-
-
-    /* =========================================
+  /* =========================================
        INICIALIZAÇÃO
     ========================================= */
 
-    document.addEventListener("DOMContentLoaded", function () {
+  document.addEventListener("DOMContentLoaded", function () {
+    atualizarHeader();
 
-        atualizarHeader();
+    /* Botão sair */
 
-        /* Botão sair */
+    const botaoSair = document.getElementById("botaoSair");
 
-        const botaoSair = document.getElementById("botaoSair");
+    if (botaoSair) {
+      botaoSair.addEventListener("click", function (evento) {
+        evento.preventDefault();
 
-        if (botaoSair) {
+        encerrarSessao();
+      });
+    }
 
-            botaoSair.addEventListener("click", function (evento) {
+    /* Login */
 
-                evento.preventDefault();
+    const formularioLogin = document.getElementById("formLogin");
 
-                encerrarSessao();
+    if (formularioLogin) {
+      formularioLogin.addEventListener("submit", realizarLogin);
+    }
 
-            });
-        }
+    /* Cadastro */
 
+    const formularioCadastro = document.getElementById("formCadastro");
 
-        /* Login */
+    if (formularioCadastro) {
+      formularioCadastro.addEventListener("submit", realizarCadastro);
+    }
 
-        const formularioLogin = document.getElementById("formLogin");
+    /* Menus */
 
-        if (formularioLogin) {
+    configurarMenus();
 
-            formularioLogin.addEventListener(
-                "submit",
-                realizarLogin
-            );
-        }
+    /* Outros formulários */
 
+    configurarFormularioMusica();
 
-        /* Cadastro */
+    configurarFormularioPlaylist();
 
-        const formularioCadastro = document.getElementById("formCadastro");
+    /* Impedir que usuário já logado entre novamente no login/cadastro */
 
-        if (formularioCadastro) {
-
-            formularioCadastro.addEventListener(
-                "submit",
-                realizarCadastro
-            );
-        }
-
-
-        /* Menus */
-
-        configurarMenus();
-
-
-        /* Outros formulários */
-
-        configurarFormularioMusica();
-
-        configurarFormularioPlaylist();
-
-
-        /* Impedir que usuário já logado entre novamente no login/cadastro */
-
-        if (
-            usuarioEstaLogado() &&
-            (
-                document.getElementById("formLogin") ||
-                document.getElementById("formCadastro")
-            )
-        ) {
-
-            window.location.href = "index.html";
-        }
-
-    });
-
+    if (
+      usuarioEstaLogado() &&
+      (document.getElementById("formLogin") ||
+        document.getElementById("formCadastro"))
+    ) {
+      window.location.href = "index.html";
+    }
+  });
 })();
