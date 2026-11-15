@@ -139,18 +139,22 @@
 
         <aside class="perfil-dashboard">
 
-            <!-- FOTO DO USUÁRIO
-             ALTERE O SRC PARA SUA IMAGEM PADRÃO -->
-            <img src="assets/images/avatar-padrao.png" alt="Foto do usuário" id="fotoPerfil" class="foto-perfil">
+            <!-- FOTO DO USUÁRIO -->
+            <img src="assets/icons/user.svg" alt="Foto do usuário" id="fotoPerfil" class="foto-perfil">
 
             <div class="nome-perfil">
                 <h2 id="nomeUsuario">Usuário</h2>
 
-                <!-- BOTÃO PARA EDITAR PERFIL -->
                 <button type="button" id="editarPerfil" aria-label="Editar perfil">
                     ✎
                 </button>
             </div>
+
+            <!-- BOTÃO SAIR DA CONTA -->
+            <button type="button" id="botaoSair" class="botao-sair">
+                <span>↪</span>
+                Sair da conta
+            </button>
 
         </aside>
 
@@ -185,7 +189,9 @@
                 <!-- MÉDIA DAS NOTAS -->
 
                 <article class="kpi">
-                    <div class="kpi-icone">▥</div>
+                    <div class="kpi-icone">
+                        <img src="assets/icons/grafico-de-barras.png" alt="icon-grafico">
+                    </div>
 
                     <div class="kpi-info">
                         <span>Média das notas</span>
@@ -197,7 +203,9 @@
                 <!-- COMENTÁRIOS -->
 
                 <article class="kpi">
-                    <div class="kpi-icone">●</div>
+                    <div class="kpi-icone">
+                        <img src="assets/icons/bater-papo.png" alt="icon-comentario">
+                    </div>
 
                     <div class="kpi-info">
                         <span>Comentários</span>
@@ -209,7 +217,9 @@
                 <!-- PLAYLISTS -->
 
                 <article class="kpi">
-                    <div class="kpi-icone">♫</div>
+                    <div class="kpi-icone">
+                        <img src="assets/icons/adicionar-a-playlist.png" alt="icon-playlist">
+                    </div>
 
                     <div class="kpi-info">
                         <span>Playlists</span>
@@ -279,8 +289,10 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- JAVASCRIPT DA DASHBOARD -->
+    <!-- JAVASCRIPT GLOBAL -->
+    <script src="js/global.js"></script>
 
+    <!-- JAVASCRIPT DA DASHBOARD -->
     <script src="js/dashboard.js"></script>
 
     <footer class="footer">

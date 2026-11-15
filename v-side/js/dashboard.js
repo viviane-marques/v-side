@@ -1,51 +1,111 @@
-
 /* =========================================
    V-SIDE - DASHBOARD
 ========================================= */
-
 
 /* =========================================
    1. CONFIGURAÇÕES
 ========================================= */
 
-// ALTERE PARA O ENDEREÇO DA SUA API
 const API_URL = "http://localhost:3333";
 
-// ID DO USUÁRIO LOGADO
-// ADAPTE A CHAVE AO PADRÃO UTILIZADO
-// NO SEU LOGIN E NO SEU GLOBAL.JS.
+// Recupera os dados armazenados durante o login
+const dadosUsuario = localStorage.getItem("vsideUsuario");
+const tokenUsuario = localStorage.getItem("vsideToken");
 
-const idUsuario = sessionStorage.getItem("ID_USUARIO");
+// Inicializa as variáveis antes de utilizá-las
+let usuarioLogado = null;
+let idUsuario = null;
 
+// Converte os dados do usuário
+try {
+    usuarioLogado = dadosUsuario
+        ? JSON.parse(dadosUsuario)
+        : null;
 
+    idUsuario = usuarioLogado
+        ? usuarioLogado.id
+        : null;
+
+} catch (erro) {
+    console.error("Erro ao recuperar usuário:", erro);
+}
+
+// Verifica a sessão
+if (!usuarioLogado || !idUsuario || !tokenUsuario) {
+
+    alert("Faça login para acessar sua dashboard.");
+
+    window.location.href = "login.html";
+
+}
+/* =========================================
+   VERIFICAÇÃO DE LOGIN
+========================================= */
+
+if (!usuarioLogado || !idUsuario || !tokenUsuario) {
+  alert("Faça login para acessar sua dashboard.");
+
+  window.location.href = "login.html";
+}
+
+/* =========================================
+   1.1. REQUISIÇÕES AUTENTICADAS
+========================================= */
+
+async function requisicaoAutenticada(url, opcoes = {}) {
+
+    const cabecalhos = {
+        ...opcoes.headers,
+        Authorization: `Bearer ${tokenUsuario}`
+    };
+
+    // Define JSON como formato quando houver corpo na requisição
+    if (
+        opcoes.body &&
+        !(opcoes.body instanceof FormData)
+    ) {
+        cabecalhos["Content-Type"] = "application/json";
+    }
+
+    const resposta = await fetch(url, {
+        ...opcoes,
+        headers: cabecalhos
+    });
+
+    // Verifica se o token expirou ou é inválido
+    if (resposta.status === 401) {
+
+        localStorage.removeItem("vsideUsuario");
+        localStorage.removeItem("vsideToken");
+
+        alert("Sua sessão expirou. Faça login novamente.");
+
+        window.location.href = "login.html";
+
+        throw new Error("Sessão não autorizada.");
+    }
+
+    return resposta;
+}
 /* =========================================
    2. ELEMENTOS HTML
 ========================================= */
 
-const totalAvaliacoes =
-    document.getElementById("totalAvaliacoes");
+const totalAvaliacoes = document.getElementById("totalAvaliacoes");
 
-const mediaNotas =
-    document.getElementById("mediaNotas");
+const mediaNotas = document.getElementById("mediaNotas");
 
-const totalComentarios =
-    document.getElementById("totalComentarios");
+const totalComentarios = document.getElementById("totalComentarios");
 
-const totalPlaylists =
-    document.getElementById("totalPlaylists");
+const totalPlaylists = document.getElementById("totalPlaylists");
 
-const nomeUsuario =
-    document.getElementById("nomeUsuario");
+const nomeUsuario = document.getElementById("nomeUsuario");
 
-const fotoPerfil =
-    document.getElementById("fotoPerfil");
+const fotoPerfil = document.getElementById("fotoPerfil");
 
-const listaAtividades =
-    document.getElementById("listaAtividades");
+const listaAtividades = document.getElementById("listaAtividades");
 
-const mensagemGrafico =
-    document.getElementById("mensagemGrafico");
-
+const mensagemGrafico = document.getElementById("mensagemGrafico");
 
 /* =========================================
    3. GRÁFICO
@@ -53,364 +113,326 @@ const mensagemGrafico =
 
 let graficoAvaliacoes = null;
 
-
 function criarGrafico(dados) {
+  const contexto = document
+    .getElementById("graficoAvaliacoes")
+    .getContext("2d");
 
-    const contexto = document
-        .getElementById("graficoAvaliacoes")
-        .getContext("2d");
+  if (graficoAvaliacoes) {
+    graficoAvaliacoes.destroy();
+  }
 
-    if (graficoAvaliacoes) {
-        graficoAvaliacoes.destroy();
-    }
+  const meses = [
+    "Jan",
+    "Fev",
+    "Mar",
+    "Abr",
+    "Mai",
+    "Jun",
+    "Jul",
+    "Ago",
+    "Set",
+    "Out",
+    "Nov",
+    "Dez",
+  ];
 
-    const meses = [
-        "Jan", "Fev", "Mar", "Abr",
-        "Mai", "Jun", "Jul", "Ago",
-        "Set", "Out", "Nov", "Dez"
-    ];
+  const valores = Array(12).fill(null);
 
-    const valores = Array(12).fill(null);
+  dados.forEach((item) => {
+    // mês deve ser um número de 1 a 12
+    valores[Number(item.mes) - 1] = Number(item.media);
+  });
 
-    dados.forEach(item => {
+  const possuiAvaliacoes = valores.some((valor) => valor !== null);
 
-        // mês deve ser um número de 1 a 12
-        valores[Number(item.mes) - 1] =
-            Number(item.media);
+  mensagemGrafico.hidden = possuiAvaliacoes;
 
-    });
+  graficoAvaliacoes = new Chart(contexto, {
+    type: "line",
 
-    const possuiAvaliacoes =
-        valores.some(valor => valor !== null);
+    data: {
+      labels: meses,
 
-    mensagemGrafico.hidden = possuiAvaliacoes;
+      datasets: [
+        {
+          label: "Média das notas",
 
-    graficoAvaliacoes = new Chart(contexto, {
+          data: valores,
 
-        type: "line",
+          borderColor: "#F8F4EE",
 
-        data: {
+          backgroundColor: "rgba(248,244,238,0.12)",
 
-            labels: meses,
+          borderWidth: 3,
 
-            datasets: [{
+          pointBackgroundColor: "#F8F4EE",
 
-                label: "Média das notas",
+          pointRadius: 3,
 
-                data: valores,
+          tension: 0.25,
 
-                borderColor: "#F8F4EE",
+          spanGaps: false,
 
-                backgroundColor: "rgba(248,244,238,0.12)",
+          fill: false,
+        },
+      ],
+    },
 
-                borderWidth: 3,
+    options: {
+      responsive: true,
 
-                pointBackgroundColor: "#F8F4EE",
+      maintainAspectRatio: false,
 
-                pointRadius: 3,
+      plugins: {
+        legend: {
+          display: false,
+        },
+      },
 
-                tension: 0.25,
+      scales: {
+        y: {
+          min: 1,
 
-                spanGaps: false,
+          max: 5,
 
-                fill: false
+          ticks: {
+            color: "#F8F4EE",
+            stepSize: 1,
+          },
 
-            }]
-
+          grid: {
+            color: "rgba(255,255,255,0.35)",
+          },
         },
 
-        options: {
+        x: {
+          ticks: {
+            color: "#F8F4EE",
+          },
 
-            responsive: true,
-
-            maintainAspectRatio: false,
-
-            plugins: {
-
-                legend: {
-                    display: false
-                }
-
-            },
-
-            scales: {
-
-                y: {
-
-                    min: 1,
-
-                    max: 5,
-
-                    ticks: {
-                        color: "#F8F4EE",
-                        stepSize: 1
-                    },
-
-                    grid: {
-                        color: "rgba(255,255,255,0.35)"
-                    }
-
-                },
-
-                x: {
-
-                    ticks: {
-                        color: "#F8F4EE"
-                    },
-
-                    grid: {
-                        display: false
-                    }
-
-                }
-
-            }
-
-        }
-
-    });
-
+          grid: {
+            display: false,
+          },
+        },
+      },
+    },
+  });
 }
-
 
 /* =========================================
    4. CARREGAR INFORMAÇÕES DO USUÁRIO
 ========================================= */
 
 async function carregarPerfil() {
+  try {
+    const resposta = await requisicaoAutenticada(
+      `${API_URL}/dashboard/perfil/${idUsuario}`,
+      {
+        headers: {
+          Authorization: `Bearer ${tokenUsuario}`,
+        },
+      },
+    );
 
-    try {
+    const dados = await resposta.json();
 
-        const resposta = await fetch(
-            `${API_URL}/dashboard/perfil/${idUsuario}`
-        );
+    nomeUsuario.textContent = dados.nome;
 
-        if (!resposta.ok) {
-            throw new Error("Erro ao carregar perfil.");
-        }
-
-        const dados = await resposta.json();
-
-        nomeUsuario.textContent = dados.nome;
-
-        // Se não houver foto, utiliza o avatar padrão.
-        fotoPerfil.src =
-            dados.foto || "assets/images/avatar-padrao.png";
-
-    } catch (erro) {
-
-        console.error(erro);
-
-    }
-
+    // Se não houver foto, utiliza o avatar padrão.
+    fotoPerfil.src = dados.foto || "assets/icons/user.svg";
+  } catch (erro) {
+    console.error(erro);
+  }
 }
-
 
 /* =========================================
    5. CARREGAR KPIs
 ========================================= */
 
 async function carregarIndicadores() {
+  try {
+    const resposta = await requisicaoAutenticada(
+      `${API_URL}/dashboard/resumo/${idUsuario}`,
+    );
 
-    try {
-
-        const resposta = await fetch(
-            `${API_URL}/dashboard/resumo/${idUsuario}`
-        );
-
-        if (!resposta.ok) {
-            throw new Error("Erro ao carregar indicadores.");
-        }
-
-        const dados = await resposta.json();
-
-        totalAvaliacoes.textContent =
-            dados.totalAvaliacoes ?? 0;
-
-        mediaNotas.textContent =
-            Number(dados.mediaNotas ?? 0).toFixed(1);
-
-        totalComentarios.textContent =
-            dados.totalComentarios ?? 0;
-
-        totalPlaylists.textContent =
-            dados.totalPlaylists ?? 0;
-
-    } catch (erro) {
-
-        console.error(erro);
-
+    if (!resposta.ok) {
+      throw new Error("Erro ao carregar indicadores.");
     }
 
-}
+    const dados = await resposta.json();
 
+    totalAvaliacoes.textContent = dados.totalAvaliacoes ?? 0;
+
+    mediaNotas.textContent = Number(dados.mediaNotas ?? 0).toFixed(1);
+
+    totalComentarios.textContent = dados.totalComentarios ?? 0;
+
+    totalPlaylists.textContent = dados.totalPlaylists ?? 0;
+  } catch (erro) {
+    console.error(erro);
+  }
+}
 
 /* =========================================
    6. CARREGAR GRÁFICO
 ========================================= */
 
 async function carregarAvaliacoes() {
+  try {
+    const resposta = await requisicaoAutenticada(
+      `${API_URL}/dashboard/avaliacoes-mensais/${idUsuario}`,
+    );
 
-    try {
-
-        const resposta = await fetch(
-            `${API_URL}/dashboard/avaliacoes-mensais/${idUsuario}`
-        );
-
-        if (!resposta.ok) {
-            throw new Error("Erro ao carregar avaliações.");
-        }
-
-        const dados = await resposta.json();
-
-        criarGrafico(dados);
-
-    } catch (erro) {
-
-        console.error(erro);
-
-        mensagemGrafico.hidden = false;
-
+    if (!resposta.ok) {
+      throw new Error("Erro ao carregar avaliações.");
     }
 
-}
+    const dados = await resposta.json();
 
+    criarGrafico(dados);
+  } catch (erro) {
+    console.error(erro);
+
+    mensagemGrafico.hidden = false;
+  }
+}
 
 /* =========================================
    7. CARREGAR ATIVIDADES RECENTES
 ========================================= */
 
 async function carregarAtividades() {
+  try {
+    const resposta = await requisicaoAutenticada(
+      `${API_URL}/dashboard/atividades/${idUsuario}`,
+    );
 
-    try {
+    if (!resposta.ok) {
+      throw new Error("Erro ao carregar atividades.");
+    }
 
-        const resposta = await fetch(
-            `${API_URL}/dashboard/atividades/${idUsuario}`
-        );
+    const atividades = await resposta.json();
 
-        if (!resposta.ok) {
-            throw new Error("Erro ao carregar atividades.");
-        }
+    listaAtividades.innerHTML = "";
 
-        const atividades = await resposta.json();
-
-        listaAtividades.innerHTML = "";
-
-        if (atividades.length === 0) {
-
-            listaAtividades.innerHTML = `
+    if (atividades.length === 0) {
+      listaAtividades.innerHTML = `
                 <p class="sem-atividades">
                     Você ainda não possui atividades.
                 </p>
             `;
 
-            return;
+      return;
+    }
 
-        }
+    atividades.forEach((atividade) => {
+      let icone = "●";
 
-        atividades.forEach(atividade => {
+      if (atividade.tipo === "avaliacao") {
+        icone = "★";
+      }
 
-            let icone = "●";
+      if (atividade.tipo === "playlist") {
+        icone = "♫";
+      }
 
-            if (atividade.tipo === "avaliacao") {
-                icone = "★";
-            }
+      if (atividade.tipo === "comentario") {
+        icone = "●";
+      }
 
-            if (atividade.tipo === "playlist") {
-                icone = "♫";
-            }
+      const elemento = document.createElement("div");
 
-            if (atividade.tipo === "comentario") {
-                icone = "●";
-            }
+      elemento.className = "atividade";
 
-            const elemento = document.createElement("div");
+      const iconeElemento = document.createElement("div");
 
-            elemento.className = "atividade";
+      iconeElemento.className = "atividade-icone";
+      iconeElemento.textContent = icone;
 
-            const iconeElemento =
-                document.createElement("div");
+      const informacoes = document.createElement("div");
 
-            iconeElemento.className = "atividade-icone";
-            iconeElemento.textContent = icone;
+      informacoes.className = "atividade-info";
 
-            const informacoes =
-                document.createElement("div");
+      const titulo = document.createElement("strong");
 
-            informacoes.className = "atividade-info";
+      titulo.textContent = atividade.titulo;
 
-            const titulo =
-                document.createElement("strong");
+      const descricao = document.createElement("span");
 
-            titulo.textContent = atividade.titulo;
+      descricao.textContent = atividade.descricao;
 
-            const descricao =
-                document.createElement("span");
+      const data = document.createElement("small");
 
-            descricao.textContent = atividade.descricao;
+      data.textContent = atividade.data
+        ? new Date(atividade.data).toLocaleDateString("pt-BR")
+        : "";
 
-            const data =
-                document.createElement("small");
+      informacoes.append(titulo, descricao, data);
 
-            data.textContent = atividade.data
-                ? new Date(atividade.data).toLocaleDateString("pt-BR")
-                : "";
+      elemento.append(iconeElemento, informacoes);
 
-            informacoes.append(titulo, descricao, data);
+      listaAtividades.appendChild(elemento);
+    });
+  } catch (erro) {
+    console.error(erro);
 
-            elemento.append(iconeElemento, informacoes);
-
-            listaAtividades.appendChild(elemento);
-
-        });
-
-    } catch (erro) {
-
-        console.error(erro);
-
-        listaAtividades.innerHTML = `
+    listaAtividades.innerHTML = `
             <p class="sem-atividades">
                 Não foi possível carregar suas atividades.
             </p>
         `;
-
-    }
-
+  }
 }
-
 
 /* =========================================
    8. INICIALIZAR DASHBOARD
 ========================================= */
 
 async function iniciarDashboard() {
+  // Confere se existe uma sessão válida no navegador
+  if (!usuarioLogado || !idUsuario || !tokenUsuario) {
+    return;
+  }
 
-    if (!idUsuario) {
+  await Promise.all([
+    carregarPerfil(),
 
-        alert("Faça login para acessar sua dashboard.");
+    carregarIndicadores(),
 
-        window.location.href = "login.html";
+    carregarAvaliacoes(),
 
-        return;
-
-    }
-
-    await Promise.all([
-
-        carregarPerfil(),
-
-        carregarIndicadores(),
-
-        carregarAvaliacoes(),
-
-        carregarAtividades()
-
-    ]);
-
+    carregarAtividades(),
+  ]);
 }
 
+document.addEventListener("DOMContentLoaded", iniciarDashboard);
 
-document.addEventListener(
-    "DOMContentLoaded",
-    iniciarDashboard
-);
+/* =========================================
+   9. SAIR DA CONTA
+========================================= */
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const botaoSair = document.getElementById("botaoSair");
+
+    if (!botaoSair) return;
+
+    botaoSair.addEventListener("click", function () {
+
+        const confirmar = confirm(
+            "Tem certeza de que deseja sair da sua conta?"
+        );
+
+        if (!confirmar) return;
+
+        // Remove somente os dados de autenticação.
+        localStorage.removeItem("vsideUsuario");
+        localStorage.removeItem("vsideToken");
+
+        // Retorna para a página inicial.
+        window.location.replace("index.html");
+
+    });
+
+});

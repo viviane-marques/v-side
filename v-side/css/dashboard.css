@@ -419,3 +419,78 @@
     }
 
 }
+
+/* =========================================
+   ÍCONES DOS INDICADORES
+========================================= */
+
+.kpi-icone {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    /* Mantém o tamanho proporcional à estrela */
+    font-size: clamp(30px, 4vw, 55px);
+
+    flex-shrink: 0;
+}
+
+/* Imagens dos ícones */
+
+.kpi-icone img {
+    width: 1em;
+    height: 1em;
+
+    object-fit: contain;
+
+    display: block;
+}
+
+/* =========================================
+   10. BOTÃO SAIR DA CONTA
+========================================= */
+
+.botao-sair {
+    width: 100%;
+
+    margin-top: auto;
+
+    padding: 13px 16px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    background: var(--dash-vinho);
+
+    color: var(--dash-claro);
+
+    border: none;
+    border-radius: 8px;
+
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: background 0.3s ease,
+                transform 0.3s ease;
+}
+
+.botao-sair span {
+    font-size: 20px;
+}
+
+.botao-sair:hover {
+    background: #542129;
+
+    transform: translateY(-2px);
+}
+
+.botao-sair:active {
+    transform: scale(0.98);
+}

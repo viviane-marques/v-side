@@ -1,76 +1,96 @@
+document.addEventListener("DOMContentLoaded", function () {
 
-document.addEventListener("DOMContentLoaded", () => {
+    // =========================================
+    // 1. CONFIGURAÇÕES
+    // =========================================
 
-    // FORMULÁRIO PRINCIPAL
-    const formulario = document.getElementById(
-        "formCadastroCatalogo"
-    );
+    const API_URL = "http://localhost:3333";
 
-    // BOTÕES DE CATEGORIA
-    const opcoes = document.querySelectorAll(
-        ".opcao-categoria"
-    );
+    const formulario = document.getElementById("formCadastroCatalogo");
 
-    // BOTÃO DE ENVIO
-    const botaoEnviar = document.getElementById(
-        "botaoEnviarCadastro"
-    );
+    const opcoes = document.querySelectorAll(".opcao-categoria");
 
-    // GRUPOS DE CAMPOS
+    const botaoEnviar = document.getElementById("botaoEnviarCadastro");
+
     const grupos = {
         musica: document.getElementById("campos-musica"),
         album: document.getElementById("campos-album"),
         artista: document.getElementById("campos-artista")
     };
 
-    // CATEGORIA INICIAL
     let categoriaAtual = "musica";
 
 
     // =========================================
-    // 1. TROCAR A CATEGORIA
+    // 2. MENSAGENS DO FORMULÁRIO
+    // =========================================
+
+    const mensagem = document.createElement("div");
+
+    mensagem.id = "mensagemCadastroCatalogo";
+    mensagem.style.marginTop = "15px";
+    mensagem.style.textAlign = "center";
+    mensagem.style.fontWeight = "bold";
+    mensagem.style.display = "none";
+
+    formulario.querySelector(".area-botao-enviar").appendChild(mensagem);
+
+
+    function mostrarMensagem(texto, sucesso) {
+
+        mensagem.textContent = texto;
+        mensagem.style.display = "block";
+
+        mensagem.style.color = sucesso ? "#218838" : "#dc3545";
+
+    }
+
+
+    // =========================================
+    // 3. CAMPOS OBRIGATÓRIOS
+    // =========================================
+
+    const camposObrigatorios = {
+        musica: ["nomeMusica", "artistaMusica"],
+        album: ["nomeAlbum", "artistaAlbum"],
+        artista: ["nomeArtista"]
+    };
+
+
+    // =========================================
+    // 4. TROCAR A CATEGORIA
     // =========================================
 
     function selecionarCategoria(categoria) {
 
         categoriaAtual = categoria;
 
-        // Atualiza os botões.
-        opcoes.forEach((opcao) => {
+        opcoes.forEach(function (opcao) {
 
-            const selecionada =
-                opcao.dataset.tipo === categoria;
+            const selecionada = opcao.dataset.tipo === categoria;
 
             opcao.classList.toggle("ativa", selecionada);
 
-            opcao.setAttribute(
-                "aria-pressed",
-                String(selecionada)
-            );
+            opcao.setAttribute("aria-pressed", String(selecionada));
 
         });
 
 
-        // Mostra apenas os campos da categoria escolhida.
-        Object.entries(grupos).forEach(([tipo, grupo]) => {
+        Object.entries(grupos).forEach(function ([tipo, grupo]) {
 
             const ativo = tipo === categoria;
 
             grupo.hidden = !ativo;
 
-            // Campos ocultos deixam de ser obrigatórios.
-            grupo.querySelectorAll("input").forEach((campo) => {
+            grupo.querySelectorAll("input").forEach(function (campo) {
 
-                campo.required = ativo;
+                campo.required = ativo &&
+                    camposObrigatorios[tipo].includes(campo.name);
 
             });
 
         });
 
-
-        // =====================================
-        // 2. ALTERAR TEXTO DO BOTÃO
-        // =====================================
 
         const textos = {
             musica: "Enviar Música",
@@ -80,16 +100,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
         botaoEnviar.textContent = textos[categoria];
 
+        mensagem.style.display = "none";
+
     }
 
 
     // =========================================
-    // 3. EVENTOS DOS BOTÕES DE CATEGORIA
+    // 5. EVENTOS DOS BOTÕES DE CATEGORIA
     // =========================================
 
-    opcoes.forEach((opcao) => {
+    opcoes.forEach(function (opcao) {
 
-        opcao.addEventListener("click", () => {
+        opcao.addEventListener("click", function () {
 
             selecionarCategoria(opcao.dataset.tipo);
 
@@ -99,68 +121,161 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     // =========================================
-    // 4. ENVIAR CADASTRO
+    // 6. RECUPERAR OS DADOS DO FORMULÁRIO
     // =========================================
 
-    formulario.addEventListener("submit", (evento) => {
+    function obterDados() {
 
-        evento.preventDefault();
-
-        // Verifica apenas os campos da categoria atual.
         const grupoAtivo = grupos[categoriaAtual];
 
         const campos = grupoAtivo.querySelectorAll("input");
 
-        let valido = true;
-
-        campos.forEach((campo) => {
-
-            if (!campo.value.trim()) {
-
-                campo.reportValidity();
-                valido = false;
-
-            }
-
-        });
-
-        if (!valido) return;
-
-
-        // Recupera os dados preenchidos.
         const dados = {};
 
-        campos.forEach((campo) => {
+        campos.forEach(function (campo) {
 
             dados[campo.name] = campo.value.trim();
 
         });
 
+        return dados;
 
-        // Exibe confirmação demonstrativa.
-        const nomes = {
-            musica: "Música",
-            album: "Álbum",
-            artista: "Artista"
+    }
+
+
+    // =========================================
+    // 7. ENVIAR OS DADOS PARA A API
+    // =========================================
+
+    formulario.addEventListener("submit", async function (evento) {
+
+        evento.preventDefault();
+
+        mensagem.style.display = "none";
+
+        // Recupera o token salvo no login.
+        const token = localStorage.getItem("vsideToken");
+
+        if (!token) {
+
+            mostrarMensagem(
+                "Você precisa entrar na sua conta para cadastrar no catálogo.",
+                false
+            );
+
+            return;
+
+        }
+
+
+        // Verifica os campos obrigatórios.
+        const grupoAtivo = grupos[categoriaAtual];
+
+        const campos = grupoAtivo.querySelectorAll("input");
+
+        for (const campo of campos) {
+
+            if (
+                camposObrigatorios[categoriaAtual].includes(campo.name) &&
+                !campo.value.trim()
+            ) {
+
+                campo.reportValidity();
+
+                return;
+
+            }
+
+        }
+
+
+        // Recupera os dados preenchidos.
+        const dados = obterDados();
+
+        // Identifica qual categoria está sendo cadastrada.
+        const corpoRequisicao = {
+            tipo: categoriaAtual,
+            ...dados
         };
 
-        alert(
-            nomes[categoriaAtual] +
-            " preenchido(a) com sucesso!\n\n" +
-            "Os dados estão prontos para serem enviados ao catálogo."
-        );
 
-        console.log("Categoria:", categoriaAtual);
-        console.log("Dados:", dados);
+        // Desabilita o botão durante o envio.
+        const textoOriginal = botaoEnviar.textContent;
 
-        // O formulário ainda não salva no banco de dados.
-        // A integração com o backend será feita posteriormente.
+        botaoEnviar.disabled = true;
+        botaoEnviar.textContent = "Enviando...";
+
+
+        try {
+
+            const resposta = await fetch(
+                `${API_URL}/catalogo/cadastrar`,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+
+                    body: JSON.stringify(corpoRequisicao)
+                }
+            );
+
+
+            const resultado = await resposta.json();
+
+
+            if (!resposta.ok) {
+
+                throw new Error(
+                    resultado.mensagem ||
+                    "Não foi possível realizar o cadastro."
+                );
+
+            }
+
+
+            // Cadastro concluído.
+            mostrarMensagem(
+                resultado.mensagem || "Cadastro realizado com sucesso!",
+                true
+            );
+
+            formulario.reset();
+
+            // Mantém a categoria atual selecionada.
+            selecionarCategoria(categoriaAtual);
+
+
+        } catch (erro) {
+
+            console.error("Erro no cadastro do catálogo:", erro);
+
+            mostrarMensagem(
+                erro.message || "Erro ao conectar com o servidor.",
+                false
+            );
+
+        } finally {
+
+            botaoEnviar.disabled = false;
+
+            const textos = {
+                musica: "Enviar Música",
+                album: "Enviar Álbum",
+                artista: "Enviar Artista"
+            };
+
+            botaoEnviar.textContent = textos[categoriaAtual] || textoOriginal;
+
+        }
 
     });
 
 
     // =========================================
-    // 5. CONFIGURAÇÃO INICIAL
+    // 8. CONFIGURAÇÃO INICIAL
     // =========================================
 
     selecionarCategoria("musica");

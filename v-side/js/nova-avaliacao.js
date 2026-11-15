@@ -1,108 +1,68 @@
-
 /* =========================================
    V-SIDE - CADASTRAR NOVA AVALIAÇÃO
 
-   1. Validar formulário
-   2. Recuperar dados
-   3. Salvar avaliação
-   4. Redirecionar para avaliações.html
+   1. Recuperar dados do formulário
+   2. Identificar usuário autenticado
+   3. Enviar avaliação para a API
+   4. Salvar no MySQL
+   5. Redirecionar
 ========================================= */
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", function () {
 
-    const formulario = document.getElementById(
-        "formNovaAvaliacao"
-    );
+    const formulario = document.getElementById("formNovaAvaliacao");
 
     if (!formulario) return;
 
-    const CHAVE_AVALIACOES = "vside_avaliacoes";
+    const API_URL = "http://localhost:3333";
 
 
     // =========================================
-    // 1. RECUPERAR AVALIAÇÕES ANTERIORES
+    // 1. ENVIAR FORMULÁRIO
     // =========================================
 
-    function recuperarAvaliacoes() {
-
-        try {
-
-            return JSON.parse(
-                localStorage.getItem(CHAVE_AVALIACOES) || "[]"
-            );
-
-        } catch (erro) {
-
-            console.error("Erro ao recuperar avaliações:", erro);
-
-            return [];
-
-        }
-
-    }
-
-
-    // =========================================
-    // 2. IDENTIFICAR O USUÁRIO
-    // =========================================
-
-    function obterNomeUsuario() {
-
-        try {
-
-            const usuario = JSON.parse(
-                localStorage.getItem("vsideUsuario") || "null"
-            );
-
-            if (typeof usuario === "string") {
-                return usuario;
-            }
-
-            return usuario?.nome ||
-                usuario?.nomeUsuario ||
-                usuario?.usuario ||
-                "Usuário";
-
-        } catch (erro) {
-
-            return localStorage.getItem("vsideUsuario") ||
-                "Usuário";
-
-        }
-
-    }
-
-
-    // =========================================
-    // 3. ENVIAR A AVALIAÇÃO
-    // =========================================
-
-    formulario.addEventListener("submit", (evento) => {
+    formulario.addEventListener("submit", async function (evento) {
 
         evento.preventDefault();
 
-        const musica = document.getElementById(
-            "nomeMusica"
-        ).value.trim();
 
-        const artista = document.getElementById(
-            "nomeArtista"
-        ).value.trim();
+        // -------------------------------------
+        // 2. RECUPERAR TOKEN
+        // -------------------------------------
 
-        const album = document.getElementById(
-            "nomeAlbum"
-        ).value.trim();
+        const token = localStorage.getItem("vsideToken");
 
-        const resenha = document.getElementById(
-            "textoResenha"
-        ).value.trim();
+        if (!token) {
+
+            alert("Você precisa entrar na sua conta para avaliar uma música.");
+
+            window.location.href = "login.html";
+
+            return;
+
+        }
+
+
+        // -------------------------------------
+        // 3. RECUPERAR CAMPOS
+        // -------------------------------------
+
+        const musica = document.getElementById("nomeMusica").value.trim();
+
+        const artista = document.getElementById("nomeArtista").value.trim();
+
+        const album = document.getElementById("nomeAlbum").value.trim();
+
+        const resenha = document.getElementById("textoResenha").value.trim();
 
         const notaSelecionada = document.querySelector(
             'input[name="nota"]:checked'
         );
 
 
-        // VERIFICAÇÃO DOS CAMPOS
+        // -------------------------------------
+        // 4. VALIDAR CAMPOS
+        // -------------------------------------
 
         if (!musica || !artista || !resenha || !notaSelecionada) {
 
@@ -113,13 +73,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
 
-        // =====================================
-        // 4. MONTAR OBJETO DA AVALIAÇÃO
-        // =====================================
+        // -------------------------------------
+        // 5. MONTAR DADOS DA AVALIAÇÃO
+        // -------------------------------------
 
         const avaliacao = {
-
-            id: Date.now().toString(),
 
             musica: musica,
 
@@ -129,54 +87,83 @@ document.addEventListener("DOMContentLoaded", () => {
 
             resenha: resenha,
 
-            nota: Number(notaSelecionada.value),
-
-            usuario: obterNomeUsuario(),
-
-            spotifyMusica:
-                "https://open.spotify.com/search/" +
-                encodeURIComponent(musica + " " + artista),
-
-            capa: "assets/logos/monograma-fundo-escuro.svg",
-
-            data: new Date().toISOString()
+            nota: Number(notaSelecionada.value)
 
         };
 
 
-        // =====================================
-        // 5. SALVAR NO LOCALSTORAGE
-        // =====================================
+        // -------------------------------------
+        // 6. ENVIAR PARA A API
+        // -------------------------------------
 
-        const avaliacoes = recuperarAvaliacoes();
+        const botaoEnviar = formulario.querySelector(
+            'button[type="submit"]'
+        );
 
-        avaliacoes.push(avaliacao);
+        if (botaoEnviar) {
+            botaoEnviar.disabled = true;
+        }
 
         try {
 
-            localStorage.setItem(
-                CHAVE_AVALIACOES,
-                JSON.stringify(avaliacoes)
+            const resposta = await fetch(
+                `${API_URL}/avaliacoes/cadastrar`,
+                {
+
+                    method: "POST",
+
+                    headers: {
+
+                        "Content-Type": "application/json",
+
+                        "Authorization": `Bearer ${token}`
+
+                    },
+
+                    body: JSON.stringify(avaliacao)
+
+                }
             );
+
+
+            const dados = await resposta.json();
+
+
+            // ---------------------------------
+            // 7. TRATAR RESPOSTA
+            // ---------------------------------
+
+            if (!resposta.ok) {
+
+                alert(dados.mensagem || "Não foi possível cadastrar a avaliação.");
+
+                return;
+
+            }
+
+
+            // ---------------------------------
+            // 8. CONFIRMAR CADASTRO
+            // ---------------------------------
+
+            alert("Sua avaliação foi cadastrada com sucesso!");
+
+            window.location.href = "avaliacoes.html";
+
 
         } catch (erro) {
 
-            console.error("Erro ao salvar avaliação:", erro);
+            console.error("Erro ao enviar avaliação:", erro);
 
-            alert("Não foi possível salvar sua avaliação.");
+            alert("Não foi possível conectar à API. Verifique se o servidor está funcionando.");
 
-            return;
+        } finally {
+
+            if (botaoEnviar) {
+                botaoEnviar.disabled = false;
+            }
 
         }
-
-
-        // =====================================
-        // 6. CONFIRMAR E REDIRECIONAR
-        // =====================================
-
-        alert("Sua avaliação foi cadastrada com sucesso!");
-
-        window.location.href = "avaliacoes.html";
 
     });
 
