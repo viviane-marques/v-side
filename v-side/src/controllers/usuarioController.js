@@ -152,9 +152,47 @@ function sair(req, res) {
     });
 }
 
+// PUT /usuarios/perfil  { nome, foto? }  -> edita nome e/ou foto do usuário logado
+//   foto ausente (undefined) = não mexe na foto
+//   foto = null              = remove a foto
+//   foto = "data:image/..."  = nova foto (o navegador já reduz a imagem antes de enviar)
+function atualizarPerfil(req, res) {
+    var usuarioId = req.session.usuarioId;
+    var nome = req.body.nome;
+    var foto = req.body.foto;
+
+    if (typeof nome !== "string" || nome.trim().length < 2 || nome.trim().length > 50) {
+        return res.status(400).json({ erro: "Digite um nome entre 2 e 50 caracteres." });
+    }
+    nome = nome.trim();
+
+    if (foto !== undefined && foto !== null) {
+        // só aceita imagem em base64 e de tamanho limitado (~220 KB)
+        var formatoFoto = /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+\/]+=*$/;
+
+        if (typeof foto !== "string" || foto.length > 300000 || !formatoFoto.test(foto)) {
+            return res.status(400).json({ erro: "Foto inválida. Use uma imagem JPG, PNG ou WEBP." });
+        }
+    }
+
+    var atualizacao = foto === undefined
+        ? usuarioModel.atualizarNome(usuarioId, nome)
+        : usuarioModel.atualizarPerfil(usuarioId, nome, foto);
+
+    atualizacao
+        .then(function () {
+            res.json({ nome: nome });
+        })
+        .catch(function (erro) {
+            console.log(erro);
+            res.status(500).json({ erro: "Erro ao salvar o perfil." });
+        });
+}
+
 module.exports = {
     cadastrar,
     autenticar,
     sessao,
-    sair
+    sair,
+    atualizarPerfil
 };

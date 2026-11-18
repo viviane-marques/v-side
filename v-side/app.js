@@ -22,9 +22,10 @@ var app = express();
 var usuarioRouter = require("./src/routes/usuarios");
 var avaliacaoRouter = require("./src/routes/avaliacoes");
 var favoritoRouter = require("./src/routes/favoritos");
+var dashboardRouter = require("./src/routes/dashboard");
 var testeRouter = require("./src/routes/teste"); // provisória: apague no fim do projeto
 
-app.use(express.json()); // entende JSON enviado pelo fetch
+app.use(express.json({limit: "1mb"})); // entende JSON enviado pelo fetch
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public"))); // serve o site (pasta public)
 app.use(cors());
@@ -46,6 +47,7 @@ app.use(session({
 app.use("/usuarios", usuarioRouter);
 app.use("/avaliacoes", avaliacaoRouter);
 app.use("/favoritos", favoritoRouter);
+app.use("/dashboard", dashboardRouter);
 app.use("/teste", testeRouter);
 
 app.listen(PORTA_APP, function () {

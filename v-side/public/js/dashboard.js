@@ -1,0 +1,429 @@
+/* =========================================
+   V-SIDE | dashboard.js
+   - Busca os dados reais na API (GET /dashboard)
+   - Preenche os 4 indicadores
+   - Desenha o gráfico (média das notas por mês)
+   - Lista as atividades recentes
+   - Aba "Editar perfil" (nome e foto)
+========================================= */
+
+(function () {
+    'use strict';
+
+    const V = window.VSide;
+    if (!V) return;
+    if (!V.exigirLogin()) return;
+
+
+    /* -----------------------------------------
+       1. CONFIGURAÇÕES (mude aqui se precisar)
+    ----------------------------------------- */
+
+    // Imagem usada quando a pessoa ainda não escolheu uma foto
+    const FOTO_PADRAO = 'assets/icons/user.svg';
+
+    // Tamanho (em pixels) da foto depois de reduzida antes de enviar ao servidor
+    const TAMANHO_FOTO = 256;
+
+    const MESES = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+
+    // Ícones das atividades (SVG no próprio código: não dependem de arquivo de imagem)
+    const ICONE_ESTRELA =
+        '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+        '<path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6L2.5 9.4l6.6-.8z"/>' +
+        '</svg>';
+
+    const ICONE_CORACAO =
+        '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+        '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/>' +
+        '</svg>';
+
+
+    /* -----------------------------------------
+       2. ELEMENTOS DA PÁGINA
+    ----------------------------------------- */
+
+    const el = {
+        foto: document.getElementById('fotoPerfil'),
+        nome: document.getElementById('nomeUsuario'),
+        botaoEditar: document.getElementById('editarPerfil'),
+        form: document.getElementById('formPerfil'),
+        inputFoto: document.getElementById('inputFoto'),
+        botaoEscolherFoto: document.getElementById('botaoTrocarFoto'),
+        botaoRemoverFoto: document.getElementById('botaoRemoverFoto'),
+        campoNome: document.getElementById('campoNome'),
+        mensagemPerfil: document.getElementById('mensagemPerfil'),
+        botaoCancelar: document.getElementById('cancelarPerfil'),
+        totalAvaliacoes: document.getElementById('totalAvaliacoes'),
+        mediaNotas: document.getElementById('mediaNotas'),
+        totalFavoritos: document.getElementById('totalFavoritos'),
+        totalArtistas: document.getElementById('totalArtistas'),
+        grafico: document.getElementById('graficoAvaliacoes'),
+        mensagemGrafico: document.getElementById('mensagemGrafico'),
+        atividades: document.getElementById('listaAtividades')
+    };
+
+    // Dados que vieram da API (guardados para redesenhar o gráfico ao redimensionar)
+    let dados = null;
+
+    // Foto escolhida na aba de edição, ainda não salva:
+    //   undefined = não mexeu | null = remover a foto | 'data:image/...' = nova foto
+    let fotoPendente;
+
+
+    /* -----------------------------------------
+       3. FORMATAÇÃO
+    ----------------------------------------- */
+
+    // 4.5 -> "4,5"  (padrão brasileiro)
+    function formatarDecimal(numero) {
+        return numero.toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+    }
+
+    // 125 segundos -> "há 2 minutos"
+    function haQuantoTempo(segundos) {
+        if (segundos < 60) return 'agora mesmo';
+
+        const minutos = Math.floor(segundos / 60);
+        if (minutos < 60) return 'há ' + minutos + (minutos === 1 ? ' minuto' : ' minutos');
+
+        const horas = Math.floor(minutos / 60);
+        if (horas < 24) return 'há ' + horas + (horas === 1 ? ' hora' : ' horas');
+
+        const dias = Math.floor(horas / 24);
+        if (dias < 30) return 'há ' + dias + (dias === 1 ? ' dia' : ' dias');
+
+        const meses = Math.floor(dias / 30);
+        if (meses < 12) return 'há ' + meses + (meses === 1 ? ' mês' : ' meses');
+
+        const anos = Math.floor(dias / 365);
+        return 'há ' + anos + (anos === 1 ? ' ano' : ' anos');
+    }
+
+    // Cria um elemento já com classe e texto (textContent evita injeção de HTML)
+    function criar(tag, classe, texto) {
+        const e = document.createElement(tag);
+        if (classe) e.className = classe;
+        if (texto !== undefined) e.textContent = texto;
+        return e;
+    }
+
+
+    /* -----------------------------------------
+       4. PERFIL (foto e nome)
+    ----------------------------------------- */
+
+    function mostrarPerfil(usuario) {
+        el.nome.textContent = usuario.nome;
+        el.foto.src = usuario.foto || FOTO_PADRAO;
+    }
+
+
+    /* -----------------------------------------
+       5. INDICADORES
+    ----------------------------------------- */
+
+    function mostrarIndicadores(kpis) {
+        el.totalAvaliacoes.textContent = kpis.avaliacoes;
+        el.mediaNotas.textContent = kpis.media === null ? '–' : formatarDecimal(kpis.media);
+        el.totalFavoritos.textContent = kpis.favoritos;
+        el.totalArtistas.textContent = kpis.artistas;
+    }
+
+
+    /* -----------------------------------------
+       6. GRÁFICO (SVG desenhado à mão)
+       Eixo Y: notas de 1 a 5. Eixo X: Jan a Dez.
+       Cada ponto = média das notas daquele mês.
+       Mês sem avaliação = linha interrompida.
+    ----------------------------------------- */
+
+    function desenharGrafico() {
+        if (!dados) return;
+
+        const serie = dados.serie;
+        const largura = el.grafico.clientWidth;
+        const altura = el.grafico.clientHeight;
+
+        if (largura === 0 || altura === 0) return;
+
+        // espaço reservado para os textos dos eixos
+        const margem = { topo: 14, direita: 16, base: 34, esquerda: 42 };
+        const areaLargura = largura - margem.esquerda - margem.direita;
+        const areaAltura = altura - margem.topo - margem.base;
+
+        // converte mês (0..11) e nota (1..5) em posição na tela
+        const x = function (indice) {
+            return margem.esquerda + (areaLargura * (indice + 0.5)) / 12;
+        };
+        const y = function (nota) {
+            return margem.topo + areaAltura - ((nota - 1) / 4) * areaAltura;
+        };
+
+        let svg = '<svg width="' + largura + '" height="' + altura + '" ' +
+            'viewBox="0 0 ' + largura + ' ' + altura + '" role="img" ' +
+            'aria-label="Média das suas notas por mês">';
+
+        // linhas horizontais e números do eixo Y (1,0 a 5,0)
+        for (let nota = 1; nota <= 5; nota++) {
+            svg += '<line x1="' + margem.esquerda + '" x2="' + (largura - margem.direita) + '" ' +
+                'y1="' + y(nota) + '" y2="' + y(nota) + '" stroke="#fff" stroke-opacity="0.75" stroke-width="1"/>';
+            svg += '<text x="' + (margem.esquerda - 10) + '" y="' + (y(nota) + 4) + '" ' +
+                'text-anchor="end" font-size="12" fill="#fff">' + formatarDecimal(nota) + '</text>';
+        }
+
+        // nomes dos meses no eixo X
+        MESES.forEach(function (nomeMes, i) {
+            svg += '<text x="' + x(i) + '" y="' + (altura - 10) + '" ' +
+                'text-anchor="middle" font-size="12" fill="#fff">' + nomeMes + '</text>';
+        });
+
+        // linha: um "trecho" para cada sequência de meses com dados
+        let trecho = '';
+        serie.forEach(function (ponto, i) {
+            if (ponto.media === null) {
+                if (trecho) svg += '<path d="' + trecho + '" fill="none" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"/>';
+                trecho = '';
+                return;
+            }
+            trecho += (trecho ? ' L ' : 'M ') + x(i) + ' ' + y(ponto.media);
+        });
+        if (trecho) svg += '<path d="' + trecho + '" fill="none" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"/>';
+
+        // bolinhas (com dica ao passar o mouse)
+        serie.forEach(function (ponto, i) {
+            if (ponto.media === null) return;
+
+            const dica = MESES[i] + ': média ' + formatarDecimal(ponto.media) + ' (' +
+                ponto.quantidade + (ponto.quantidade === 1 ? ' avaliação)' : ' avaliações)');
+
+            svg += '<g><title>' + dica + '</title>' +
+                '<circle cx="' + x(i) + '" cy="' + y(ponto.media) + '" r="4.5" fill="#fff"/>' +
+                // círculo invisível maior: facilita acertar o mouse
+                '<circle cx="' + x(i) + '" cy="' + y(ponto.media) + '" r="12" fill="transparent"/></g>';
+        });
+
+        svg += '</svg>';
+        el.grafico.innerHTML = svg;
+
+        // sem nenhum ponto no ano: mostra o aviso
+        const temDados = serie.some(function (ponto) { return ponto.media !== null; });
+        el.mensagemGrafico.hidden = temDados;
+    }
+
+
+    /* -----------------------------------------
+       7. ATIVIDADES RECENTES
+    ----------------------------------------- */
+
+    function mostrarAtividades(atividades) {
+        el.atividades.textContent = '';
+
+        if (atividades.length === 0) {
+            el.atividades.appendChild(criar('p', 'sem-atividades',
+                'Nada por aqui ainda. Faça sua primeira avaliação!'));
+            return;
+        }
+
+        atividades.forEach(function (a) {
+            const item = criar('div', 'atividade');
+
+            const icone = criar('div', 'atividade-icone');
+            icone.innerHTML = a.tipo === 'avaliacao' ? ICONE_ESTRELA : ICONE_CORACAO;
+            item.appendChild(icone);
+
+            const info = criar('div', 'atividade-info');
+
+            if (a.tipo === 'avaliacao') {
+                info.appendChild(criar('strong', '', 'Avaliação de música'));
+                info.appendChild(criar('span', '', '"' + a.musica + '" – ' + a.artista + ' — ' + a.nota + '★'));
+            } else {
+                info.appendChild(criar('strong', '', 'Música favoritada'));
+                info.appendChild(criar('span', '', '"' + a.musica + '" – ' + a.artista));
+            }
+
+            info.appendChild(criar('small', '', haQuantoTempo(a.segundos)));
+            item.appendChild(info);
+
+            el.atividades.appendChild(item);
+        });
+    }
+
+
+    /* -----------------------------------------
+       8. EDITAR PERFIL (nome e foto)
+    ----------------------------------------- */
+
+    function mostrarMensagemPerfil(texto, sucesso) {
+        el.mensagemPerfil.textContent = texto;
+        el.mensagemPerfil.classList.toggle('sucesso', !!sucesso);
+        el.mensagemPerfil.hidden = !texto;
+    }
+
+    function abrirEdicao() {
+        el.campoNome.value = dados ? dados.usuario.nome : el.nome.textContent;
+        fotoPendente = undefined;
+        mostrarMensagemPerfil('');
+
+        el.form.hidden = false;
+        el.botaoEditar.setAttribute('aria-expanded', 'true');
+        el.campoNome.focus();
+    }
+
+    // Fecha a aba e volta a foto para a que está salva
+    function fecharEdicao() {
+        el.form.hidden = true;
+        el.botaoEditar.setAttribute('aria-expanded', 'false');
+
+        fotoPendente = undefined;
+        el.inputFoto.value = '';
+
+        if (dados) mostrarPerfil(dados.usuario);
+    }
+
+    // Reduz a imagem escolhida para um quadrado de TAMANHO_FOTO px e devolve em texto
+    // (assim a foto fica leve, ~20 KB, e cabe tranquilamente no banco).
+    function reduzirImagem(arquivo) {
+        return new Promise(function (resolve, reject) {
+            if (!arquivo.type || arquivo.type.indexOf('image/') !== 0) {
+                return reject(new Error('Escolha um arquivo de imagem (JPG, PNG ou WEBP).'));
+            }
+            if (arquivo.size > 8 * 1024 * 1024) {
+                return reject(new Error('A imagem é muito grande (máximo 8 MB).'));
+            }
+
+            const endereco = URL.createObjectURL(arquivo);
+            const imagem = new Image();
+
+            imagem.onload = function () {
+                const canvas = document.createElement('canvas');
+                canvas.width = TAMANHO_FOTO;
+                canvas.height = TAMANHO_FOTO;
+
+                const ctx = canvas.getContext('2d');
+
+                // fundo branco (PNG transparente viraria preto ao salvar em JPEG)
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(0, 0, TAMANHO_FOTO, TAMANHO_FOTO);
+
+                // recorta o maior quadrado possível do centro da imagem
+                const lado = Math.min(imagem.width, imagem.height);
+                const origemX = (imagem.width - lado) / 2;
+                const origemY = (imagem.height - lado) / 2;
+                ctx.drawImage(imagem, origemX, origemY, lado, lado, 0, 0, TAMANHO_FOTO, TAMANHO_FOTO);
+
+                URL.revokeObjectURL(endereco);
+                resolve(canvas.toDataURL('image/jpeg', 0.85));
+            };
+
+            imagem.onerror = function () {
+                URL.revokeObjectURL(endereco);
+                reject(new Error('Não foi possível ler essa imagem.'));
+            };
+
+            imagem.src = endereco;
+        });
+    }
+
+    el.botaoEditar.addEventListener('click', function () {
+        if (el.form.hidden) {
+            abrirEdicao();
+        } else {
+            fecharEdicao();
+        }
+    });
+
+    el.botaoCancelar.addEventListener('click', fecharEdicao);
+
+    el.botaoEscolherFoto.addEventListener('click', function () {
+        el.inputFoto.click(); // abre a janela de escolher arquivo
+    });
+
+    el.inputFoto.addEventListener('change', async function () {
+        const arquivo = el.inputFoto.files[0];
+        if (!arquivo) return;
+
+        try {
+            fotoPendente = await reduzirImagem(arquivo);
+            el.foto.src = fotoPendente; // prévia imediata no círculo
+            mostrarMensagemPerfil('');
+        } catch (erro) {
+            mostrarMensagemPerfil(erro.message);
+        }
+
+        el.inputFoto.value = ''; // permite escolher o mesmo arquivo de novo
+    });
+
+    el.botaoRemoverFoto.addEventListener('click', function () {
+        fotoPendente = null;
+        el.foto.src = FOTO_PADRAO;
+        mostrarMensagemPerfil('');
+    });
+
+    el.form.addEventListener('submit', async function (evento) {
+        evento.preventDefault();
+
+        const nome = el.campoNome.value.trim();
+
+        if (nome.length < 2) {
+            mostrarMensagemPerfil('Digite um nome com pelo menos 2 caracteres.');
+            return;
+        }
+
+        const corpo = { nome: nome };
+        if (fotoPendente !== undefined) corpo.foto = fotoPendente; // só envia a foto se mexeu nela
+
+        const botaoSalvar = el.form.querySelector('button[type="submit"]');
+        botaoSalvar.disabled = true;
+
+        const resultado = await V.chamarApi('/usuarios/perfil', {
+            method: 'PUT',
+            body: JSON.stringify(corpo)
+        });
+
+        botaoSalvar.disabled = false;
+
+        if (!resultado.ok) {
+            mostrarMensagemPerfil(resultado.erro);
+            return;
+        }
+
+        // atualiza o que está guardado na tela
+        dados.usuario.nome = resultado.dados.nome;
+        if (fotoPendente !== undefined) dados.usuario.foto = fotoPendente;
+
+        fecharEdicao();
+        mostrarPerfil(dados.usuario);
+    });
+
+
+    /* -----------------------------------------
+       9. CARREGAMENTO
+    ----------------------------------------- */
+
+    async function carregar() {
+        const resultado = await V.chamarApi('/dashboard');
+
+        if (!resultado.ok) {
+            el.atividades.textContent = '';
+            el.atividades.appendChild(criar('p', 'sem-atividades', resultado.erro));
+            return;
+        }
+
+        dados = resultado.dados;
+
+        mostrarPerfil(dados.usuario);
+        mostrarIndicadores(dados.kpis);
+        mostrarAtividades(dados.atividades);
+        desenharGrafico();
+    }
+
+    // Redesenha o gráfico quando a janela muda de tamanho
+    let temporizador;
+    window.addEventListener('resize', function () {
+        clearTimeout(temporizador);
+        temporizador = setTimeout(desenharGrafico, 150);
+    });
+
+    carregar();
+})();

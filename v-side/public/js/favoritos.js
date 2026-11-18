@@ -51,7 +51,7 @@
         info.appendChild(el('p', 'artistas-album',
             total === 1 ? '1 música favoritada' : total + ' músicas favoritadas'));
 
-        const botaoResenha = el('button', 'link-resenha', 'Clique para ver a resenha');
+        const botaoResenha = el('button', 'link-resenha', 'Clique para ver suas músicas favoritas');
         botaoResenha.type = 'button';
         botaoResenha.setAttribute('aria-expanded', 'false');
         botaoResenha.setAttribute('aria-controls', idPainel);

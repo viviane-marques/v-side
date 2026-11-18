@@ -427,6 +427,7 @@
         sair: sair,
         exigirLogin: exigirLogin,
         atualizarHeader: atualizarHeader,
+        chamarApi: chamarApi,
         listarAvaliacoes: listarAvaliacoes,
         salvarAvaliacao: salvarAvaliacao,
         favoritar: favoritar,

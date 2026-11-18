@@ -1,4 +1,4 @@
-var database = require("../database/config")
+var database = require("../database/config");
 
 // Os "?" são preenchidos pelo array do segundo argumento, na mesma ordem.
 // O mysql2 escapa cada valor, então o que a pessoa digita NUNCA vira parte do SQL.
@@ -11,20 +11,40 @@ function buscarPorEmail(email) {
     return database.executar(instrucaoSql, [email]);
 }
 
-// Procura pelo id (usado para confirmar quem está logado). Não traz a senha.
 function buscarPorId(id) {
     var instrucaoSql = "SELECT id, nome, email FROM usuario WHERE id = ?;";
     return database.executar(instrucaoSql, [id]);
 }
 
-// Grava um novo usuário. Aqui a senha já chega como hash (nunca texto puro).
 function cadastrar(nome, email, senhaHash) {
     var instrucaoSql = "INSERT INTO usuario (nome, email, senha) VALUES (?, ?, ?);";
     return database.executar(instrucaoSql, [nome, email, senhaHash]);
 }
 
+// Perfil completo para a dashboard (inclui a foto, que é pesada demais
+// para ir em toda requisição de /usuarios/sessao)
+function buscarPerfil(id) {
+    var instrucaoSql = "SELECT nome, email, foto FROM usuario WHERE id = ?;";
+    return database.executar(instrucaoSql, [id]);
+}
+
+// Troca só o nome (a foto continua a mesma)
+function atualizarNome(id, nome) {
+    var instrucaoSql = "UPDATE usuario SET nome = ? WHERE id = ?;";
+    return database.executar(instrucaoSql, [nome, id]);
+}
+
+// Troca nome E foto. foto = texto da imagem (nova foto) ou null (remover a foto)
+function atualizarPerfil(id, nome, foto) {
+    var instrucaoSql = "UPDATE usuario SET nome = ?, foto = ? WHERE id = ?;";
+    return database.executar(instrucaoSql, [nome, foto, id]);
+}
+
 module.exports = {
     buscarPorEmail,
     buscarPorId,
-    cadastrar
+    cadastrar,
+    buscarPerfil,
+    atualizarNome,
+    atualizarPerfil
 };

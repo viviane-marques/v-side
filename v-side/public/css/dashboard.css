@@ -494,3 +494,213 @@
 .botao-sair:active {
     transform: scale(0.98);
 }
+
+
+
+/* =========================================
+   11. ETAPA 7 - ÍCONES SVG, GRÁFICO E EDIÇÃO DE PERFIL
+========================================= */
+
+/* Ícones SVG dos indicadores (estrela e coração): herdam a cor vinho do .kpi-icone */
+.kpi-icone svg {
+    width: 1em;
+    height: 1em;
+
+    fill: currentColor;
+
+    display: block;
+}
+
+/* Gráfico desenhado pelo JavaScript */
+.grafico-svg {
+    width: 100%;
+    height: 100%;
+}
+
+.grafico-svg svg {
+    display: block;
+}
+
+/* Ícones pequenos das atividades recentes */
+.atividade-icone svg {
+    width: 15px;
+    height: 15px;
+
+    fill: currentColor;
+}
+
+/* Foto escolhida aparece no círculo logo ao escolher (prévia) */
+.foto-perfil {
+    flex-shrink: 0;
+}
+
+
+/* ----- Aba "Editar perfil" ----- */
+
+.form-perfil {
+    width: 100%;
+
+    margin-top: 18px;
+    padding: 14px;
+
+    background: #FFFFFF;
+
+    border: 1px solid rgba(23, 30, 50, 0.12);
+    border-radius: 10px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 12px;
+}
+
+/* display:flex acima sobrescreveria o atributo hidden */
+.form-perfil[hidden] {
+    display: none;
+}
+
+.form-perfil h3 {
+    font-size: 16px;
+
+    color: var(--dash-texto);
+}
+
+.campo-perfil {
+    display: flex;
+    flex-direction: column;
+
+    gap: 6px;
+}
+
+.rotulo-perfil {
+    font-size: 13px;
+    font-weight: 600;
+
+    color: var(--dash-texto);
+}
+
+.form-perfil input[type="text"] {
+    width: 100%;
+
+    padding: 10px 12px;
+
+    background: var(--dash-claro);
+
+    border: 1px solid #CDBFB3;
+    border-radius: 8px;
+
+    font-family: inherit;
+    font-size: 15px;
+
+    color: var(--dash-texto);
+}
+
+.form-perfil input[type="text"]:focus {
+    outline: 2px solid var(--dash-rosa);
+    outline-offset: 1px;
+}
+
+.linha-foto,
+.linha-acoes-perfil {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 8px;
+}
+
+.botao-perfil-primario,
+.botao-perfil-secundario {
+    padding: 9px 14px;
+
+    border-radius: 8px;
+
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: background 0.3s ease, opacity 0.3s ease;
+}
+
+.botao-perfil-primario {
+    background: var(--dash-vinho);
+
+    color: var(--dash-claro);
+
+    border: 1px solid var(--dash-vinho);
+}
+
+.botao-perfil-primario:hover {
+    background: #542129;
+}
+
+.botao-perfil-secundario {
+    background: transparent;
+
+    color: var(--dash-texto);
+
+    border: 1px solid #CDBFB3;
+}
+
+.botao-perfil-secundario:hover {
+    background: var(--dash-claro);
+}
+
+.botao-perfil-primario:disabled {
+    opacity: 0.6;
+
+    cursor: wait;
+}
+
+.mensagem-perfil {
+    padding: 8px 10px;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    background: rgba(114, 47, 55, 0.12);
+
+    color: #6B1D2A;
+}
+
+.mensagem-perfil[hidden] {
+    display: none;
+}
+
+.mensagem-perfil.sucesso {
+    background: rgba(46, 125, 80, 0.14);
+
+    color: #1F6B3E;
+}
+
+/* Espaço entre a aba e o botão Sair */
+.perfil-dashboard .botao-sair {
+    margin-top: auto;
+}
+
+.perfil-dashboard .form-perfil + .botao-sair {
+    margin-top: 18px;
+}
+
+@media (max-width: 1000px) {
+
+    .perfil-dashboard {
+        flex-wrap: wrap;
+    }
+
+    .form-perfil {
+        flex: 1 1 100%;
+
+        margin-top: 4px;
+    }
+
+    .perfil-dashboard .botao-sair {
+        width: auto;
+
+        margin-left: auto;
+    }
+
+}
