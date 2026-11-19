@@ -37,6 +37,59 @@ function executar(instrucao, parametros) {
     });
 }
 
+// transacao(passos): executa vários comandos como UMA operação só.
+// Se qualquer um falhar, o MySQL desfaz tudo (rollback).
+// Uso:
+//   database.transacao(async function (consulta) {
+//       await consulta("INSERT ...", [valores]);
+//       await consulta("DELETE ...", [valores]);
+//   });
+function transacao(passos) {
+    return new Promise(function (resolve, reject) {
+        // pega UMA conexão do pool (a transação precisa usar a mesma conexão do início ao fim)
+        pool.getConnection(function (erro, conexao) {
+            if (erro) return reject(erro);
+
+            // desfaz tudo, devolve a conexão ao pool e repassa o erro
+            function falhar(motivo) {
+                conexao.rollback(function () {
+                    conexao.release();
+                    reject(motivo);
+                });
+            }
+
+            conexao.beginTransaction(function (erro) {
+                if (erro) {
+                    conexao.release();
+                    return reject(erro);
+                }
+
+                // "consulta" é o equivalente de executar(), mas preso a esta conexão
+                function consulta(instrucao, parametros) {
+                    return new Promise(function (res, rej) {
+                        conexao.query(instrucao, parametros || [], function (e, r) {
+                            if (e) return rej(e);
+                            res(r);
+                        });
+                    });
+                }
+
+                passos(consulta)
+                    .then(function (resultado) {
+                        // deu tudo certo: confirma as alterações
+                        conexao.commit(function (erro) {
+                            if (erro) return falhar(erro);
+                            conexao.release();
+                            resolve(resultado);
+                        });
+                    })
+                    .catch(falhar);
+            });
+        });
+    });
+}
+
 module.exports = {
-    executar
+    executar,
+    transacao
 };

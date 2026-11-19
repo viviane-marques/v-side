@@ -1,0 +1,154 @@
+/* =========================================
+   EDITOR DE PLAYLIST (criar-playlist.html)
+   Os seletores começam com .formulario-vside para vencer
+   o estilo genérico de botões do formularios.css
+========================================= */
+
+.campo-capa {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 18px;
+}
+
+.previa-capa-playlist {
+    width: 140px;
+    height: 140px;
+    flex-shrink: 0;
+
+    object-fit: cover;
+
+    border-radius: 9px;
+    background: #c99b9b;
+}
+
+.rotulo-campo {
+    display: block;
+    margin-bottom: 8px;
+
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.linha-botoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* Botões pequenos (capa, adicionar, remover) */
+.formulario-vside .botao-mini {
+    align-self: auto;
+
+    padding: 8px 13px;
+
+    border: 1px solid #a86f73;
+    border-radius: 7px;
+
+    background: transparent;
+    color: var(--cor-fundo-escuro);
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.formulario-vside .botao-mini:hover {
+    background: rgba(166, 93, 104, 0.18);
+}
+
+.formulario-vside .botao-adicionar {
+    background: var(--cor-destaque);
+    border-color: var(--cor-destaque);
+    color: var(--cor-branco);
+}
+
+.formulario-vside .botao-adicionar:hover {
+    background: var(--cor-destaque-hover);
+}
+
+/* Blocos de listas de músicas */
+.bloco-musicas {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.bloco-musicas h3 {
+    font-size: 17px;
+}
+
+.lista-musicas-editor {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    max-height: 300px;
+    overflow-y: auto;
+
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.linha-musica {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    padding: 9px 12px;
+
+    border-radius: 7px;
+    background: rgba(201, 155, 155, 0.35);
+}
+
+.linha-musica-textos {
+    display: flex;
+    flex-direction: column;
+    min-width: 0; /* permite cortar texto longo */
+}
+
+.linha-musica-textos strong,
+.linha-musica-textos small {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.linha-musica-textos small {
+    opacity: 0.75;
+}
+
+.aviso-editor {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.aviso-editor[hidden] {
+    display: none;
+}
+
+.aviso-editor a {
+    font-weight: 700;
+    text-decoration: underline;
+}
+
+/* Salvar / Cancelar */
+.linha-botoes-final {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.formulario-vside button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+.botao-cancelar-editor {
+    font-weight: 600;
+    text-decoration: underline;
+    color: var(--cor-fundo-escuro);
+}

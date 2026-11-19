@@ -8,6 +8,7 @@
     <link rel="icon" href="assets/logos/monograma-fundo-escuro.svg">
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/formularios.css">
+    <link rel="stylesheet" href="css/editor-playlist.css">
 </head>
 
 <body>
@@ -128,14 +129,65 @@
 
     </header>
     <main class="pagina-formulario">
+
         <section class="banner-formulario">
-            <h1>Criar playlist</h1>
+            <!-- o JS troca para "Editar playlist" quando a URL tem ?id= -->
+            <h1 id="tituloPagina">Criar playlist</h1>
         </section>
-        <form class="formulario-vside" id="formPlaylist"><label for="nomePlaylist">Nome da playlist</label><input
-                id="nomePlaylist" required><label for="descricaoPlaylist">Descrição</label><textarea
-                id="descricaoPlaylist" rows="4"></textarea><button type="submit">CRIAR PLAYLIST</button>
-            <p id="retornoPlaylist" role="status"></p>
+
+        <form class="formulario-vside" id="formPlaylist" novalidate>
+
+            <!-- CAPA (mesmo esquema da foto de perfil: escolher / remover) -->
+            <div class="campo-capa">
+                <img id="previaCapaPlaylist" class="previa-capa-playlist" src="" alt="Capa da playlist">
+
+                <div>
+                    <span class="rotulo-campo">Foto de capa</span>
+
+                    <div class="linha-botoes">
+                        <button type="button" id="botaoEscolherCapa" class="botao-mini">Escolher foto</button>
+                        <button type="button" id="botaoRemoverCapa" class="botao-mini">Remover</button>
+                    </div>
+
+                    <!-- input de arquivo invisível: o botão acima o aciona -->
+                    <input type="file" id="inputCapa" accept="image/png, image/jpeg, image/webp" hidden>
+                </div>
+            </div>
+
+            <label for="nomePlaylist">Nome da playlist</label>
+            <input id="nomePlaylist" maxlength="80" autocomplete="off">
+
+            <label for="descricaoPlaylist">Descrição</label>
+            <textarea id="descricaoPlaylist" rows="3" maxlength="300"></textarea>
+
+            <!-- MÚSICAS QUE JÁ ESTÃO NA PLAYLIST -->
+            <div class="bloco-musicas">
+                <h3>Na playlist <span id="contadorPlaylist">(0)</span></h3>
+                <ul id="listaNaPlaylist" class="lista-musicas-editor"></ul>
+                <p id="vazioPlaylist" class="aviso-editor">Nenhuma música ainda. Adicione pela lista abaixo.</p>
+            </div>
+
+            <!-- AVALIAÇÕES DO USUÁRIO QUE AINDA NÃO ESTÃO NA PLAYLIST -->
+            <div class="bloco-musicas">
+                <h3>Adicionar das suas avaliações</h3>
+                <input type="search" id="filtroAvaliacoes" placeholder="Filtrar por música, artista ou álbum..."
+                    autocomplete="off">
+                <ul id="listaDisponiveis" class="lista-musicas-editor"></ul>
+                <p id="vazioDisponiveis" class="aviso-editor" hidden>
+                    Nenhuma avaliação para mostrar.
+                    <a href="nova-avaliacao.html">Fazer uma avaliação</a>
+                </p>
+            </div>
+
+            <p id="retornoPlaylist" class="mensagem-formulario" role="alert" hidden></p>
+
+            <div class="linha-botoes-final">
+                <button type="submit" id="botaoSalvarPlaylist">CRIAR PLAYLIST</button>
+                <a href="playlists.html" class="botao-cancelar-editor">Cancelar</a>
+            </div>
+
         </form>
+
     </main>
     <footer class="footer">
         <div class="footer-conteudo">
@@ -174,6 +226,7 @@
         <p class="footer-direitos">© Todos os direitos reservados V-Side. 2026</p>
     </footer>
     <script src="js/global.js"></script>
+    <script src="js/criar-playlist.js"></script>
 </body>
 
 </html>

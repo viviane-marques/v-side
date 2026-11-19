@@ -7,6 +7,8 @@
 
     <title>Playlists | V-Side</title>
 
+    <link rel="icon" href="assets/logos/monograma-fundo-escuro.svg">
+
     <!-- CSS global: header, footer, cores e fontes -->
     <link rel="stylesheet" href="css/global.css">
 
@@ -189,104 +191,23 @@
 
         <section class="lista-playlists" id="listaPlaylists">
 
+            <!-- Aparece quando o usuário ainda não criou nenhuma playlist -->
+            <p class="playlist-vazia" id="playlistsVazia" hidden>
+                Você ainda não criou nenhuma playlist.
+                <a href="criar-playlist.html">Criar minha primeira playlist</a>
+            </p>
 
-            <!-- PLAYLIST 1: LOVERGIRL -->
-            <article class="playlist-card">
-
-                <!-- CAPA: substitua pelo caminho da sua imagem -->
-                <img class="capa-playlist" src="assets/banners/banner-playlists.png" alt="Capa da playlist Lovergirl">
-
-                <!-- INFORMAÇÕES DA PLAYLIST -->
-                <div class="playlist-informacoes">
-
-                    <div class="playlist-titulo-linha">
-                        <h2>lovergirl</h2>
-
-                        <span class="playlist-duracao">
-                            185 músicas | 11h 10min
-                        </span>
-                    </div>
-
-                    <p>Pra ouvir quando está apaixonado(a)</p>
-
-                </div>
-
-                <!-- LINK PARA O SPOTIFY -->
-                <a href="https://open.spotify.com/" target="_blank" rel="noopener noreferrer" class="botao-spotify">
-
-                    <img src="assets/icons/ic-spotify.png" alt="">
-
-                    Ouça no Spotify
-
-                </a>
-
-            </article>
-
-
-            <!-- PLAYLIST 2: BRASILIDADE -->
-            <article class="playlist-card">
-
-                <img class="capa-playlist" src="assets/banners/banner-ideias.png" alt="Capa da playlist Brasilidade">
-
-                <div class="playlist-informacoes">
-
-                    <div class="playlist-titulo-linha">
-                        <h2>brasilidade</h2>
-
-                        <span class="playlist-duracao">
-                            343 músicas | 19h 17min
-                        </span>
-                    </div>
-
-                    <p>Músicas brasileiras de várias eras!</p>
-
-                </div>
-
-                <a href="https://open.spotify.com/" target="_blank" rel="noopener noreferrer" class="botao-spotify">
-
-                    <img src="assets/icons/ic-spotify.png" alt="">
-
-                    Ouça no Spotify
-
-                </a>
-
-            </article>
-
-
-            <!-- PLAYLIST 3: ROCK -->
-            <article class="playlist-card">
-
-                <img class="capa-playlist" src="assets/banners/banner-game.png" alt="Capa da playlist Rock">
-
-                <div class="playlist-informacoes">
-
-                    <div class="playlist-titulo-linha">
-                        <h2>rock!!!</h2>
-
-                        <span class="playlist-duracao">
-                            48 músicas | 2h 55min
-                        </span>
-                    </div>
-
-                    <p>AAAAAAAAAAAAAAAAAAAAAA</p>
-
-                </div>
-
-                <a href="https://open.spotify.com/" target="_blank" rel="noopener noreferrer" class="botao-spotify">
-
-                    <img src="assets/icons/ic-spotify.png" alt="">
-
-                    Ouça no Spotify
-
-                </a>
-
-            </article>
-
-
-            <!-- MENSAGEM EXIBIDA QUANDO NÃO HÁ RESULTADOS -->
+            <!-- Aparece quando a busca não encontra nada (o JS controla) -->
             <p class="nenhuma-playlist" id="nenhumaPlaylist">
                 Nenhuma playlist encontrada.
             </p>
+
+        </section>
+
+        <!-- MENSAGEM EXIBIDA QUANDO NÃO HÁ RESULTADOS -->
+        <p class="nenhuma-playlist" id="nenhumaPlaylist">
+            Nenhuma playlist encontrada.
+        </p>
 
         </section>
 
@@ -389,10 +310,10 @@
     </footer>
 
 
+    <script src="js/global.js"></script>
+
     <!-- JAVASCRIPT DA BUSCA -->
     <script src="js/playlists.js"></script>
-
-    <script src="js/global.js"></script>
 </body>
 
 </html>
