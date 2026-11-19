@@ -45,7 +45,7 @@ CREATE TABLE favorito (
     FOREIGN KEY (fk_avaliacao) REFERENCES avaliacao(id) ON DELETE CASCADE
 );
 
--- PLAYLIST: pertence a um usuário. capa guarda a imagem como texto (igual à foto do perfil).
+-- PLAYLIST
 CREATE TABLE playlist (
     id INT PRIMARY KEY AUTO_INCREMENT,
     fk_usuario INT NOT NULL,
@@ -54,14 +54,10 @@ CREATE TABLE playlist (
     capa MEDIUMTEXT NULL,
     criado_em DATETIME DEFAULT CURRENT_TIMESTAMP,
     atualizado_em DATETIME DEFAULT CURRENT_TIMESTAMP,
-    -- se o usuário for apagado, as playlists dele vão junto
     FOREIGN KEY (fk_usuario) REFERENCES usuario(id) ON DELETE CASCADE
 );
 
--- PLAYLIST_MUSICA: tabela de ligação (uma playlist tem várias avaliações;
--- uma avaliação pode estar em várias playlists).
--- PRIMARY KEY composta: impede a mesma avaliação duas vezes na mesma playlist.
--- posicao: guarda a ordem em que as músicas foram adicionadas.
+-- PLAYLIST_MUSICA
 CREATE TABLE playlist_musica (
     fk_playlist INT NOT NULL,
     fk_avaliacao INT NOT NULL,
@@ -69,4 +65,14 @@ CREATE TABLE playlist_musica (
     PRIMARY KEY (fk_playlist, fk_avaliacao),
     FOREIGN KEY (fk_playlist) REFERENCES playlist(id) ON DELETE CASCADE,
     FOREIGN KEY (fk_avaliacao) REFERENCES avaliacao(id) ON DELETE CASCADE
+);
+
+-- PARTIDA
+CREATE TABLE partida (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    fk_usuario INT NOT NULL,
+    acertou TINYINT(1) NOT NULL,
+    tentativas TINYINT NOT NULL,
+    criado_em DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (fk_usuario) REFERENCES usuario(id) ON DELETE CASCADE
 );

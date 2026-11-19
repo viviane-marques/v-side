@@ -1,4 +1,5 @@
 var jogoService = require("../services/jogoService");
+var partidaModel = require("../models/partidaModel");
 
 // Quantas tentativas a pessoa tem (uma por etapa: 0,5s / 1s / 5s / 10s / 15s)
 var MAX_TENTATIVAS = 5;
@@ -17,9 +18,18 @@ function rodadaAtiva(req, res) {
     return jogo;
 }
 
-// Encerra a rodada e devolve a resposta completa
-function revelar(jogo) {
+// Encerra a rodada e devolve a resposta completa.
+// Se quem jogou está LOGADO, guarda o resultado (alimenta o indicador da dashboard).
+function revelar(req, jogo, acertou) {
     jogo.encerrada = true;
+
+    if (req.session.usuarioId) {
+        partidaModel.registrar(req.session.usuarioId, acertou, jogo.tentativas)
+            .catch(function (erro) {
+                console.log("ERRO AO REGISTRAR PARTIDA:", erro.code || erro);
+            });
+    }
+
     return {
         titulo: jogo.musica.titulo,
         artista: jogo.musica.artista,
@@ -29,9 +39,9 @@ function revelar(jogo) {
 }
 
 // Chamado depois de um erro ou de um "pular": acabou as tentativas?
-function responderErro(jogo, res) {
+function responderErro(req, jogo, res) {
     if (jogo.tentativas >= MAX_TENTATIVAS) {
-        return res.json({ acertou: false, encerrada: true, tentativas: jogo.tentativas, revelacao: revelar(jogo) });
+        return res.json({ acertou: false, encerrada: true, tentativas: jogo.tentativas, revelacao: revelar(req, jogo, false) });
     }
     res.json({ acertou: false, encerrada: false, tentativas: jogo.tentativas });
 }
@@ -61,9 +71,9 @@ function chutar(req, res) {
     jogo.tentativas++;
 
     if (jogoService.acertou(resposta, jogo.musica.titulo)) {
-        return res.json({ acertou: true, encerrada: true, tentativas: jogo.tentativas, revelacao: revelar(jogo) });
+        return res.json({ acertou: true, encerrada: true, tentativas: jogo.tentativas, revelacao: revelar(req, jogo, true) });
     }
-    responderErro(jogo, res);
+    responderErro(req, jogo, res);
 }
 
 // POST /jogo/pular -> gasta uma tentativa sem chutar (libera o trecho maior)
@@ -72,7 +82,7 @@ function pular(req, res) {
     if (!jogo) return;
 
     jogo.tentativas++;
-    responderErro(jogo, res);
+    responderErro(req, jogo, res);
 }
 
 // POST /jogo/dica -> revela só o artista
@@ -88,7 +98,7 @@ function desistir(req, res) {
     var jogo = rodadaAtiva(req, res);
     if (!jogo) return;
 
-    res.json({ acertou: false, encerrada: true, tentativas: jogo.tentativas, revelacao: revelar(jogo) });
+    res.json({ acertou: false, encerrada: true, tentativas: jogo.tentativas, revelacao: revelar(req, jogo, false) });
 }
 
 module.exports = { nova, chutar, pular, dica, desistir };

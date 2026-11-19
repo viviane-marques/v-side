@@ -31,8 +31,6 @@ function serieMensal(usuarioId) {
 
 // Últimas 7 atividades: junta avaliações e favoritos numa lista só (UNION ALL)
 // e ordena da mais recente para a mais antiga.
-// "segundos" = quanto tempo faz, calculado PELO MySQL (assim não depende do
-// fuso horário do navegador nem do Node).
 function atividades(usuarioId) {
     var instrucaoSql = `
         (SELECT 'avaliacao' AS tipo, a.musica, a.artista, a.nota,
@@ -53,8 +51,20 @@ function atividades(usuarioId) {
     return database.executar(instrucaoSql, [usuarioId, usuarioId]);
 }
 
+// Resumo do jogo: quantas rodadas a pessoa jogou e em quantas acertou.
+function jogo(usuarioId) {
+    var instrucaoSql = `
+        SELECT COUNT(*)     AS partidas,
+               SUM(acertou) AS acertos
+        FROM partida
+        WHERE fk_usuario = ?;
+    `;
+    return database.executar(instrucaoSql, [usuarioId]);
+}
+
 module.exports = {
     indicadores,
+    jogo,
     serieMensal,
     atividades
 };

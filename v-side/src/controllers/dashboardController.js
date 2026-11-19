@@ -6,12 +6,13 @@ function carregar(req, res) {
     // O id vem da SESSÃO (servidor), nunca do navegador
     var usuarioId = req.session.usuarioId;
 
-    // Promise.all dispara as 4 consultas ao mesmo tempo e espera todas terminarem
+    // Promise.all dispara as 5 consultas ao mesmo tempo e espera todas terminarem
     Promise.all([
         usuarioModel.buscarPerfil(usuarioId),
         dashboardModel.indicadores(usuarioId),
         dashboardModel.serieMensal(usuarioId),
-        dashboardModel.atividades(usuarioId)
+        dashboardModel.atividades(usuarioId),
+        dashboardModel.jogo(usuarioId)
     ])
         .then(function (resultados) {
             var perfil = resultados[0][0];
@@ -35,11 +36,15 @@ function carregar(req, res) {
                 var linha = porMes[mes];
                 serie.push({
                     mes: mes,
-                    // AVG chega como texto ("4.2500"): converte e arredonda
                     media: linha ? Number(Number(linha.media).toFixed(2)) : null,
                     quantidade: linha ? linha.quantidade : 0
                 });
             }
+
+            // Jogo: SUM pode chegar como texto ou NULL. Taxa = acertos / rodadas (em %)
+            var resumoJogo = resultados[4][0];
+            var partidas = Number(resumoJogo.partidas) || 0;
+            var acertos = Number(resumoJogo.acertos) || 0;
 
             res.json({
                 usuario: { nome: perfil.nome, email: perfil.email, foto: perfil.foto },
@@ -48,6 +53,11 @@ function carregar(req, res) {
                     media: ind.media === null ? null : Number(Number(ind.media).toFixed(1)),
                     favoritos: ind.favoritos,
                     artistas: ind.artistas
+                },
+                jogo: {
+                    partidas: partidas,
+                    acertos: acertos,
+                    taxa: partidas === 0 ? null : Math.round((acertos / partidas) * 100)
                 },
                 serie: serie,
                 atividades: resultados[3].map(function (linha) {
