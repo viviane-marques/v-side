@@ -166,229 +166,212 @@
 
                 <div class="seletor-categoria">
 
-                    <button type="button" class="opcao-categoria ativa" data-tipo="musica">
-
-                        Música
-
-                    </button>
-
-                    <button type="button" class="opcao-categoria" data-tipo="album">
-
-                        Álbum
-
-                    </button>
-
-                    <button type="button" class="opcao-categoria" data-tipo="artista">
-
-                        Artista
-
-                    </button>
-
-                </div>
-
-
-                <!-- =================================
+                    <!-- =================================
                      CAMPOS DE MÚSICA
                 ================================== -->
 
-                <div class="grupo-campos ativo" id="campos-musica">
+                    <div class="grupo-campos ativo" id="campos-musica">
 
-                    <div class="campo">
+                        <div class="campo">
 
-                        <label for="nomeMusica">
-                            Nome da música
-                        </label>
+                            <label for="nomeMusica">
+                                Nome da música
+                            </label>
 
-                        <input type="text" id="nomeMusica" name="nomeMusica" placeholder="Digite o nome da música">
+                            <input type="text" id="nomeMusica" name="nomeMusica" placeholder="Digite o nome da música">
+
+                        </div>
+
+
+                        <div class="grade-campos">
+
+                            <div class="campo">
+
+                                <label for="artistaMusica">
+                                    Artista
+                                </label>
+
+                                <input type="text" id="artistaMusica" name="artistaMusica"
+                                    placeholder="Nome do artista">
+
+                            </div>
+
+
+                            <div class="campo">
+
+                                <label for="albumMusica">
+                                    Álbum
+                                </label>
+
+                                <input type="text" id="albumMusica" name="albumMusica" placeholder="Nome do álbum">
+
+                            </div>
+
+
+                            <div class="campo">
+
+                                <label for="duracaoMusica">
+                                    Duração
+                                </label>
+
+                                <input type="text" id="duracaoMusica" name="duracaoMusica" placeholder="Ex.: 03:45">
+
+                            </div>
+
+
+                            <div class="campo">
+
+                                <label for="linkMusica">
+                                    Link do Spotify
+                                </label>
+
+                                <input type="url" id="linkMusica" name="linkMusica" placeholder="Cole o link da música">
+
+                            </div>
+
+                        </div>
 
                     </div>
 
 
-                    <div class="grade-campos">
-
-                        <div class="campo">
-
-                            <label for="artistaMusica">
-                                Artista
-                            </label>
-
-                            <input type="text" id="artistaMusica" name="artistaMusica" placeholder="Nome do artista">
-
-                        </div>
-
-
-                        <div class="campo">
-
-                            <label for="albumMusica">
-                                Álbum
-                            </label>
-
-                            <input type="text" id="albumMusica" name="albumMusica" placeholder="Nome do álbum">
-
-                        </div>
-
-
-                        <div class="campo">
-
-                            <label for="duracaoMusica">
-                                Duração
-                            </label>
-
-                            <input type="text" id="duracaoMusica" name="duracaoMusica" placeholder="Ex.: 03:45">
-
-                        </div>
-
-
-                        <div class="campo">
-
-                            <label for="linkMusica">
-                                Link do Spotify
-                            </label>
-
-                            <input type="url" id="linkMusica" name="linkMusica" placeholder="Cole o link da música">
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- =================================
+                    <!-- =================================
                      CAMPOS DE ÁLBUM
                 ================================== -->
 
-                <div class="grupo-campos" id="campos-album" hidden>
+                    <div class="grupo-campos" id="campos-album" hidden>
 
-                    <div class="campo">
+                        <div class="campo">
 
-                        <label for="nomeAlbum">
-                            Nome do álbum
-                        </label>
+                            <label for="nomeAlbum">
+                                Nome do álbum
+                            </label>
 
-                        <input type="text" id="nomeAlbum" name="nomeAlbum" placeholder="Digite o nome do álbum">
+                            <input type="text" id="nomeAlbum" name="nomeAlbum" placeholder="Digite o nome do álbum">
+
+                        </div>
+
+
+                        <div class="grade-campos">
+
+                            <div class="campo">
+
+                                <label for="artistaAlbum">
+                                    Artista
+                                </label>
+
+                                <input type="text" id="artistaAlbum" name="artistaAlbum" placeholder="Nome do artista">
+
+                            </div>
+
+
+                            <div class="campo">
+
+                                <label for="dataAlbum">
+                                    Data de lançamento
+                                </label>
+
+                                <input type="date" id="dataAlbum" name="dataAlbum">
+
+                            </div>
+
+
+                            <div class="campo">
+
+                                <label for="generoAlbum">
+                                    Gênero musical
+                                </label>
+
+                                <input type="text" id="generoAlbum" name="generoAlbum"
+                                    placeholder="Ex.: Pop, Rock, Indie">
+
+                            </div>
+
+
+                            <div class="campo">
+
+                                <label for="linkAlbum">
+                                    Link do Spotify
+                                </label>
+
+                                <input type="url" id="linkAlbum" name="linkAlbum" placeholder="Cole o link do álbum">
+
+                            </div>
+
+                        </div>
 
                     </div>
 
 
-                    <div class="grade-campos">
-
-                        <div class="campo">
-
-                            <label for="artistaAlbum">
-                                Artista
-                            </label>
-
-                            <input type="text" id="artistaAlbum" name="artistaAlbum" placeholder="Nome do artista">
-
-                        </div>
-
-
-                        <div class="campo">
-
-                            <label for="dataAlbum">
-                                Data de lançamento
-                            </label>
-
-                            <input type="date" id="dataAlbum" name="dataAlbum">
-
-                        </div>
-
-
-                        <div class="campo">
-
-                            <label for="generoAlbum">
-                                Gênero musical
-                            </label>
-
-                            <input type="text" id="generoAlbum" name="generoAlbum" placeholder="Ex.: Pop, Rock, Indie">
-
-                        </div>
-
-
-                        <div class="campo">
-
-                            <label for="linkAlbum">
-                                Link do Spotify
-                            </label>
-
-                            <input type="url" id="linkAlbum" name="linkAlbum" placeholder="Cole o link do álbum">
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- =================================
+                    <!-- =================================
                      CAMPOS DE ARTISTA
                 ================================== -->
 
-                <div class="grupo-campos" id="campos-artista" hidden>
+                    <div class="grupo-campos" id="campos-artista" hidden>
 
-                    <div class="campo">
+                        <div class="campo">
 
-                        <label for="nomeArtista">
-                            Nome artístico
-                        </label>
+                            <label for="nomeArtista">
+                                Nome artístico
+                            </label>
 
-                        <input type="text" id="nomeArtista" name="nomeArtista" placeholder="Digite o nome do artista">
+                            <input type="text" id="nomeArtista" name="nomeArtista"
+                                placeholder="Digite o nome do artista">
+
+                        </div>
+
+
+                        <div class="grade-campos">
+
+                            <div class="campo">
+
+                                <label for="generoArtista">
+                                    Gênero musical
+                                </label>
+
+                                <input type="text" id="generoArtista" name="generoArtista"
+                                    placeholder="Ex.: Rock, Pop, Rap">
+
+                            </div>
+
+
+                            <div class="campo">
+
+                                <label for="paisArtista">
+                                    País de origem
+                                </label>
+
+                                <input type="text" id="paisArtista" name="paisArtista" placeholder="País do artista">
+
+                            </div>
+
+
+                            <div class="campo campo-completo">
+
+                                <label for="linkArtista">
+                                    Link do Spotify
+                                </label>
+
+                                <input type="url" id="linkArtista" name="linkArtista"
+                                    placeholder="Cole o link do artista">
+
+                            </div>
+
+                        </div>
 
                     </div>
 
 
-                    <div class="grade-campos">
+                    <!-- BOTÃO DINÂMICO -->
 
-                        <div class="campo">
+                    <div class="area-botao-enviar">
 
-                            <label for="generoArtista">
-                                Gênero musical
-                            </label>
+                        <button type="submit" id="botaoEnviarCadastro">
 
-                            <input type="text" id="generoArtista" name="generoArtista"
-                                placeholder="Ex.: Rock, Pop, Rap">
+                            Enviar Música
 
-                        </div>
-
-
-                        <div class="campo">
-
-                            <label for="paisArtista">
-                                País de origem
-                            </label>
-
-                            <input type="text" id="paisArtista" name="paisArtista" placeholder="País do artista">
-
-                        </div>
-
-
-                        <div class="campo campo-completo">
-
-                            <label for="linkArtista">
-                                Link do Spotify
-                            </label>
-
-                            <input type="url" id="linkArtista" name="linkArtista" placeholder="Cole o link do artista">
-
-                        </div>
+                        </button>
 
                     </div>
-
-                </div>
-
-
-                <!-- BOTÃO DINÂMICO -->
-
-                <div class="area-botao-enviar">
-
-                    <button type="submit" id="botaoEnviarCadastro">
-
-                        Enviar Música
-
-                    </button>
-
-                </div>
 
             </form>
 
