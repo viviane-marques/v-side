@@ -24,6 +24,7 @@ var avaliacaoRouter = require("./src/routes/avaliacoes");
 var favoritoRouter = require("./src/routes/favoritos");
 var dashboardRouter = require("./src/routes/dashboard");
 var playlistRouter = require("./src/routes/playlists");
+var jogoRouter = require('./src/routes/jogo');
 var testeRouter = require("./src/routes/teste"); // provisória: apague no fim do projeto
 
 app.use(express.json({limit: "1mb"})); // entende JSON enviado pelo fetch
@@ -50,6 +51,7 @@ app.use("/avaliacoes", avaliacaoRouter);
 app.use("/favoritos", favoritoRouter);
 app.use("/dashboard", dashboardRouter);
 app.use("/playlists", playlistRouter);
+app.use("/jogo", jogoRouter);
 app.use("/teste", testeRouter);
 
 app.listen(PORTA_APP, function () {

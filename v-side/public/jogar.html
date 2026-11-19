@@ -205,37 +205,47 @@
 
                     <div class="linha-tempo">
 
-                        <div class="marcadores-tempo">
-
-                            <span>0:00</span>
-                            <span>0:05</span>
-                            <span>0:10</span>
-                            <span>0:15</span>
-                            <span>0:20</span>
-                            <span>0:30</span>
-
+                        <!-- cada rótulo fica no FIM da sua etapa; o JS acende os já liberados -->
+                        <div class="marcadores-tempo" id="marcadoresTempo">
+                            <span>0,5s</span>
+                            <span>1s</span>
+                            <span>5s</span>
+                            <span>10s</span>
+                            <span>15s</span>
                         </div>
 
-                        <input type="range" id="barraAudio" min="0" max="30" value="0" step="0.1"
-                            aria-label="Progresso da música">
+                        <!-- a barra só MOSTRA o progresso (a pessoa não arrasta) -->
+                        <div class="barra-wrapper" id="barraWrapper">
+                            <input type="range" id="barraAudio" min="0" max="100" value="0" step="0.1" tabindex="-1"
+                                aria-label="Progresso do trecho">
+                            <div class="barra-bloqueada"></div>
+                            <div class="barra-divisorias"></div>
+                        </div>
 
                     </div>
 
-                </div>
-
-
-                <div class="informacoes-tempo">
-
-                    <span id="tempoDecorrido">Tempo: 0:00</span>
-
-                    <span id="tempoRestante">Restam: 0:30</span>
+                    <input type="range" id="barraAudio" min="0" max="30" value="0" step="0.1"
+                        aria-label="Progresso da música">
 
                 </div>
-
-                <audio id="audioMusica" preload="none"></audio>
 
             </div>
 
+
+            <div class="informacoes-tempo">
+
+                <span id="tempoDecorrido">Trecho liberado: 0,5s</span>
+
+                <span id="tempoRestante">Tentativa 1 de 5</span>
+
+            </div>
+
+            <audio id="audioMusica" preload="none"></audio>
+
+            </div>
+
+            <!-- AS 5 TENTATIVAS (o JS preenche) -->
+            <ol class="lista-tentativas" id="listaTentativas" aria-label="Tentativas"></ol>
 
             <!-- CAMPO PARA ADIVINHAR A MÚSICA -->
 
@@ -243,10 +253,14 @@
 
                 <span class="icone-pesquisa">⌕</span>
 
-                <input type="text" id="respostaMusica" placeholder="Buscar música..." autocomplete="off"
+                <input type="text" id="respostaMusica" placeholder="Digite o nome da música..." autocomplete="off"
                     aria-label="Digite o nome da música">
 
-                <button type="submit" class="botao-responder">
+                <button type="button" id="botaoPular" class="botao-responder botao-pular">
+                    Pular
+                </button>
+
+                <button type="submit" id="botaoAdivinhar" class="botao-responder">
                     Adivinhar
                 </button>
 

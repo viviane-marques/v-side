@@ -855,3 +855,148 @@ body {
     }
 
 }
+
+/* =========================================
+   MODO "V-GUESS": etapas, tentativas e pular
+========================================= */
+
+/* 5 rótulos, um por etapa, alinhados ao FIM de cada trecho */
+.marcadores-tempo {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+}
+
+.marcadores-tempo span {
+    text-align: right;
+    padding-right: 6px;
+
+    opacity: 0.45; /* bloqueado */
+    transition: opacity 0.2s ease;
+}
+
+.marcadores-tempo span.liberada {
+    opacity: 1;
+}
+
+/* A barra agora só mostra o progresso (não dá para arrastar) */
+.barra-wrapper {
+    position: relative;
+}
+
+.barra-wrapper #barraAudio {
+    display: block;
+    pointer-events: none;
+}
+
+/* Escurece o que ainda não foi liberado. A variável --liberado vem do JS */
+.barra-bloqueada {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--liberado, 20%);
+    right: 0;
+
+    background: rgba(23, 30, 50, 0.45);
+    border-radius: 0 20px 20px 0;
+
+    pointer-events: none;
+    transition: left 0.3s ease;
+}
+
+/* Traços que separam as 5 etapas (a cada 20%) */
+.barra-divisorias {
+    position: absolute;
+    inset: 0;
+
+    pointer-events: none;
+
+    background: repeating-linear-gradient(
+        to right,
+        transparent 0,
+        transparent calc(20% - 2px),
+        rgba(255, 255, 255, 0.55) calc(20% - 2px),
+        rgba(255, 255, 255, 0.55) 20%
+    );
+}
+
+/* As 5 tentativas */
+.lista-tentativas {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+}
+
+.lista-tentativas li {
+    padding: 6px 8px;
+
+    border: 2px solid transparent;
+    border-radius: 8px;
+
+    background: rgba(23, 30, 50, 0.55);
+    color: #F1E1CB;
+
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.lista-tentativas li.atual {
+    border-color: #E8D9C2;
+}
+
+.lista-tentativas li.erro {
+    background: rgba(176, 58, 58, 0.75);
+}
+
+.lista-tentativas li.pulo {
+    background: rgba(23, 30, 50, 0.9);
+    font-style: italic;
+}
+
+.lista-tentativas li.acerto {
+    background: #2E7D50;
+    color: #FFFFFF;
+}
+
+/* Botão Pular (contorno, para não competir com o "Adivinhar") */
+.botao-pular {
+    background-color: transparent;
+    color: #E8D9C2;
+    border: 1px solid #E8D9C2;
+}
+
+.botao-pular:hover {
+    background-color: rgba(232, 217, 194, 0.15);
+}
+
+.botao-responder:disabled,
+.botao-dica:disabled,
+.botao-play:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Celular: o botão Pular quebra de linha para caber */
+@media (max-width: 600px) {
+    .lista-tentativas li {
+        font-size: 11px;
+        padding: 5px 3px;
+    }
+
+    .formulario-resposta {
+        flex-wrap: wrap;
+        padding: 8px 10px;
+    }
+
+    .formulario-resposta input {
+        flex: 1 1 100%;
+    }
+}
