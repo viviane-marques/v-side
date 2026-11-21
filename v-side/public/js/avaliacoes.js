@@ -55,7 +55,7 @@
         const principal = el('div', 'avaliacao-principal');
 
         const capa = el('img', 'capa-avaliacao');
-        capa.src = V.capaPlaceholder(av.musica);
+        capa.src = av.capa || V.capaPlaceholder(av.musica);
         capa.alt = 'Capa de ' + av.musica;
         principal.appendChild(capa);
 
