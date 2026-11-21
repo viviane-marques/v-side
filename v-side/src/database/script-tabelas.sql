@@ -1,10 +1,6 @@
--- Cria o banco do V-Side e passa a usá-lo
 CREATE DATABASE IF NOT EXISTS vside;
 USE vside;
 
--- USUÁRIOS
--- senha tem 100 caracteres porque o hash do bcrypt tem 60 (o template usava 50 e cortaria o hash)
--- email é UNIQUE: o banco impede dois cadastros com o mesmo email
 CREATE TABLE usuario (
     id INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(50) NOT NULL,
@@ -14,13 +10,22 @@ CREATE TABLE usuario (
     criado_em DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- AVALIAÇÕES
--- fk_usuario liga a avaliação ao seu autor: é isso que garante que
--- cada pessoa só enxergue as próprias avaliações (WHERE fk_usuario = ...)
--- ON DELETE CASCADE: se o usuário for apagado, as avaliações dele vão junto
+CREATE TABLE musica (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    fk_usuario INT NULL,
+    titulo VARCHAR(150) COLLATE utf8mb4_unicode_ci NOT NULL,
+    artista VARCHAR(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+    album VARCHAR(150) NULL,
+    capa  MEDIUMTEXT NULL,
+    criado_em DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_musica (titulo, artista),
+    FOREIGN KEY (fk_usuario) REFERENCES usuario(id) ON DELETE SET NULL
+);
+
 CREATE TABLE avaliacao (
     id INT PRIMARY KEY AUTO_INCREMENT,
     fk_usuario INT NOT NULL,
+    fk_musica INT NULL,
     musica VARCHAR(150) NOT NULL,
     artista VARCHAR(100) NOT NULL,
     album VARCHAR(150),
@@ -28,13 +33,10 @@ CREATE TABLE avaliacao (
     resenha TEXT NOT NULL,
     criado_em DATETIME DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT chk_nota CHECK (nota BETWEEN 1 AND 5),
+    CONSTRAINT fk_avaliacao_musica FOREIGN KEY (fk_musica) REFERENCES musica(id) ON DELETE SET NULL,
     FOREIGN KEY (fk_usuario) REFERENCES usuario(id) ON DELETE CASCADE
 );
 
--- FAVORITOS
--- Cada linha = "este usuário favoritou esta música (avaliação)".
--- UNIQUE (fk_usuario, fk_avaliacao): impede favoritar a mesma música duas vezes.
--- O artista que aparece em "Favoritos" vem do campo artista da avaliação.
 CREATE TABLE favorito (
     id INT PRIMARY KEY AUTO_INCREMENT,
     fk_usuario INT NOT NULL,
@@ -43,36 +45,4 @@ CREATE TABLE favorito (
     UNIQUE (fk_usuario, fk_avaliacao),
     FOREIGN KEY (fk_usuario) REFERENCES usuario(id) ON DELETE CASCADE,
     FOREIGN KEY (fk_avaliacao) REFERENCES avaliacao(id) ON DELETE CASCADE
-);
-
--- PLAYLIST
-CREATE TABLE playlist (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    fk_usuario INT NOT NULL,
-    titulo VARCHAR(80) NOT NULL,
-    descricao VARCHAR(300) NULL,
-    capa MEDIUMTEXT NULL,
-    criado_em DATETIME DEFAULT CURRENT_TIMESTAMP,
-    atualizado_em DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (fk_usuario) REFERENCES usuario(id) ON DELETE CASCADE
-);
-
--- PLAYLIST_MUSICA
-CREATE TABLE playlist_musica (
-    fk_playlist INT NOT NULL,
-    fk_avaliacao INT NOT NULL,
-    posicao INT NOT NULL,
-    PRIMARY KEY (fk_playlist, fk_avaliacao),
-    FOREIGN KEY (fk_playlist) REFERENCES playlist(id) ON DELETE CASCADE,
-    FOREIGN KEY (fk_avaliacao) REFERENCES avaliacao(id) ON DELETE CASCADE
-);
-
--- PARTIDA
-CREATE TABLE partida (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    fk_usuario INT NOT NULL,
-    acertou TINYINT(1) NOT NULL,
-    tentativas TINYINT NOT NULL,
-    criado_em DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (fk_usuario) REFERENCES usuario(id) ON DELETE CASCADE
 );
