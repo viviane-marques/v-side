@@ -50,7 +50,7 @@
         totalAvaliacoes: document.getElementById('totalAvaliacoes'),
         mediaNotas: document.getElementById('mediaNotas'),
         totalFavoritos: document.getElementById('totalFavoritos'),
-        totalArtistas: document.getElementById('totalArtistas'),
+        totalPlaylists: document.getElementById('totalPlaylists'),
         taxaJogo: document.getElementById('taxaJogo'),
         detalheJogo: document.getElementById('detalheJogo'),
         grafico: document.getElementById('graficoAvaliacoes'),
@@ -112,7 +112,7 @@
         el.totalAvaliacoes.textContent = kpis.avaliacoes;
         el.mediaNotas.textContent = kpis.media === null ? '–' : formatarDecimal(kpis.media);
         el.totalFavoritos.textContent = kpis.favoritos;
-        el.totalArtistas.textContent = kpis.artistas;
+        el.totalPlaylists.textContent = kpis.playlists;
     }
 
     function mostrarJogo(jogo) {

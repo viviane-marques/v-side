@@ -8,7 +8,7 @@ function indicadores(usuarioId) {
             (SELECT COUNT(*)               FROM avaliacao WHERE fk_usuario = ?) AS avaliacoes,
             (SELECT AVG(nota)              FROM avaliacao WHERE fk_usuario = ?) AS media,
             (SELECT COUNT(*)               FROM favorito  WHERE fk_usuario = ?) AS favoritos,
-            (SELECT COUNT(DISTINCT artista) FROM avaliacao WHERE fk_usuario = ?) AS artistas;
+            (SELECT COUNT(*)               FROM playlist  WHERE fk_usuario = ?) AS playlists;
     `;
     return database.executar(instrucaoSql, [usuarioId, usuarioId, usuarioId, usuarioId]);
 }

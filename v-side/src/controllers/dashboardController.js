@@ -52,7 +52,7 @@ function carregar(req, res) {
                     avaliacoes: ind.avaliacoes,
                     media: ind.media === null ? null : Number(Number(ind.media).toFixed(1)),
                     favoritos: ind.favoritos,
-                    artistas: ind.artistas
+                    playlists: ind.playlists
                 },
                 jogo: {
                     partidas: partidas,
