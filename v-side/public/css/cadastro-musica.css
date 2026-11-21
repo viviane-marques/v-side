@@ -194,6 +194,62 @@
     color: rgba(23, 30, 50, 0.65);
 }
 
+/* =========================================
+   CAPA DO ÁLBUM
+========================================= */
+
+.rotulo-capa {
+    color: #171E32;
+
+    font-family: var(--fonte-titulos);
+    font-size: 21px;
+    font-weight: 600;
+}
+
+.campo-capa-album {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 18px;
+}
+
+.previa-capa-album {
+    width: 140px;
+    height: 140px;
+    flex-shrink: 0;
+
+    object-fit: cover;
+
+    border-radius: 9px;
+    background: #c99b9b;
+}
+
+.linha-botoes-capa {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.botao-capa {
+    padding: 8px 13px;
+
+    border: 1px solid #171E32;
+    border-radius: 7px;
+
+    background: transparent;
+    color: #171E32;
+
+    font-family: var(--fonte-principal);
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.botao-capa:hover {
+    background: rgba(23, 30, 50, 0.12);
+}
 
 /* =========================================
    7. ORGANIZAÇÃO EM DUAS COLUNAS

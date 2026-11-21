@@ -3,9 +3,7 @@ var database = require("../database/config");
 // Colunas devolvidas ao site. NÃO inclui fk_usuario: ninguém precisa saber
 // quem cadastrou a música (e isso protege a privacidade de quem cadastrou).
 var COLUNAS = `
-    id, titulo, artista, album,
-    duracao_seg AS duracaoSeg,
-    link_spotify AS linkSpotify
+    id, titulo, artista, album, capa
 `;
 
 // Lista até 10 músicas do catálogo (de TODOS os usuários).
@@ -39,12 +37,12 @@ function buscarPorTituloArtista(titulo, artista) {
 }
 
 // Grava a música no catálogo, registrando quem cadastrou
-function cadastrar(usuarioId, titulo, artista, album, duracaoSeg, linkSpotify) {
+function cadastrar(usuarioId, titulo, artista, album, capa) {
     var instrucaoSql = `
-        INSERT INTO musica (fk_usuario, titulo, artista, album, duracao_seg, link_spotify)
-        VALUES (?, ?, ?, ?, ?, ?);
+        INSERT INTO musica (fk_usuario, titulo, artista, album, capa)
+        VALUES (?, ?, ?, ?, ?);
     `;
-    return database.executar(instrucaoSql, [usuarioId, titulo, artista, album, duracaoSeg, linkSpotify]);
+    return database.executar(instrucaoSql, [usuarioId, titulo, artista, album, capa]);
 }
 
 module.exports = {

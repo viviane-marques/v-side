@@ -1,19 +1,8 @@
 var musicaModel = require("../models/musicaModel");
 
-// Só aceitamos links do Spotify (e só https): o link vira um <a href> na tela,
-// então nunca podemos guardar algo como "javascript:..."
-var LINK_SPOTIFY = /^https:\/\/open\.spotify\.com\/\S*$/;
-
-// Duração no formato mm:ss (ex.: 03:45)
-var DURACAO = /^(\d{1,3}):([0-5]\d)$/;
-
-// 225 segundos -> "03:45"
-function formatarDuracao(segundos) {
-    if (segundos === null || segundos === undefined) return null;
-    var min = Math.floor(segundos / 60);
-    var seg = segundos % 60;
-    return String(min).padStart(2, "0") + ":" + String(seg).padStart(2, "0");
-}
+// Capa do álbum: JPG, PNG ou WEBP em base64 (o navegador já reduz a imagem antes de enviar,
+// do mesmo jeito que a capa da playlist)
+var FORMATO_CAPA = /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+\/]+=*$/;
 
 // Linha do banco -> objeto que vai para o site
 function formatar(linha) {
@@ -22,8 +11,7 @@ function formatar(linha) {
         titulo: linha.titulo,
         artista: linha.artista,
         album: linha.album,
-        duracao: formatarDuracao(linha.duracaoSeg),
-        linkSpotify: linha.linkSpotify
+        capa: linha.capa
     };
 }
 
@@ -68,7 +56,7 @@ async function obter(req, res) {
     }
 }
 
-// POST /musicas { titulo, artista, album?, duracao?, linkSpotify? }
+// POST /musicas { titulo, artista, album?, capa? }
 // Qualquer usuário logado pode cadastrar; depois, TODOS podem avaliar.
 async function cadastrar(req, res) {
     var usuarioId = req.session.usuarioId; // vem da SESSÃO, nunca do navegador
@@ -76,8 +64,7 @@ async function cadastrar(req, res) {
     var titulo = req.body.titulo;
     var artista = req.body.artista;
     var album = req.body.album;
-    var duracao = req.body.duracao;
-    var linkSpotify = req.body.linkSpotify;
+    var capa = req.body.capa;
 
     // Validações (os mesmos limites das colunas do banco)
     if (typeof titulo !== "string" || titulo.trim() === "" || titulo.trim().length > 150) {
@@ -90,23 +77,13 @@ async function cadastrar(req, res) {
         return res.status(400).json({ erro: "O álbum pode ter até 150 caracteres." });
     }
 
-    // duração (opcional): "03:45" vira 225 segundos
-    var duracaoSeg = null;
-    if (duracao !== undefined && duracao !== null && String(duracao).trim() !== "") {
-        var partes = DURACAO.exec(String(duracao).trim());
-        if (!partes) {
-            return res.status(400).json({ erro: "Informe a duração no formato mm:ss (ex.: 03:45)." });
+    // capa do álbum (opcional): só imagem JPG, PNG ou WEBP, com tamanho limitado
+    if (capa !== undefined && capa !== null && capa !== "") {
+        if (typeof capa !== "string" || capa.length > 300000 || !FORMATO_CAPA.test(capa)) {
+            return res.status(400).json({ erro: "Capa inválida. Use uma imagem JPG, PNG ou WEBP." });
         }
-        duracaoSeg = Number(partes[1]) * 60 + Number(partes[2]);
-    }
-
-    // link (opcional): só do Spotify
-    var link = null;
-    if (linkSpotify !== undefined && linkSpotify !== null && String(linkSpotify).trim() !== "") {
-        link = String(linkSpotify).trim();
-        if (link.length > 300 || !LINK_SPOTIFY.test(link)) {
-            return res.status(400).json({ erro: "O link precisa ser do Spotify (https://open.spotify.com/...)." });
-        }
+    } else {
+        capa = null;
     }
 
     titulo = titulo.trim();
@@ -114,7 +91,7 @@ async function cadastrar(req, res) {
 
     try {
         var resultado = await musicaModel.cadastrar(
-            usuarioId, titulo, artista, album ? album.trim() : null, duracaoSeg, link
+            usuarioId, titulo, artista, album ? album.trim() : null, capa
         );
         res.status(201).json({ id: resultado.insertId });
     } catch (erro) {

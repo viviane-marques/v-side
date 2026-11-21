@@ -350,7 +350,8 @@
     padding: 10px 12px;
 
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    gap: 12px;
 
     border: none;
     border-radius: 6px;
@@ -365,6 +366,21 @@
 .resultado-catalogo:focus-visible {
     background-color: rgba(232, 217, 197, 0.12);
     outline: none;
+}
+
+.resultado-capa {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.resultado-textos {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
 }
 
 .resultado-catalogo small {
