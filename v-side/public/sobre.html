@@ -292,56 +292,45 @@
 
 
             <!-- =================================
-                 2.3. GALERIA DE FOTOGRAFIAS
+                 2.3. GALERIA DE FOTOGRAFIAS (CARROSSEL)
+                 Os slides e as bolinhas são criados pelo js/sobre.js
             ================================== -->
 
             <div class="galeria-sobre-mim">
 
-                <!-- FOTO 1: primeiro setup -->
-                <figure class="foto-sobre">
+                <h3 class="galeria-titulo">Momentos que fazem parte da minha história</h3>
 
-                    <!--
-                        ALTERE A IMAGEM AQUI:
-                    -->
-                    <img src="assets/img/primeiro-setup.png" alt="Meu primeiro setup para tocar guitarra">
+                <div class="carrossel" id="carrosselSobre" tabindex="0" role="region" aria-roledescription="carrossel"
+                    aria-label="Fotos da minha história com a música">
 
-                    <figcaption>
-                        Meu primeiro setup para tocar guitarra
-                    </figcaption>
+                    <!-- Janela: mostra uma foto por vez -->
+                    <div class="carrossel-janela">
+                        <div class="carrossel-trilho" id="carrosselTrilho"></div>
+                    </div>
 
-                </figure>
+                    <!-- Controles: seta, bolinhas e seta -->
+                    <div class="carrossel-controles">
 
+                        <button type="button" class="carrossel-seta" id="carrosselAnterior" aria-label="Foto anterior">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M15 5l-7 7 7 7" />
+                            </svg>
+                        </button>
 
-                <!-- FOTO 2: apresentação em banda -->
-                <figure class="foto-sobre">
+                        <div class="carrossel-centro">
+                            <div class="carrossel-pontos" id="carrosselPontos"></div>
+                            <span class="carrossel-contador" id="carrosselContador" aria-live="polite"></span>
+                        </div>
 
-                    <!--
-                        ALTERE A IMAGEM AQUI:
-                        assets/image-2.png
-                    -->
-                    <img src="assets/img/foto-banda.png" alt="Eu em uma das minhas apresentações em banda">
+                        <button type="button" class="carrossel-seta" id="carrosselProximo" aria-label="Próxima foto">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
 
-                    <figcaption>
-                        Eu em uma das minhas apresentações em banda
-                    </figcaption>
+                    </div>
 
-                </figure>
-
-
-                <!-- FOTO 3: primeiro violão -->
-                <figure class="foto-sobre">
-
-                    <!--
-                        ALTERE A IMAGEM AQUI:
-                        assets/image-1.png
-                    -->
-                    <img src="assets/img/mini-eu.png" alt="Eu aos 3 anos de idade com meu primeiro violão">
-
-                    <figcaption>
-                        Eu, aos 3 anos de idade, com meu primeiro violão
-                    </figcaption>
-
-                </figure>
+                </div>
 
             </div>
 
@@ -451,6 +440,7 @@
     </footer>
 
     <script src="js/global.js"></script>
+    <script src="js/sobre.js"></script>
 </body>
 
 </html>
