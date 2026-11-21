@@ -448,6 +448,12 @@
           mostrarMensagem(formCadastro, "As senhas não coincidem.");
           return;
         }
+        
+        // A senha precisa cumprir todos os critérios (regras em js/forca-senha.js)
+        if (window.VSideSenha && !window.VSideSenha.ehForte(senha)) {
+          mostrarMensagem(formCadastro, "Sua senha ainda não atende a todos os critérios.");
+          return;
+        }
 
         const botao = formCadastro.querySelector('button[type="submit"]');
         botao.disabled = true;
