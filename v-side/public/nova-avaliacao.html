@@ -157,13 +157,40 @@
 
                 <!-- NOME DA MÚSICA -->
 
+                <!-- BUSCA NO CATÁLOGO (músicas cadastradas por todos os usuários) -->
+
+                <div class="campo-avaliacao campo-busca-catalogo">
+
+                    <label for="buscaCatalogo">
+                        Buscar música no catálogo
+                    </label>
+
+                    <input type="search" id="buscaCatalogo" autocomplete="off"
+                        placeholder="Digite o nome da música, do artista ou do álbum...">
+
+                    <!-- lista de resultados (o JS preenche e mostra/esconde) -->
+                    <ul id="resultadosCatalogo" class="resultados-catalogo" hidden></ul>
+
+                    <p class="dica-catalogo">
+                        Não achou? <a href="cadastro-musica.html">Cadastre a música</a> e avalie em seguida.
+                    </p>
+
+                </div>
+
+                <!-- id da música escolhida (é ele que vai para o servidor) -->
+                <input type="hidden" id="musicaId" value="">
+
+
+                <!-- NOME DA MÚSICA (preenchido ao escolher; somente leitura) -->
+
                 <div class="campo-avaliacao">
 
                     <label for="nomeMusica">
                         Nome da música
                     </label>
 
-                    <input type="text" id="nomeMusica" name="nomeMusica" required>
+                    <input type="text" id="nomeMusica" name="nomeMusica" readonly
+                        placeholder="Escolha uma música na busca acima">
 
                 </div>
 
@@ -176,7 +203,7 @@
                         Artista
                     </label>
 
-                    <input type="text" id="nomeArtista" name="nomeArtista" required>
+                    <input type="text" id="nomeArtista" name="nomeArtista" readonly>
 
                 </div>
 
@@ -189,7 +216,7 @@
                         Álbum
                     </label>
 
-                    <input type="text" id="nomeAlbum" name="nomeAlbum">
+                    <input type="text" id="nomeAlbum" name="nomeAlbum" readonly>
 
                 </div>
 

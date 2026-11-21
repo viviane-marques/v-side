@@ -1,4 +1,5 @@
 var avaliacaoModel = require("../models/avaliacaoModel");
+var musicaModel = require("../models/musicaModel");
 
 // GET /avaliacoes -> as avaliações do usuário logado
 function listar(req, res) {
@@ -21,24 +22,19 @@ function listar(req, res) {
 }
 
 // POST /avaliacoes -> salva uma nova avaliação no nome do usuário logado
-function cadastrar(req, res) {
+// POST /avaliacoes { musicaId, nota, resenha } -> salva uma nova avaliação no nome do usuário logado
+// A música agora vem do CATÁLOGO: o navegador manda só o id, e o servidor busca
+// título, artista e álbum no banco (assim ninguém grava dados inventados).
+async function cadastrar(req, res) {
     var usuarioId = req.session.usuarioId;
 
-    var musica = req.body.musica;
-    var artista = req.body.artista;
-    var album = req.body.album;
+    var musicaId = req.body.musicaId;
     var nota = req.body.nota;
     var resenha = req.body.resenha;
 
-    // Validações (os mesmos limites das colunas do banco)
-    if (typeof musica !== "string" || musica.trim() === "" || musica.trim().length > 150) {
-        return res.status(400).json({ erro: "Informe o nome da música (até 150 caracteres)." });
-    }
-    if (typeof artista !== "string" || artista.trim() === "" || artista.trim().length > 100) {
-        return res.status(400).json({ erro: "Informe o artista (até 100 caracteres)." });
-    }
-    if (album !== undefined && album !== null && (typeof album !== "string" || album.trim().length > 150)) {
-        return res.status(400).json({ erro: "O álbum pode ter até 150 caracteres." });
+    // Validações
+    if (!Number.isInteger(musicaId) || musicaId < 1) {
+        return res.status(400).json({ erro: "Escolha uma música do catálogo." });
     }
     if (!Number.isInteger(nota) || nota < 1 || nota > 5) {
         return res.status(400).json({ erro: "A nota precisa ser um número de 1 a 5." });
@@ -47,21 +43,33 @@ function cadastrar(req, res) {
         return res.status(400).json({ erro: "Escreva a resenha (até 1500 caracteres)." });
     }
 
-    avaliacaoModel.cadastrar(
-        usuarioId,
-        musica.trim(),
-        artista.trim(),
-        album ? album.trim() : "",
-        nota,
-        resenha.trim()
-    )
-        .then(function (resultado) {
-            res.status(201).json({ id: resultado.insertId });
-        })
-        .catch(function (erro) {
-            console.log(erro);
-            res.status(500).json({ erro: "Erro ao salvar a avaliação." });
-        });
+    try {
+        // a música existe no catálogo?
+        var encontradas = await musicaModel.buscarPorId(musicaId);
+
+        if (encontradas.length === 0) {
+            return res.status(404).json({ erro: "Música não encontrada no catálogo." });
+        }
+
+        var musica = encontradas[0];
+
+        // fk_usuario = quem está logado (sessão). Mesmo que a música tenha sido cadastrada
+        // por outra pessoa, a avaliação pertence SÓ a quem a escreveu.
+        var resultado = await avaliacaoModel.cadastrar(
+            usuarioId,
+            musica.id,
+            musica.titulo,
+            musica.artista,
+            musica.album || "",
+            nota,
+            resenha.trim()
+        );
+
+        res.status(201).json({ id: resultado.insertId });
+    } catch (erro) {
+        console.log(erro);
+        res.status(500).json({ erro: "Erro ao salvar a avaliação." });
+    }
 }
 
 module.exports = {

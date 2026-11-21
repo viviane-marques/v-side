@@ -17,17 +17,14 @@ function listarDoUsuario(usuarioId) {
     return database.executar(instrucaoSql, [usuarioId]);
 }
 
-// Grava uma avaliação no nome do usuário
-function cadastrar(usuarioId, musica, artista, album, nota, resenha) {
+function cadastrar(usuarioId, musicaId, musica, artista, album, nota, resenha) {
     var instrucaoSql = `
-        INSERT INTO avaliacao (fk_usuario, musica, artista, album, nota, resenha)
-        VALUES (?, ?, ?, ?, ?, ?);
+        INSERT INTO avaliacao (fk_usuario, fk_musica, musica, artista, album, nota, resenha)
+        VALUES (?, ?, ?, ?, ?, ?, ?);
     `;
-    return database.executar(instrucaoSql, [usuarioId, musica, artista, album, nota, resenha]);
+    return database.executar(instrucaoSql, [usuarioId, musicaId, musica, artista, album, nota, resenha]);
 }
 
-// Procura UMA avaliação, mas só se ela for do usuário informado
-// (usado para impedir favoritar a avaliação de outra pessoa)
 function buscarDoUsuario(usuarioId, avaliacaoId) {
     var instrucaoSql = "SELECT id FROM avaliacao WHERE id = ? AND fk_usuario = ?;";
     return database.executar(instrucaoSql, [avaliacaoId, usuarioId]);

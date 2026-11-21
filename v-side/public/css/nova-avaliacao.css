@@ -312,3 +312,82 @@
     }
 
 }
+
+/* =========================================
+   BUSCA NO CATÁLOGO
+========================================= */
+
+/* position: relative deixa a lista "flutuar" logo abaixo do campo */
+.campo-busca-catalogo {
+    position: relative;
+}
+
+.resultados-catalogo {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 20;
+
+    max-height: 320px;
+    overflow-y: auto;
+
+    margin: 4px 0 0;
+    padding: 4px;
+    list-style: none;
+
+    background-color: #171E32;
+    border-radius: 8px;
+}
+
+/* o atributo hidden precisa vencer o display definido acima */
+.resultados-catalogo[hidden] {
+    display: none;
+}
+
+.resultado-catalogo {
+    width: 100%;
+    padding: 10px 12px;
+
+    display: flex;
+    flex-direction: column;
+
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: #E8D9C5;
+
+    text-align: left;
+    cursor: pointer;
+}
+
+.resultado-catalogo:hover,
+.resultado-catalogo:focus-visible {
+    background-color: rgba(232, 217, 197, 0.12);
+    outline: none;
+}
+
+.resultado-catalogo small {
+    opacity: 0.75;
+}
+
+.resultado-mensagem {
+    padding: 12px;
+    color: #E8D9C5;
+}
+
+.dica-catalogo {
+    font-size: 14px;
+    color: #171E32;
+}
+
+.dica-catalogo a {
+    font-weight: 700;
+    text-decoration: underline;
+}
+
+/* campos preenchidos pela escolha: não dá para digitar neles */
+.campo-avaliacao input[readonly] {
+    opacity: 0.85;
+    cursor: default;
+}

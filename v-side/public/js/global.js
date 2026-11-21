@@ -257,6 +257,28 @@
     return chamarApi("/avaliacoes");
   }
 
+    /* -----------------------------------------
+       CATÁLOGO DE MÚSICAS (compartilhado entre todos os usuários)
+    ----------------------------------------- */
+
+  // GET /musicas?busca=... -> até 10 músicas do catálogo (sem busca = as mais recentes)
+  function listarMusicas(busca) {
+    return chamarApi("/musicas?busca=" + encodeURIComponent(busca || ""));
+  }
+
+  // GET /musicas/:id -> uma música do catálogo
+  function obterMusica(id) {
+    return chamarApi("/musicas/" + encodeURIComponent(id));
+  }
+
+  // POST /musicas -> cadastra uma música no catálogo
+  function cadastrarMusica(dados) {
+    return chamarApi("/musicas", {
+      method: "POST",
+      body: JSON.stringify(dados),
+    });
+  }
+
   // POST /avaliacoes -> salva uma avaliação nova
   function salvarAvaliacao(dados) {
     return chamarApi("/avaliacoes", {
@@ -495,6 +517,9 @@
     chamarApi: chamarApi,
     listarAvaliacoes: listarAvaliacoes,
     salvarAvaliacao: salvarAvaliacao,
+    listarMusicas: listarMusicas,
+    obterMusica: obterMusica,
+    cadastrarMusica: cadastrarMusica,
     favoritar: favoritar,
     desfavoritar: desfavoritar,
     listarArtistasFavoritos: listarArtistasFavoritos,

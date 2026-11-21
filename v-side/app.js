@@ -25,7 +25,7 @@ var favoritoRouter = require("./src/routes/favoritos");
 var dashboardRouter = require("./src/routes/dashboard");
 var playlistRouter = require("./src/routes/playlists");
 var jogoRouter = require('./src/routes/jogo');
-var testeRouter = require("./src/routes/teste"); // provisória: apague no fim do projeto
+var musicaRouter = require('./src/routes/musicas');
 
 app.use(express.json({limit: "1mb"})); // entende JSON enviado pelo fetch
 app.use(express.urlencoded({ extended: false }));
@@ -52,7 +52,7 @@ app.use("/favoritos", favoritoRouter);
 app.use("/dashboard", dashboardRouter);
 app.use("/playlists", playlistRouter);
 app.use("/jogo", jogoRouter);
-app.use("/teste", testeRouter);
+app.use("/musicas", musicaRouter);
 
 app.listen(PORTA_APP, function () {
     console.log(`\n    V-Side no ar! Acesse: http://${HOST_APP}:${PORTA_APP}`);
