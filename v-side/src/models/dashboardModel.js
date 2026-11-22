@@ -1,7 +1,6 @@
 var database = require("../database/config");
 
-// Os 4 números dos cards, numa consulta só (4 sub-consultas).
-// Todas filtram por fk_usuario: cada pessoa só soma o que é dela.
+//subquerys para as kpis
 function indicadores(usuarioId) {
     var instrucaoSql = `
         SELECT
@@ -13,8 +12,7 @@ function indicadores(usuarioId) {
     return database.executar(instrucaoSql, [usuarioId, usuarioId, usuarioId, usuarioId]);
 }
 
-// Média das notas e quantidade de avaliações por mês, no ano atual.
-// Só vêm os meses em que houve avaliação (o controller completa os outros).
+// media e quantidade de avaliacoes por mes no ano atual
 function serieMensal(usuarioId) {
     var instrucaoSql = `
         SELECT MONTH(criado_em) AS mes,
@@ -29,8 +27,7 @@ function serieMensal(usuarioId) {
     return database.executar(instrucaoSql, [usuarioId]);
 }
 
-// Últimas 7 atividades: junta avaliações e favoritos numa lista só (UNION ALL)
-// e ordena da mais recente para a mais antiga.
+// subquerys para atividades recentes (ultimas 7 pra caber)
 function atividades(usuarioId) {
     var instrucaoSql = `
         (SELECT 'avaliacao' AS tipo, a.musica, a.artista, a.nota,
@@ -51,7 +48,7 @@ function atividades(usuarioId) {
     return database.executar(instrucaoSql, [usuarioId, usuarioId]);
 }
 
-// Resumo do jogo: quantas rodadas a pessoa jogou e em quantas acertou.
+// total de partidas e acertos no jogo
 function jogo(usuarioId) {
     var instrucaoSql = `
         SELECT COUNT(*)     AS partidas,

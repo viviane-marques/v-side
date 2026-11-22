@@ -1,6 +1,7 @@
 CREATE DATABASE IF NOT EXISTS vside;
 USE vside;
 
+-- senha com hash para maior segurança
 CREATE TABLE IF NOT EXISTS usuario (
   id         INT          NOT NULL AUTO_INCREMENT,
   nome       VARCHAR(50)  NOT NULL,
@@ -12,6 +13,7 @@ CREATE TABLE IF NOT EXISTS usuario (
   UNIQUE KEY email (email)
 );
 
+-- catalogo compartilhado entre usuarios e fala qual usuario cadastrou qual musica pelo idUsuario
 CREATE TABLE IF NOT EXISTS musica (
   id            INT               NOT NULL AUTO_INCREMENT,
   fk_usuario    INT               NULL,
@@ -51,6 +53,7 @@ CREATE TABLE IF NOT EXISTS avaliacao (
     ON DELETE SET NULL
 );
 
+-- liga o usuario a avaliacao, sem ligar ele a musica
 CREATE TABLE IF NOT EXISTS favorito (
   id            INT      NOT NULL AUTO_INCREMENT,
   fk_usuario    INT      NOT NULL,
@@ -108,3 +111,5 @@ CREATE TABLE IF NOT EXISTS playlist_musica (
     FOREIGN KEY (fk_avaliacao) REFERENCES avaliacao (id)
     ON DELETE CASCADE
 );
+
+-- on delete e set null define oq some quando alguma info é deletda

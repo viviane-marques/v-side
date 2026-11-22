@@ -1,12 +1,10 @@
 var usuarioModel = require("../models/usuarioModel");
 var dashboardModel = require("../models/dashboardModel");
 
-// GET /dashboard -> tudo que a tela da dashboard precisa, numa resposta só
+// carlcula todas as kpis
 function carregar(req, res) {
-    // O id vem da SESSÃO (servidor), nunca do navegador
     var usuarioId = req.session.usuarioId;
 
-    // Promise.all dispara as 5 consultas ao mesmo tempo e espera todas terminarem
     Promise.all([
         usuarioModel.buscarPerfil(usuarioId),
         dashboardModel.indicadores(usuarioId),
@@ -17,15 +15,12 @@ function carregar(req, res) {
         .then(function (resultados) {
             var perfil = resultados[0][0];
 
-            // usuário foi apagado do banco: trata como "não logado"
             if (!perfil) {
                 return res.status(401).json({ erro: "Não logado." });
             }
 
             var ind = resultados[1][0];
 
-            // Monta os 12 meses (Jan..Dez). Mês sem avaliação fica com media = null
-            // (o gráfico deixa um vazio no lugar).
             var porMes = {};
             resultados[2].forEach(function (linha) {
                 porMes[linha.mes] = linha;
@@ -40,8 +35,7 @@ function carregar(req, res) {
                     quantidade: linha ? linha.quantidade : 0
                 });
             }
-
-            // Jogo: SUM pode chegar como texto ou NULL. Taxa = acertos / rodadas (em %)
+            
             var resumoJogo = resultados[4][0];
             var partidas = Number(resumoJogo.partidas) || 0;
             var acertos = Number(resumoJogo.acertos) || 0;

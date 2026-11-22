@@ -1,6 +1,5 @@
 var database = require("../database/config");
 
-// Playlists de UM usuário (sem as músicas). "total" = quantas músicas cada uma tem.
 function listarDoUsuario(usuarioId) {
     var instrucaoSql = `
         SELECT p.id, p.titulo, p.descricao, p.capa,
@@ -12,8 +11,6 @@ function listarDoUsuario(usuarioId) {
     return database.executar(instrucaoSql, [usuarioId]);
 }
 
-// Músicas de TODAS as playlists do usuário, de uma vez (o controller agrupa por playlist).
-// JOIN com avaliacao: a "música" da playlist é, na verdade, uma avaliação do usuário.
 function listarMusicasDoUsuario(usuarioId) {
     var instrucaoSql = `
         SELECT pm.fk_playlist AS playlistId, a.id AS avaliacaoId,
@@ -27,13 +24,11 @@ function listarMusicasDoUsuario(usuarioId) {
     return database.executar(instrucaoSql, [usuarioId]);
 }
 
-// UMA playlist, mas só se for do usuário (o "AND fk_usuario = ?" barra playlist alheia)
 function buscarDoUsuario(usuarioId, playlistId) {
     var instrucaoSql = "SELECT id, titulo, descricao, capa FROM playlist WHERE id = ? AND fk_usuario = ?;";
     return database.executar(instrucaoSql, [playlistId, usuarioId]);
 }
 
-// Músicas de uma playlist, na ordem em que foram adicionadas
 function listarMusicasDaPlaylist(playlistId) {
     var instrucaoSql = `
         SELECT a.id AS avaliacaoId, a.musica, a.artista, a.album, a.nota
@@ -45,19 +40,15 @@ function listarMusicasDaPlaylist(playlistId) {
     return database.executar(instrucaoSql, [playlistId]);
 }
 
-// Dos ids informados, quantos são MESMO avaliações deste usuário?
-// (se o número for menor que o enviado, alguém tentou usar avaliação de outra pessoa)
-// "IN (?)" com um array: o mysql2 transforma em IN (1, 2, 3)
 function contarAvaliacoesDoUsuario(usuarioId, ids) {
     var instrucaoSql = "SELECT COUNT(*) AS total FROM avaliacao WHERE fk_usuario = ? AND id IN (?);";
     return database.executar(instrucaoSql, [usuarioId, ids]);
 }
 
-// Auxiliar: insere várias músicas de uma vez. "VALUES ?" recebe uma lista de linhas.
+// insere varias linhas por vez
 async function inserirMusicas(consulta, playlistId, ids) {
-    if (ids.length === 0) return; // playlist vazia é permitida
+    if (ids.length === 0) return;
 
-    // cada linha: [playlist, avaliacao, posicao]. A posição é o índice no array (0, 1, 2...)
     var linhas = ids.map(function (avaliacaoId, indice) {
         return [playlistId, avaliacaoId, indice];
     });
@@ -68,7 +59,6 @@ async function inserirMusicas(consulta, playlistId, ids) {
     );
 }
 
-// Cria a playlist E suas músicas numa transação. Devolve o id da nova playlist.
 function criar(usuarioId, titulo, descricao, capa, ids) {
     return database.transacao(async function (consulta) {
         var resultado = await consulta(
@@ -80,10 +70,6 @@ function criar(usuarioId, titulo, descricao, capa, ids) {
     });
 }
 
-// Edita a playlist e SUBSTITUI a lista de músicas pela nova (apaga as antigas e insere as atuais).
-//   capa === undefined -> mantém a capa que já está salva
-//   capa === null      -> remove a capa
-//   capa === "data:..."-> nova capa
 function atualizar(usuarioId, playlistId, titulo, descricao, capa, ids) {
     return database.transacao(async function (consulta) {
 
@@ -104,8 +90,6 @@ function atualizar(usuarioId, playlistId, titulo, descricao, capa, ids) {
     });
 }
 
-// Apaga a playlist (as linhas de playlist_musica vão junto, por causa do ON DELETE CASCADE).
-// As AVALIAÇÕES não são apagadas.
 function excluir(usuarioId, playlistId) {
     var instrucaoSql = "DELETE FROM playlist WHERE id = ? AND fk_usuario = ?;";
     return database.executar(instrucaoSql, [playlistId, usuarioId]);

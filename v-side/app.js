@@ -2,23 +2,23 @@
 // var ambiente_processo = 'producao';
 var ambiente_processo = 'desenvolvimento';
 
-// Operador ternário: se for produção usa o arquivo .env, senão usa o .env.dev
 var caminho_env = ambiente_processo === 'producao' ? '.env': '.env.dev';
+// Acima, temos o uso do operador ternário para definir o caminho do arquivo .env
+// A sintaxe do operador ternário é: condição ? valor_se_verdadeiro : valor_se_falso
 
-// Lê o arquivo escolhido e coloca os valores em process.env
 require("dotenv").config({path: caminho_env});
 
 var express = require("express");
 var cors = require("cors");
 var path = require("path");
-var session = require("express-session");
-
+var session = require("express-session"); // sessão do usuario
 var PORTA_APP = process.env.APP_PORT;
 var HOST_APP = process.env.APP_HOST;
 
+// chama a biblioteca express pelo nome app
 var app = express();
 
-// Rotas do V-Side (cada arquivo cuida de um recurso)
+//rotas do site
 var usuarioRouter = require("./src/routes/usuarios");
 var avaliacaoRouter = require("./src/routes/avaliacoes");
 var favoritoRouter = require("./src/routes/favoritos");
@@ -27,22 +27,20 @@ var playlistRouter = require("./src/routes/playlists");
 var jogoRouter = require('./src/routes/jogo');
 var musicaRouter = require('./src/routes/musicas');
 
-app.use(express.json({limit: "1mb"})); // entende JSON enviado pelo fetch
+app.use(express.json({limit: "1mb"}));
 app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, "public"))); // serve o site (pasta public)
+app.use(express.static(path.join(__dirname, "public")));
 app.use(cors());
 
-// SESSÃO: depois do login, o servidor guarda "quem é você" e entrega ao navegador
-// um cookie com um código. Em cada requisição o cookie volta, e o servidor
-// descobre o usuário SEM confiar em nada que o navegador diga sobre ele.
+//guarda o cookie do usuario
 app.use(session({
     secret: process.env.SESSION_SECRET || "troque-este-segredo-no-env", // assina o cookie
-    resave: false,             // não regrava a sessão se nada mudou
-    saveUninitialized: false,  // não cria sessão para quem não logou
+    resave: false,  
+    saveUninitialized: false,
     cookie: {
-        httpOnly: true,                    // o JavaScript do navegador não consegue ler o cookie
-        sameSite: "lax",                   // o cookie não vai em requisições de outros sites
-        maxAge: 1000 * 60 * 60 * 24 * 7    // dura 7 dias
+        httpOnly: true,
+        sameSite: "lax",
+        maxAge: 1000 * 60 * 60 * 24 * 7
     }
 }));
 
@@ -54,6 +52,7 @@ app.use("/playlists", playlistRouter);
 app.use("/jogo", jogoRouter);
 app.use("/musicas", musicaRouter);
 
+// liga o servidor (mudei a mensagem do webdataviz)
 app.listen(PORTA_APP, function () {
     console.log(`\n    V-Side no ar! Acesse: http://${HOST_APP}:${PORTA_APP}`);
     console.log(`    Ambiente: ${process.env.AMBIENTE_PROCESSO}`);

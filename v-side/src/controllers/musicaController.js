@@ -1,10 +1,8 @@
 var musicaModel = require("../models/musicaModel");
 
-// Capa do álbum: JPG, PNG ou WEBP em base64 (o navegador já reduz a imagem antes de enviar,
-// do mesmo jeito que a capa da playlist)
 var FORMATO_CAPA = /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+\/]+=*$/;
 
-// Linha do banco -> objeto que vai para o site
+// nao mostra o usuario que cadastrou o artista
 function formatar(linha) {
     return {
         id: linha.id,
@@ -15,7 +13,6 @@ function formatar(linha) {
     };
 }
 
-// GET /musicas?busca=texto -> músicas do catálogo (de todos os usuários)
 async function listar(req, res) {
     var termo = typeof req.query.busca === "string" ? req.query.busca.trim() : "";
 
@@ -23,7 +20,6 @@ async function listar(req, res) {
         return res.status(400).json({ erro: "A busca pode ter até 100 caracteres." });
     }
 
-    // % e _ têm significado especial no LIKE; o "\" faz o MySQL tratá-los como letras comuns
     termo = termo.replace(/[\\%_]/g, "\\$&");
 
     try {
@@ -35,7 +31,6 @@ async function listar(req, res) {
     }
 }
 
-// GET /musicas/:id -> uma música do catálogo
 async function obter(req, res) {
     var id = Number(req.params.id);
 
@@ -56,17 +51,15 @@ async function obter(req, res) {
     }
 }
 
-// POST /musicas { titulo, artista, album?, capa? }
-// Qualquer usuário logado pode cadastrar; depois, TODOS podem avaliar.
 async function cadastrar(req, res) {
-    var usuarioId = req.session.usuarioId; // vem da SESSÃO, nunca do navegador
+    var usuarioId = req.session.usuarioId; // vem da sessão nao do navegador
 
     var titulo = req.body.titulo;
     var artista = req.body.artista;
     var album = req.body.album;
     var capa = req.body.capa;
 
-    // Validações (os mesmos limites das colunas do banco)
+    // validacao de campos
     if (typeof titulo !== "string" || titulo.trim() === "" || titulo.trim().length > 150) {
         return res.status(400).json({ erro: "Informe o nome da música (até 150 caracteres)." });
     }
@@ -77,7 +70,6 @@ async function cadastrar(req, res) {
         return res.status(400).json({ erro: "O álbum pode ter até 150 caracteres." });
     }
 
-    // capa do álbum (opcional): só imagem JPG, PNG ou WEBP, com tamanho limitado
     if (capa !== undefined && capa !== null && capa !== "") {
         if (typeof capa !== "string" || capa.length > 300000 || !FORMATO_CAPA.test(capa)) {
             return res.status(400).json({ erro: "Capa inválida. Use uma imagem JPG, PNG ou WEBP." });
@@ -95,8 +87,7 @@ async function cadastrar(req, res) {
         );
         res.status(201).json({ id: resultado.insertId });
     } catch (erro) {
-        // A chave UNIQUE (titulo + artista) do banco barrou uma música repetida.
-        // Em vez de só recusar, devolvemos o id da que já existe: o site leva a pessoa para avaliá-la.
+        // nao cadastra musicas repetidas
         if (erro && erro.code === "ER_DUP_ENTRY") {
             try {
                 var existente = await musicaModel.buscarPorTituloArtista(titulo, artista);

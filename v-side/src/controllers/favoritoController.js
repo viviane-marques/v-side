@@ -2,12 +2,10 @@ var favoritoModel = require("../models/favoritoModel");
 var avaliacaoModel = require("../models/avaliacaoModel");
 var chaveArtista = require("../utils/artista").chaveArtista;
 
-// Agrupa as músicas favoritadas por artista.
-// Entrada: linhas (uma por música). Saída: [{ id, artista, musicas: [...], criadoEm }]
+// junta as musicas do chaveArtista e mostra tudo junto nos favs
 function agruparPorArtista(linhas) {
     var grupos = {};
 
-    // as linhas chegam do favorito mais recente para o mais antigo
     linhas.forEach(function (linha) {
         var chave = chaveArtista(linha.artista);
 
@@ -27,13 +25,12 @@ function agruparPorArtista(linhas) {
         });
     });
 
-    // Object.keys mantém a ordem de inserção: o artista com favorito mais recente vem primeiro
     return Object.keys(grupos).map(function (chave) {
         return grupos[chave];
     });
 }
 
-// GET /favoritos -> artistas favoritos do usuário, cada um com suas músicas
+// mostra os artistas agrupados
 function listar(req, res) {
     var usuarioId = req.session.usuarioId;
 
@@ -47,7 +44,7 @@ function listar(req, res) {
         });
 }
 
-// POST /favoritos  { avaliacaoId } -> favorita uma música
+// nao deixa o usuario favoritar avaliaacoes que nao sao dele
 function adicionar(req, res) {
     var usuarioId = req.session.usuarioId;
     var avaliacaoId = req.body.avaliacaoId;
@@ -56,7 +53,6 @@ function adicionar(req, res) {
         return res.status(400).json({ erro: "Avaliação inválida." });
     }
 
-    // Só deixa favoritar uma avaliação que seja DO PRÓPRIO usuário
     avaliacaoModel.buscarDoUsuario(usuarioId, avaliacaoId)
         .then(function (encontradas) {
             if (encontradas.length === 0) {
@@ -74,7 +70,7 @@ function adicionar(req, res) {
         });
 }
 
-// DELETE /favoritos/:avaliacaoId -> desfavorita uma música
+// desfav
 function remover(req, res) {
     var usuarioId = req.session.usuarioId;
     var avaliacaoId = Number(req.params.avaliacaoId);
@@ -93,7 +89,7 @@ function remover(req, res) {
         });
 }
 
-// DELETE /favoritos/artista/:artistaId -> remove o artista (todas as músicas favoritadas dele)
+// desfav todas as musicas do artista de uma vez
 function removerArtista(req, res) {
     var usuarioId = req.session.usuarioId;
     var artistaId = String(req.params.artistaId || "");

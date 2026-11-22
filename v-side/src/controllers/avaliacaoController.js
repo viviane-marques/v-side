@@ -1,14 +1,12 @@
 var avaliacaoModel = require("../models/avaliacaoModel");
 var musicaModel = require("../models/musicaModel");
 
-// GET /avaliacoes -> as avaliações do usuário logado
+// só mostra as avaliacoes do usuario logado
 function listar(req, res) {
-    // O id vem da SESSÃO (servidor), nunca do navegador
     var usuarioId = req.session.usuarioId;
 
     avaliacaoModel.listarDoUsuario(usuarioId)
         .then(function (linhas) {
-            // o MySQL devolve 0/1; aqui vira false/true
             var avaliacoes = linhas.map(function (linha) {
                 linha.favoritada = Boolean(Number(linha.favoritada));
                 return linha;
@@ -21,10 +19,6 @@ function listar(req, res) {
         });
 }
 
-// POST /avaliacoes -> salva uma nova avaliação no nome do usuário logado
-// POST /avaliacoes { musicaId, nota, resenha } -> salva uma nova avaliação no nome do usuário logado
-// A música agora vem do CATÁLOGO: o navegador manda só o id, e o servidor busca
-// título, artista e álbum no banco (assim ninguém grava dados inventados).
 async function cadastrar(req, res) {
     var usuarioId = req.session.usuarioId;
 
@@ -32,7 +26,7 @@ async function cadastrar(req, res) {
     var nota = req.body.nota;
     var resenha = req.body.resenha;
 
-    // Validações
+    // validacoes de campo
     if (!Number.isInteger(musicaId) || musicaId < 1) {
         return res.status(400).json({ erro: "Escolha uma música do catálogo." });
     }
@@ -44,7 +38,7 @@ async function cadastrar(req, res) {
     }
 
     try {
-        // a música existe no catálogo?
+        // verifica se a musica ja existe no catalogo
         var encontradas = await musicaModel.buscarPorId(musicaId);
 
         if (encontradas.length === 0) {
@@ -53,8 +47,6 @@ async function cadastrar(req, res) {
 
         var musica = encontradas[0];
 
-        // fk_usuario = quem está logado (sessão). Mesmo que a música tenha sido cadastrada
-        // por outra pessoa, a avaliação pertence SÓ a quem a escreveu.
         var resultado = await avaliacaoModel.cadastrar(
             usuarioId,
             musica.id,

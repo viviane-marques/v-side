@@ -1,12 +1,10 @@
 var express = require("express");
 var router = express.Router();
 
+// CRUD, tudo com login
 var playlistController = require("../controllers/playlistController");
 var exigirLogin = require("../middlewares/auth").exigirLogin;
 
-// Todas as rotas são privadas: exigirLogin roda antes do controller.
-
-// GET /playlists -> minhas playlists (com as músicas)
 router.get("/", exigirLogin, function (req, res) {
     playlistController.listar(req, res);
 });

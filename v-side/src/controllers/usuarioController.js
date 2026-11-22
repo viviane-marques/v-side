@@ -1,13 +1,12 @@
-var bcrypt = require("bcryptjs");
+var bcrypt = require("bcryptjs"); //criptografia do cookie da sessao
 var usuarioModel = require("../models/usuarioModel");
 
-// Confere se o texto parece um email (algo@algo.algo)
+// ve se tem @ no email
 function emailValido(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-// Marca o usuário como logado NO SERVIDOR.
-// regenerate() troca o código da sessão, o que evita "fixação de sessão".
+// gera novo codigo de sessao
 function iniciarSessao(req, usuarioId, callback) {
   req.session.regenerate(function (erro) {
     if (erro) {
@@ -18,13 +17,13 @@ function iniciarSessao(req, usuarioId, callback) {
   });
 }
 
-// POST /usuarios/cadastrar
 function cadastrar(req, res) {
+  // Crie uma variável que vá recuperar os valores do arquivo cadastro.html
   var nome = req.body.nomeServer;
   var email = req.body.emailServer;
   var senha = req.body.senhaServer;
 
-  // 1) Validações: o servidor nunca confia no que veio do navegador
+  // Faça as validações dos valores
   if (
     typeof nome !== "string" ||
     nome.trim().length < 2 ||
@@ -41,8 +40,7 @@ function cadastrar(req, res) {
   ) {
     return res.status(400).json({ erro: "Digite um email válido." });
   }
-  // Senha forte: de 8 a 72 caracteres (72 é o limite de bytes do bcrypt), com letra
-  // maiúscula, minúscula, número e símbolo. Mesmas regras do js/forca-senha.js
+  // validacao de senha
   if (
     typeof senha !== "string" ||
     senha.length < 8 ||
@@ -58,9 +56,8 @@ function cadastrar(req, res) {
   }
 
   nome = nome.trim();
-  email = email.trim().toLowerCase(); // "Ana@X.com" e "ana@x.com" são o mesmo email
+  email = email.trim().toLowerCase();
 
-  // 2) Email já existe?
   usuarioModel
     .buscarPorEmail(email)
     .then(function (encontrados) {
@@ -69,7 +66,7 @@ function cadastrar(req, res) {
         return;
       }
 
-      // 3) Transforma a senha em hash (10 = custo do cálculo) e grava
+      // transforma a senha em hash para a segurança no banco de dados
       return bcrypt
         .hash(senha, 10)
         .then(function (hash) {
@@ -78,7 +75,6 @@ function cadastrar(req, res) {
         .then(function (resultado) {
           var usuario = { id: resultado.insertId, nome: nome, email: email };
 
-          // 4) Já deixa a pessoa logada depois de cadastrar
           iniciarSessao(req, usuario.id, function (erro) {
             if (erro) {
               console.log(erro);
@@ -94,7 +90,6 @@ function cadastrar(req, res) {
     })
     .catch(function (erro) {
       console.log(erro);
-      // dois cadastros ao mesmo tempo: o UNIQUE do banco barra o segundo
       if (erro && erro.code === "ER_DUP_ENTRY") {
         return res
           .status(409)
@@ -104,7 +99,7 @@ function cadastrar(req, res) {
     });
 }
 
-// POST /usuarios/autenticar
+//busca o user por email
 function autenticar(req, res) {
   var email = req.body.emailServer;
   var senha = req.body.senhaServer;
@@ -120,8 +115,6 @@ function autenticar(req, res) {
 
   email = email.trim().toLowerCase();
 
-  // Mesma mensagem para "email não existe" e "senha errada":
-  // assim ninguém descobre quais emails estão cadastrados.
   var mensagemInvalido = "Email ou senha incorretos.";
 
   usuarioModel
@@ -134,7 +127,6 @@ function autenticar(req, res) {
 
       var usuario = encontrados[0];
 
-      // compara a senha digitada com o hash guardado no banco
       return bcrypt.compare(senha, usuario.senha).then(function (confere) {
         if (!confere) {
           res.status(401).json({ erro: mensagemInvalido });
@@ -148,7 +140,6 @@ function autenticar(req, res) {
               .status(500)
               .json({ erro: "Erro ao entrar. Tente novamente." });
           }
-          // devolve só o necessário: NUNCA envie a senha (nem o hash)
           res.json({
             id: usuario.id,
             nome: usuario.nome,
@@ -163,7 +154,6 @@ function autenticar(req, res) {
     });
 }
 
-// GET /usuarios/sessao  -> "quem sou eu?" (o site chama ao abrir cada página)
 function sessao(req, res) {
   if (!req.session.usuarioId) {
     return res.status(401).json({ erro: "Não logado." });
@@ -173,7 +163,6 @@ function sessao(req, res) {
     .buscarPorId(req.session.usuarioId)
     .then(function (encontrados) {
       if (encontrados.length !== 1) {
-        // usuário foi apagado do banco: encerra a sessão
         return req.session.destroy(function () {
           res.status(401).json({ erro: "Não logado." });
         });
@@ -186,7 +175,6 @@ function sessao(req, res) {
     });
 }
 
-// POST /usuarios/sair  -> encerra a sessão no servidor
 function sair(req, res) {
   req.session.destroy(function () {
     res.clearCookie("connect.sid"); // apaga o cookie no navegador
@@ -194,10 +182,7 @@ function sair(req, res) {
   });
 }
 
-// PUT /usuarios/perfil  { nome, foto? }  -> edita nome e/ou foto do usuário logado
-//   foto ausente (undefined) = não mexe na foto
-//   foto = null              = remove a foto
-//   foto = "data:image/..."  = nova foto (o navegador já reduz a imagem antes de enviar)
+// edicao do perfil
 function atualizarPerfil(req, res) {
   var usuarioId = req.session.usuarioId;
   var nome = req.body.nome;
@@ -215,7 +200,6 @@ function atualizarPerfil(req, res) {
   nome = nome.trim();
 
   if (foto !== undefined && foto !== null) {
-    // só aceita imagem em base64 e de tamanho limitado (~220 KB)
     var formatoFoto = /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+\/]+=*$/;
 
     if (

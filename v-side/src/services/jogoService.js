@@ -1,7 +1,7 @@
 // Serviço do jogo: sorteia uma música na iTunes Search API (Apple) e confere respostas.
 // A API não precisa de chave. Limite: ~20 chamadas por minuto, por isso usamos cache.
 
-// Artistas sorteados a cada rodada. EDITE À VONTADE: troque por quem você quiser.
+// lista de artistas possíveis no jogo. posso editar aqui
 var ARTISTAS = [
     "Arctic Monkeys", "Olivia Rodrigo", "Chappell Roan", "Jão", "The Neighbourhood",
     "Lagum", "ROLE MODEL", "Charlie Brown Jr.", "Chase Atlantic", "The 1975", "Twenty One Pilots",
@@ -10,11 +10,11 @@ var ARTISTAS = [
     "One Direction", "Mother Mother", "Clarissa", "Tame Impala"
 ]
 
-// Guarda na memória as faixas já buscadas de cada artista: { "queen": [faixas] }.
-// Assim o mesmo artista não gasta uma nova chamada à API.
+// guarda uma lista de objetos (artistas) que guardam uma lista de músicas: { "coin": [musicas] }.
 var cachePorArtista = {};
 
-// "Beyoncé" -> "beyonce" (sem acento e em minúsculas)
+// tiram acentos, feat, remastered e etc para comparar os nomes
+// deixa Jão = jao
 function normalizar(texto) {
     return String(texto || "")
         .normalize("NFD")
@@ -22,21 +22,19 @@ function normalizar(texto) {
         .toLowerCase();
 }
 
-// Deixa só o "nome puro" da música, para comparar com o que a pessoa digitou:
-// "Bohemian Rhapsody - Remastered 2011" -> "bohemian rhapsody"
-// "Don't Stop Me Now (feat. X)"         -> "dont stop me now"
+// tira feat e "ao vivo" dos titulos: Expectations feat. Chappell Roan = expectations
+// OMG Plz Don't Come Around = omg plz dont come around
 function limparTitulo(titulo) {
     return normalizar(titulo)
-        .replace(/\(.*?\)|\[.*?\]/g, " ")   // tira (feat. X) e [Remastered]
-        .replace(/\s-\s.*$/, " ")           // tira " - Remastered 2011", " - Ao Vivo"
-        .replace(/['’`]/g, "")              // "don't" vira "dont"
-        .replace(/[^a-z0-9 ]/g, " ")        // pontuação vira espaço
+        .replace(/\(.*?\)|\[.*?\]/g, " ")
+        .replace(/\s-\s.*$/, " ")
+        .replace(/['’`]/g, "")
+        .replace(/[^a-z0-9 ]/g, " ")
         .replace(/\s+/g, " ")
         .trim();
 }
 
-// Distância de Levenshtein: quantas letras precisam mudar para um texto virar o outro.
-// Serve para aceitar pequenos erros de digitação ("rapsody" ~ "rhapsody").
+// desconsidera algumas letras erradas: rhapsody = rapsody
 function distancia(a, b) {
     var anterior = [];
     for (var j = 0; j <= b.length; j++) anterior[j] = j;
@@ -56,7 +54,7 @@ function distancia(a, b) {
     return anterior[b.length];
 }
 
-// A resposta está certa? Tolerância: nome curto = exato; médio = 1 erro; longo = 2 erros.
+// aceita alguns erros de digitacao
 function acertou(resposta, titulo) {
     var r = limparTitulo(resposta);
     var t = limparTitulo(titulo);
@@ -66,13 +64,11 @@ function acertou(resposta, titulo) {
     return distancia(r, t) <= tolerancia;
 }
 
-// Busca as faixas de um artista no iTunes (ou devolve do cache)
+// busca no itunes, filtra karaoke/cover/sem audio, remove repetidas e guarda no cache
 async function buscarFaixas(artista) {
     var chave = normalizar(artista);
     if (cachePorArtista[chave]) return cachePorArtista[chave];
 
-    // media=music&entity=song -> só músicas | attribute=artistTerm -> busca pelo nome do artista
-    // country=BR -> loja brasileira | limit=50 -> até 50 resultados
     var url = "https://itunes.apple.com/search"
         + "?term=" + encodeURIComponent(artista)
         + "&media=music&entity=song&attribute=artistTerm&country=BR&limit=50";
@@ -82,7 +78,6 @@ async function buscarFaixas(artista) {
         throw new Error("iTunes respondeu com status " + resposta.status);
     }
 
-    // o iTunes responde com Content-Type "text/javascript", mas o corpo é JSON normal
     var dados = await resposta.json();
 
     var vistos = {}; // evita a mesma música repetida (ex.: versão "Remastered")
@@ -111,7 +106,7 @@ async function buscarFaixas(artista) {
     return faixas;
 }
 
-// Sorteia uma música: escolhe um artista e uma faixa dele (tenta até 5 artistas)
+// sorteia um artista e uma musica dele (ate 5 tentativas)
 async function sortearMusica() {
     for (var tentativa = 0; tentativa < 5; tentativa++) {
         var artista = ARTISTAS[Math.floor(Math.random() * ARTISTAS.length)];

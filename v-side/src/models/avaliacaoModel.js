@@ -1,8 +1,5 @@
 var database = require("../database/config");
 
-// Lista as avaliações DE UM usuário (o WHERE fk_usuario = ? é o que garante
-// que ninguém veja avaliação alheia). O LEFT JOIN diz se cada música já foi
-// favoritada por ele: favoritada = 1 se existe linha em favorito, senão 0.
 function listarDoUsuario(usuarioId) {
   var instrucaoSql = `
                 SELECT a.id, a.musica, a.artista, a.album, a.nota, a.resenha,
