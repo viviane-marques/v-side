@@ -135,17 +135,9 @@
 
     </header>
 
-
-    <!-- =========================================
-         2. CONTEÚDO PRINCIPAL
-    ========================================== -->
-
     <main class="pagina-playlists">
 
-        <!-- BANNER DO TÍTULO -->
         <section class="banner-playlists">
-
-            <!-- ALTERE AQUI A IMAGEM DE FUNDO DO BANNER -->
             <img class="imagem-banner-playlists" src="assets/banners/banner-clean.png" alt="">
 
             <div class="banner-playlists-texto">
@@ -154,14 +146,7 @@
 
         </section>
 
-
-        <!-- =========================================
-             3. BARRA DE BUSCA E BOTÃO CRIAR
-        ========================================== -->
-
         <section class="controles-playlists">
-
-            <!-- CAMPO DE BUSCA DAS PLAYLISTS -->
             <div class="busca-playlists">
 
                 <img src="assets/icons/search.png" alt="Pesquisar">
@@ -170,11 +155,6 @@
                     aria-label="Buscar playlists">
 
             </div>
-
-            <!--
-                ALTERE O LINK PARA A PÁGINA DE CRIAÇÃO
-                QUANDO ELA ESTIVER PRONTA.
-            -->
             <a href="criar-playlist.html" class="botao-criar-playlist">
 
                 <span class="icone-mais">+</span>
@@ -184,27 +164,17 @@
 
         </section>
 
-
-        <!-- =========================================
-             4. LISTA DE PLAYLISTS
-        ========================================== -->
-
         <section class="lista-playlists" id="listaPlaylists">
-
-            <!-- Aparece quando o usuário ainda não criou nenhuma playlist -->
             <p class="playlist-vazia" id="playlistsVazia" hidden>
                 Você ainda não criou nenhuma playlist.
                 <a href="criar-playlist.html">Criar minha primeira playlist</a>
             </p>
-
-            <!-- Aparece quando a busca não encontra nada (o JS controla) -->
             <p class="nenhuma-playlist" id="nenhumaPlaylist">
                 Nenhuma playlist encontrada.
             </p>
 
         </section>
 
-        <!-- MENSAGEM EXIBIDA QUANDO NÃO HÁ RESULTADOS -->
         <p class="nenhuma-playlist" id="nenhumaPlaylist">
             Nenhuma playlist encontrada.
         </p>

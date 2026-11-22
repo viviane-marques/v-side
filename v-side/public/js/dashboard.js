@@ -1,22 +1,9 @@
-/* =========================================
-   V-SIDE | dashboard.js
-   - Busca os dados reais na API (GET /dashboard)
-   - Preenche os 5 indicadores (avaliações, média, favoritos, artistas e jogo)
-   - Desenha o gráfico (média das notas por mês)
-   - Lista as atividades recentes
-   - Aba "Editar perfil" (nome e foto)
-========================================= */
-
 (function () {
     'use strict';
 
     const V = window.VSide;
     if (!V) return;
     if (!V.exigirLogin()) return;
-
-    /* -----------------------------------------
-       1. CONFIGURAÇÕES (mude aqui se precisar)
-    ----------------------------------------- */
 
     const FOTO_PADRAO = 'assets/icons/user.svg';
     const TAMANHO_FOTO = 256;
@@ -31,10 +18,6 @@
         '<svg viewBox="0 0 24 24" aria-hidden="true">' +
         '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/>' +
         '</svg>';
-
-    /* -----------------------------------------
-       2. ELEMENTOS DA PÁGINA
-    ----------------------------------------- */
 
     const el = {
         foto: document.getElementById('fotoPerfil'),
@@ -60,10 +43,6 @@
 
     let dados = null;
     let fotoPendente;
-
-    /* -----------------------------------------
-       3. FORMATAÇÃO
-    ----------------------------------------- */
 
     function formatarDecimal(numero) {
         return numero.toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
@@ -95,18 +74,10 @@
         return e;
     }
 
-    /* -----------------------------------------
-       4. PERFIL (foto e nome)
-    ----------------------------------------- */
-
     function mostrarPerfil(usuario) {
         el.nome.textContent = usuario.nome;
         el.foto.src = usuario.foto || FOTO_PADRAO;
     }
-
-    /* -----------------------------------------
-       5. INDICADORES
-    ----------------------------------------- */
 
     function mostrarIndicadores(kpis) {
         el.totalAvaliacoes.textContent = kpis.avaliacoes;
@@ -126,13 +97,6 @@
         el.detalheJogo.textContent = jogo.acertos + ' de ' + jogo.partidas +
             (jogo.partidas === 1 ? ' rodada' : ' rodadas');
     }
-
-    /* -----------------------------------------
-       6. GRÁFICO (SVG desenhado à mão)
-       Eixo Y: notas de 1 a 5. Eixo X: Jan a Dez.
-       Cada ponto = média das notas daquele mês.
-       Mês sem avaliação = linha interrompida.
-    ----------------------------------------- */
 
     function desenharGrafico() {
         if (!dados) return;
@@ -204,10 +168,6 @@
         el.mensagemGrafico.hidden = temDados;
     }
 
-    /* -----------------------------------------
-       7. ATIVIDADES RECENTES
-    ----------------------------------------- */
-
     function mostrarAtividades(atividades) {
         el.atividades.textContent = '';
 
@@ -257,10 +217,6 @@
             itens[i].hidden = true;
         }
     }
-
-    /* -----------------------------------------
-       8. EDITAR PERFIL (nome e foto)
-    ----------------------------------------- */
 
     function mostrarMensagemPerfil(texto, sucesso) {
         el.mensagemPerfil.textContent = texto;
@@ -399,10 +355,6 @@
         fecharEdicao();
         mostrarPerfil(dados.usuario);
     });
-
-    /* -----------------------------------------
-       9. CARREGAMENTO
-    ----------------------------------------- */
 
     async function carregar() {
         const resultado = await V.chamarApi('/dashboard');

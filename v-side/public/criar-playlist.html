@@ -131,13 +131,11 @@
     <main class="pagina-formulario">
 
         <section class="banner-formulario">
-            <!-- o JS troca para "Editar playlist" quando a URL tem ?id= -->
             <h1 id="tituloPagina">Criar playlist</h1>
         </section>
 
         <form class="formulario-vside" id="formPlaylist" novalidate>
 
-            <!-- CAPA (mesmo esquema da foto de perfil: escolher / remover) -->
             <div class="campo-capa">
                 <img id="previaCapaPlaylist" class="previa-capa-playlist" src="" alt="Capa da playlist">
 
@@ -149,7 +147,6 @@
                         <button type="button" id="botaoRemoverCapa" class="botao-mini">Remover</button>
                     </div>
 
-                    <!-- input de arquivo invisível: o botão acima o aciona -->
                     <input type="file" id="inputCapa" accept="image/png, image/jpeg, image/webp" hidden>
                 </div>
             </div>
@@ -160,14 +157,12 @@
             <label for="descricaoPlaylist">Descrição</label>
             <textarea id="descricaoPlaylist" rows="3" maxlength="300"></textarea>
 
-            <!-- MÚSICAS QUE JÁ ESTÃO NA PLAYLIST -->
             <div class="bloco-musicas">
                 <h3>Na playlist <span id="contadorPlaylist">(0)</span></h3>
                 <ul id="listaNaPlaylist" class="lista-musicas-editor"></ul>
                 <p id="vazioPlaylist" class="aviso-editor">Nenhuma música ainda. Adicione pela lista abaixo.</p>
             </div>
 
-            <!-- AVALIAÇÕES DO USUÁRIO QUE AINDA NÃO ESTÃO NA PLAYLIST -->
             <div class="bloco-musicas">
                 <h3>Adicionar das suas avaliações</h3>
                 <input type="search" id="filtroAvaliacoes" placeholder="Filtrar por música, artista ou álbum..."

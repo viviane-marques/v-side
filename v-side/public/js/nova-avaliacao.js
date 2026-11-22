@@ -1,9 +1,3 @@
-/* =========================================
-   V-SIDE | nova-avaliacao.js
-   - A pessoa escolhe uma música do CATÁLOGO (cadastrada por qualquer usuário)
-   - Envia a avaliação para a API, que salva no MySQL SÓ no nome do usuário logado
-========================================= */
-
 (function () {
   "use strict";
 
@@ -15,29 +9,21 @@
 
   const campoResenha = document.getElementById("textoResenha");
 
-  // Busca no catálogo
   const campoBusca = document.getElementById("buscaCatalogo");
   const listaResultados = document.getElementById("resultadosCatalogo");
 
-  // Campos preenchidos ao escolher a música
   const campoMusicaId = document.getElementById("musicaId");
   const campoNome = document.getElementById("nomeMusica");
   const campoArtista = document.getElementById("nomeArtista");
   const campoAlbum = document.getElementById("nomeAlbum");
 
-  // Limpa o aviso de validação quando a pessoa volta a digitar
   campoResenha.addEventListener("input", function () {
     campoResenha.setCustomValidity("");
   });
 
-  /* -----------------------------------------
-       BUSCA NO CATÁLOGO
-    ----------------------------------------- */
+  let temporizador = null;
+  let numeroDaBusca = 0;
 
-  let temporizador = null; // usado no "debounce"
-  let numeroDaBusca = 0; // identifica a busca mais recente
-
-  // Debounce: só busca quando a pessoa PARA de digitar por 300ms
   campoBusca.addEventListener("input", function () {
     clearTimeout(temporizador);
 
@@ -46,13 +32,12 @@
     }, 300);
   });
 
-  // Ao clicar no campo, já mostra as músicas mais recentes do catálogo
   campoBusca.addEventListener("focus", function () {
     buscar(campoBusca.value.trim());
   });
 
+  // consulta no catalogo
   async function buscar(termo) {
-    // Se a resposta de uma busca antiga chegar depois de uma mais nova, é descartada
     const minhaBusca = ++numeroDaBusca;
 
     mostrarMensagemNaLista("Buscando...");
@@ -74,13 +59,14 @@
     desenharResultados(resultado.dados);
   }
 
-  // Mostra um texto simples dentro da lista (carregando, erro, vazio)
+  // funcoes de montar a lista de resultados = mostrarMensagemNaLista
+  // desenharResultados, escolherMusica
   function mostrarMensagemNaLista(texto) {
     listaResultados.innerHTML = "";
 
     const item = document.createElement("li");
     item.className = "resultado-mensagem";
-    item.textContent = texto; // textContent: nunca interpreta HTML
+    item.textContent = texto;
     listaResultados.appendChild(item);
 
     listaResultados.hidden = false;
@@ -92,7 +78,6 @@
     musicas.forEach(function (musica) {
       const item = document.createElement("li");
 
-      // <button> permite escolher também com o teclado (Tab + Enter)
       const botao = document.createElement("button");
       botao.type = "button";
       botao.className = "resultado-catalogo";
@@ -105,7 +90,6 @@
         ? musica.artista + " • " + musica.album
         : musica.artista;
 
-      // miniatura da capa (sem capa, mostra a inicial do álbum/música)
       const miniatura = document.createElement("img");
       miniatura.className = "resultado-capa";
       miniatura.alt = "";
@@ -131,26 +115,23 @@
     listaResultados.hidden = false;
   }
 
-  // Quando a pessoa escolhe uma música: preenche os campos e guarda o id
   function escolherMusica(musica) {
     campoMusicaId.value = musica.id;
     campoNome.value = musica.titulo;
     campoArtista.value = musica.artista;
     campoAlbum.value = musica.album || "";
 
-    // Fecha a lista e limpa a busca
     listaResultados.hidden = true;
     campoBusca.value = "";
   }
 
-  // Clicar fora da área de busca fecha a lista
   document.addEventListener("click", function (evento) {
     if (!evento.target.closest(".campo-busca-catalogo")) {
       listaResultados.hidden = true;
     }
   });
 
-  // Vindo do cadastro (nova-avaliacao.html?musica=5): já deixa essa música escolhida
+  // seleciona a musica pelo id
   async function escolherMusicaDaUrl() {
     const id = new URLSearchParams(location.search).get("musica");
 
@@ -163,14 +144,9 @@
     }
   }
 
-  /* -----------------------------------------
-       ENVIO DA AVALIAÇÃO
-    ----------------------------------------- */
-
   form.addEventListener("submit", async function (evento) {
     evento.preventDefault();
 
-    // Tem que ter escolhido uma música do catálogo
     if (!campoMusicaId.value) {
       alert("Escolha uma música do catálogo (ou cadastre uma nova).");
       campoBusca.focus();
@@ -179,7 +155,6 @@
 
     const resenha = campoResenha.value.trim();
 
-    // "required" aceita só espaços, então conferimos aqui
     if (!resenha) {
       campoResenha.setCustomValidity("Escreva sua resenha.");
       campoResenha.reportValidity();
@@ -189,9 +164,8 @@
     const nota = form.querySelector('input[name="nota"]:checked');
     const botao = form.querySelector('button[type="submit"]');
 
-    botao.disabled = true; // evita enviar duas vezes
+    botao.disabled = true;
 
-    // Só o id da música, a nota e a resenha: o servidor busca o resto no catálogo
     const resultado = await V.salvarAvaliacao({
       musicaId: Number(campoMusicaId.value),
       nota: Number(nota.value),

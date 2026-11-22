@@ -1,31 +1,14 @@
-/* =========================================
-   V-SIDE | global.js
-   - Login / cadastro / logout (via API + sessão no servidor)
-   - Troca da header (visitante x logado)
-   - Dados compartilhados (avaliações e favoritos)
-
-   Usuário, avaliações e favoritos vivem no MySQL.
-   O navegador só guarda um "lembrete" de quem está logado.
-========================================= */
-
+// cria uama "API" que os outros js usam (window.vside)
 (function () {
   "use strict";
 
-  // A dashboard.html carrega este arquivo duas vezes.
   if (window.VSide) return;
 
-  /* -----------------------------------------
-       1. ARMAZENAMENTO NO NAVEGADOR
-    ----------------------------------------- */
-
   const CHAVES = {
-    // Só um "lembrete" de quem está logado, para a tela reagir rápido.
-    // Quem MANDA é o servidor (cookie de sessão): ao abrir cada página
-    // confirmarSessao() confere com ele e corrige este lembrete.
     usuario: "vside_usuario",
   };
 
-  // Páginas que só funcionam com login
+  // paginas que só abrem se o usuario estiver logado
   const PAGINAS_PROTEGIDAS = [
     "avaliacoes.html",
     "favoritos.html",
@@ -36,6 +19,7 @@
     "criar-playlist.html",
   ];
 
+// funcoes de armazenamento = ler, gravar
   function ler(chave, padrao) {
     try {
       const valor = JSON.parse(localStorage.getItem(chave));
@@ -54,11 +38,7 @@
     }
   }
 
-  /* -----------------------------------------
-       2. COMUNICAÇÃO COM A API
-    ----------------------------------------- */
-
-  // Faz o fetch e devolve sempre { ok, status, dados }, sem lançar erro.
+// funcoes de comunicacao (lancam erros e dados, etc) = requisitar, mensgaemDeErro e chamarApi
   async function requisitar(url, opcoes) {
     try {
       const resposta = await fetch(
@@ -66,7 +46,7 @@
         Object.assign(
           {
             headers: { "Content-Type": "application/json" },
-            credentials: "same-origin", // envia o cookie da sessão junto
+            credentials: "same-origin",
           },
           opcoes,
         ),
@@ -76,12 +56,10 @@
       try {
         dados = await resposta.json();
       } catch (erro) {
-        /* resposta sem corpo */
       }
 
       return { ok: resposta.ok, status: resposta.status, dados: dados };
     } catch (erro) {
-      // servidor desligado, sem internet, etc.
       return {
         ok: false,
         status: 0,
@@ -96,9 +74,6 @@
     return (resposta.dados && resposta.dados.erro) || padrao;
   }
 
-  // Chamada às rotas PRIVADAS (avaliações e favoritos).
-  // Devolve { ok, status, dados, erro }.
-  // Se o servidor responder 401 (sessão perdida), manda a pessoa para o login.
   async function chamarApi(url, opcoes) {
     const resposta = await requisitar(url, opcoes);
 
@@ -117,11 +92,8 @@
     };
   }
 
-  /* -----------------------------------------
-       3. USUÁRIO / SESSÃO
-    ----------------------------------------- */
-
-  // Quem está logado, segundo o lembrete local (síncrono, usado pelas telas)
+// funcoes de sessão = usuarioAtual, guardarUsuario, esquecerUsuario, cadastrar, entrar, sair, paginaAtual,
+// paginaDeRetorno, irParaLogin, exigirLogin, confirmarSessao
   function usuarioAtual() {
     const usuario = ler(CHAVES.usuario, null);
     return usuario && usuario.id ? usuario : null;
@@ -143,7 +115,6 @@
     }
   }
 
-  // POST /usuarios/cadastrar -> cria a conta e já deixa logado
   async function cadastrar(dados) {
     const resposta = await requisitar("/usuarios/cadastrar", {
       method: "POST",
@@ -165,7 +136,6 @@
     return { ok: true };
   }
 
-  // POST /usuarios/autenticar -> login
   async function entrar(email, senha) {
     const resposta = await requisitar("/usuarios/autenticar", {
       method: "POST",
@@ -183,7 +153,6 @@
     return { ok: true };
   }
 
-  // POST /usuarios/sair -> encerra a sessão no servidor e limpa o lembrete
   async function sair() {
     await requisitar("/usuarios/sair", { method: "POST" });
     esquecerUsuario();
@@ -194,7 +163,6 @@
     return location.pathname.split("/").pop() || "index.html";
   }
 
-  // Só aceita nomes simples de página (evita redirecionar para sites externos)
   function paginaDeRetorno() {
     const voltar = new URLSearchParams(location.search).get("voltar");
     return voltar && /^[a-z0-9-]+\.html$/i.test(voltar) ? voltar : "index.html";
@@ -204,21 +172,18 @@
     location.replace("login.html?voltar=" + encodeURIComponent(paginaAtual()));
   }
 
-  // Páginas que exigem login chamam isto. Retorna false se redirecionou.
   function exigirLogin() {
     if (usuarioAtual()) return true;
     irParaLogin();
     return false;
   }
 
-  // GET /usuarios/sessao -> pergunta ao servidor se ainda estamos logados
   async function confirmarSessao() {
     const resposta = await requisitar("/usuarios/sessao");
 
     if (resposta.ok) {
-      guardarUsuario(resposta.dados); // atualiza nome/email se mudaram
+      guardarUsuario(resposta.dados);
     } else if (resposta.status === 401) {
-      // o servidor diz que NÃO estamos logados (reiniciou, expirou, saiu em outra aba)
       esquecerUsuario();
 
       if (PAGINAS_PROTEGIDAS.indexOf(paginaAtual()) !== -1) {
@@ -226,52 +191,36 @@
         return;
       }
     }
-    // qualquer outro erro (ex.: servidor fora do ar): não mexe em nada
-
     atualizarHeader();
   }
 
-  /* -----------------------------------------
-       4. HEADER (visitante x logado)
-       O CSS já faz o resto a partir da classe
-       "usuario-logado" no <body>.
-    ----------------------------------------- */
-
+// funcoes que trocam a header dependendo se o usuario estiver logado ou n
+// = atualizarHeader
   function atualizarHeader() {
     const usuario = usuarioAtual();
 
     document.body.classList.toggle("usuario-logado", !!usuario);
 
-    // Nome na dashboard
     const nome = document.getElementById("nomeUsuario");
     if (nome && usuario) nome.textContent = usuario.nome;
   }
 
-  /* -----------------------------------------
-       5. AVALIAÇÕES (API -> tabela avaliacao)
-       Todas devolvem { ok, dados, erro }
-    ----------------------------------------- */
-
-  // GET /avaliacoes -> só as avaliações de quem está logado
+  // atalhos da API = listarAvaliacoes, salvarAvaliacao, listarMusicas
+  // obterMusica, cadastrarMusica, favoritar, desfavoriar, listarArtistasFavoritos
+  // removerArtistaFavorito, listarPlaylists, obterPlaylist, criarPlaylist, editarPlaylist
+  // excluirPlaylist
   function listarAvaliacoes() {
     return chamarApi("/avaliacoes");
   }
 
-    /* -----------------------------------------
-       CATÁLOGO DE MÚSICAS (compartilhado entre todos os usuários)
-    ----------------------------------------- */
-
-  // GET /musicas?busca=... -> até 10 músicas do catálogo (sem busca = as mais recentes)
   function listarMusicas(busca) {
     return chamarApi("/musicas?busca=" + encodeURIComponent(busca || ""));
   }
 
-  // GET /musicas/:id -> uma música do catálogo
   function obterMusica(id) {
     return chamarApi("/musicas/" + encodeURIComponent(id));
   }
 
-  // POST /musicas -> cadastra uma música no catálogo
   function cadastrarMusica(dados) {
     return chamarApi("/musicas", {
       method: "POST",
@@ -279,7 +228,6 @@
     });
   }
 
-  // POST /avaliacoes -> salva uma avaliação nova
   function salvarAvaliacao(dados) {
     return chamarApi("/avaliacoes", {
       method: "POST",
@@ -287,13 +235,6 @@
     });
   }
 
-  /* -----------------------------------------
-       6. FAVORITOS (API -> tabela favorito)
-       Cada favorito é uma MÚSICA (uma avaliação).
-       A página de favoritos recebe os artistas já agrupados.
-    ----------------------------------------- */
-
-  // POST /favoritos -> favorita uma música
   function favoritar(avaliacaoId) {
     return chamarApi("/favoritos", {
       method: "POST",
@@ -301,40 +242,30 @@
     });
   }
 
-  // DELETE /favoritos/:avaliacaoId -> desfavorita uma música
   function desfavoritar(avaliacaoId) {
     return chamarApi("/favoritos/" + encodeURIComponent(avaliacaoId), {
       method: "DELETE",
     });
   }
 
-  // GET /favoritos -> [{ id, artista, musicas: [...] }]
   function listarArtistasFavoritos() {
     return chamarApi("/favoritos");
   }
 
-  // DELETE /favoritos/artista/:id -> tira o artista e todas as músicas dele dos favoritos
   function removerArtistaFavorito(artistaId) {
     return chamarApi("/favoritos/artista/" + encodeURIComponent(artistaId), {
       method: "DELETE",
     });
   }
 
-  /* -----------------------------------------
-       PLAYLISTS (API -> tabelas playlist e playlist_musica)
-    ----------------------------------------- */
-
-  // GET /playlists -> minhas playlists, cada uma com a lista "musicas"
   function listarPlaylists() {
     return chamarApi("/playlists");
   }
 
-  // GET /playlists/:id -> uma playlist minha (usada para editar)
   function obterPlaylist(id) {
     return chamarApi("/playlists/" + encodeURIComponent(id));
   }
 
-  // POST /playlists  { titulo, descricao, capa, avaliacoes: [ids] }
   function criarPlaylist(dados) {
     return chamarApi("/playlists", {
       method: "POST",
@@ -342,7 +273,6 @@
     });
   }
 
-  // PUT /playlists/:id -> mesmo formato do criar
   function editarPlaylist(id, dados) {
     return chamarApi("/playlists/" + encodeURIComponent(id), {
       method: "PUT",
@@ -350,18 +280,15 @@
     });
   }
 
-  // DELETE /playlists/:id
   function excluirPlaylist(id) {
     return chamarApi("/playlists/" + encodeURIComponent(id), {
       method: "DELETE",
     });
   }
 
-  /* -----------------------------------------
-       7. UTILITÁRIOS DE INTERFACE
-    ----------------------------------------- */
-
-  // Capa genérica (a nova avaliação não tem campo de imagem)
+  // funcoes de interface = capaPlaceHolder (troca a capa pela primeira letra do artista ou album)
+  // spotifyBusca (manda o usuario para o spotify com a busca da musica), mostrarMensagem, iniciarFormularios (login e cadastro), iniciarInterface (botao sair e menu musicas)
+  // iniciar
   function capaPlaceholder(texto) {
     const letra = (
       String(texto || "?")
@@ -405,10 +332,6 @@
     msg.textContent = texto;
   }
 
-  /* -----------------------------------------
-       8. FORMULÁRIOS DE LOGIN E CADASTRO
-    ----------------------------------------- */
-
   function iniciarFormularios() {
     const formLogin = document.getElementById("formLogin");
     const formCadastro = document.getElementById("formCadastro");
@@ -418,7 +341,7 @@
         evento.preventDefault();
 
         const botao = formLogin.querySelector('button[type="submit"]');
-        botao.disabled = true; // evita clique duplo enquanto espera o servidor
+        botao.disabled = true;
 
         const resultado = await entrar(
           document.getElementById("emailLogin").value,
@@ -443,13 +366,12 @@
         const senha = document.getElementById("senhaCadastro").value;
         const confirmar = document.getElementById("confirmarSenha").value;
 
-        // Conferência rápida no navegador (o servidor valida tudo de novo)
         if (senha !== confirmar) {
           mostrarMensagem(formCadastro, "As senhas não coincidem.");
           return;
         }
         
-        // A senha precisa cumprir todos os critérios (regras em js/forca-senha.js)
+        // validacao de força da senha
         if (window.VSideSenha && !window.VSideSenha.ehForte(senha)) {
           mostrarMensagem(formCadastro, "Sua senha ainda não atende a todos os critérios.");
           return;
@@ -476,10 +398,6 @@
     }
   }
 
-  /* -----------------------------------------
-       9. BOTÃO SAIR E MENU "MÚSICAS" (toque/clique)
-    ----------------------------------------- */
-
   function iniciarInterface() {
     const botaoSair = document.getElementById("botaoSair");
 
@@ -490,7 +408,6 @@
       });
     }
 
-    // O hover do CSS não existe no celular: o clique abre/fecha o menu
     const menuMusicas = document.querySelector(".menu-musicas");
     const botaoMusicas =
       menuMusicas && menuMusicas.querySelector(".botao-menu");
@@ -508,10 +425,6 @@
       });
     }
   }
-
-  /* -----------------------------------------
-       10. API PÚBLICA + INICIALIZAÇÃO
-    ----------------------------------------- */
 
   window.VSide = {
     usuarioAtual: usuarioAtual,
@@ -540,12 +453,11 @@
   };
 
   function iniciar() {
-    atualizarHeader(); // mostra já a header certa, usando o lembrete local
+    atualizarHeader();
     iniciarFormularios();
     iniciarInterface();
-    confirmarSessao(); // e em seguida confere com o servidor
+    confirmarSessao();
 
-    // Login/logout feito em outra aba
     window.addEventListener("storage", function (evento) {
       if (evento.key === CHAVES.usuario) {
         atualizarHeader();

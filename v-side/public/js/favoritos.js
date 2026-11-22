@@ -1,11 +1,3 @@
-/* =========================================
-   V-SIDE | favoritos.js
-   - Busca na API os artistas favoritados pelo usuário logado
-   - "Clique para ver a resenha": mostra qual(is)
-     música(s) foi(ram) favoritada(s)
-   - Coração: remove o artista dos favoritos
-========================================= */
-
 (function () {
     'use strict';
 
@@ -16,14 +8,13 @@
     if (!V || !lista || !vazia) return;
     if (!V.exigirLogin()) return;
 
-    vazia.hidden = true; // só aparece depois que a API responder
+    vazia.hidden = true;
 
     const ICONE_CORACAO =
         '<svg viewBox="0 0 24 24" aria-hidden="true">' +
         '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/>' +
         '</svg>';
 
-    // Cria um elemento já com classe e texto (textContent evita injeção de HTML)
     function el(tag, classe, texto) {
         const e = document.createElement(tag);
         if (classe) e.className = classe;
@@ -31,7 +22,6 @@
         return e;
     }
 
-    // artista = { id, artista, musicas: [{ avaliacaoId, musica, album }] }
     function criarCard(artista) {
         const idPainel = 'resenha-' + artista.id.replace(/[^a-z0-9]+/g, '-');
         const total = artista.musicas.length;
@@ -103,8 +93,7 @@
 
         return card;
     }
-
-    // Busca os favoritos na API e desenha os cards
+    
     async function carregar() {
         const resultado = await V.listarArtistasFavoritos();
 
@@ -153,7 +142,6 @@
                 return;
             }
 
-            // animação de saída e depois recarrega a lista do banco
             card.classList.add('card-removendo');
             setTimeout(carregar, 250);
         }

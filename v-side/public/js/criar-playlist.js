@@ -1,10 +1,3 @@
-/* =========================================
-   V-SIDE | criar-playlist.js
-   Mesma tela para CRIAR (criar-playlist.html) e EDITAR (criar-playlist.html?id=5).
-   - Título, descrição e capa (reduzida no navegador, como a foto do perfil)
-   - Adicionar/remover músicas: elas vêm das avaliações do próprio usuário
-========================================= */
-
 (function () {
     'use strict';
 
@@ -14,19 +7,16 @@
     if (!V || !form) return;
     if (!V.exigirLogin()) return;
 
-    // Tamanho (px) da capa depois de reduzida, antes de enviar ao servidor
     const TAMANHO_CAPA = 320;
 
-    // ?id=5 na URL = editando a playlist 5. Sem ?id = criando uma nova.
     const parametroId = new URLSearchParams(location.search).get('id');
     const editando = parametroId !== null;
 
     if (editando && !/^\d+$/.test(parametroId)) {
-        location.replace('playlists.html'); // id inválido na URL
+        location.replace('playlists.html');
         return;
     }
-
-    /* ---------- Elementos da tela ---------- */
+    
     const el = {
         titulo: document.getElementById('tituloPagina'),
         previa: document.getElementById('previaCapaPlaylist'),
@@ -45,17 +35,10 @@
         botaoSalvar: document.getElementById('botaoSalvarPlaylist')
     };
 
-    /* ---------- Estado da tela ---------- */
-    let avaliacoes = [];     // TODAS as avaliações do usuário (vindas da API)
-    let selecionadas = [];   // ids das avaliações que estão na playlist (na ordem)
-    let capaSalva = null;    // capa que já está salva no banco (ao editar)
-    // Capa escolhida agora, ainda não salva:
-    //   undefined = não mexeu | null = remover a capa | 'data:image/...' = nova capa
+    let avaliacoes = [];
+    let selecionadas = [];
+    let capaSalva = null;
     let capaPendente;
-
-    /* -----------------------------------------
-       UTILITÁRIOS
-    ----------------------------------------- */
 
     function normalizar(texto) {
         return String(texto || '')
@@ -74,25 +57,18 @@
         return avaliacoes.find(function (a) { return a.id === id; });
     }
 
-    /* -----------------------------------------
-       CAPA
-    ----------------------------------------- */
-
-    // Mostra no quadrado: a capa nova, a salva ou, se não houver, a inicial do título
     function atualizarPrevia() {
         let imagem;
 
         if (capaPendente === undefined) {
-            imagem = capaSalva;      // não mexeu: mostra a que está salva
+            imagem = capaSalva;
         } else {
-            imagem = capaPendente;   // mexeu: nova imagem ou null (removida)
+            imagem = capaPendente;
         }
 
         el.previa.src = imagem || V.capaPlaceholder(el.nome.value || '♪');
     }
 
-    // Reduz a imagem para um quadrado de TAMANHO_CAPA px e devolve como texto
-    // (mesma técnica da foto de perfil: fica leve e cabe no banco)
     function reduzirImagem(arquivo) {
         return new Promise(function (resolve, reject) {
             if (!arquivo.type || arquivo.type.indexOf('image/') !== 0) {
@@ -112,11 +88,9 @@
 
                 const ctx = canvas.getContext('2d');
 
-                // fundo branco (PNG transparente viraria preto ao salvar em JPEG)
                 ctx.fillStyle = '#fff';
                 ctx.fillRect(0, 0, TAMANHO_CAPA, TAMANHO_CAPA);
 
-                // recorta o maior quadrado possível do centro da imagem
                 const lado = Math.min(imagem.width, imagem.height);
                 const origemX = (imagem.width - lado) / 2;
                 const origemY = (imagem.height - lado) / 2;
@@ -151,23 +125,17 @@
             mostrarMensagem(erro.message);
         }
 
-        el.inputCapa.value = ''; // permite escolher o mesmo arquivo de novo
+        el.inputCapa.value = '';
     });
 
     el.botaoRemoverCapa.addEventListener('click', function () {
-        capaPendente = null; // null = "apague a capa"
+        capaPendente = null;
         atualizarPrevia();
         mostrarMensagem('');
     });
 
-    // Enquanto não há capa, a inicial do título aparece no quadrado
     el.nome.addEventListener('input', atualizarPrevia);
 
-    /* -----------------------------------------
-       MÚSICAS: ADICIONAR / REMOVER
-    ----------------------------------------- */
-
-    // Uma linha da lista: nome da música + botão
     function criarLinha(av, naPlaylist) {
         const item = document.createElement('li');
         item.className = 'linha-musica';
@@ -176,7 +144,7 @@
         textos.className = 'linha-musica-textos';
 
         const nome = document.createElement('strong');
-        nome.textContent = av.musica; // textContent: nunca interpreta HTML
+        nome.textContent = av.musica;
 
         const detalhe = document.createElement('small');
         detalhe.textContent = av.album ? av.artista + ' • ' + av.album : av.artista;
@@ -191,10 +159,9 @@
 
         botao.addEventListener('click', function () {
             if (naPlaylist) {
-                // tira o id da lista de selecionadas
                 selecionadas = selecionadas.filter(function (id) { return id !== av.id; });
             } else {
-                selecionadas.push(av.id); // entra no final da playlist
+                selecionadas.push(av.id);
             }
             renderizar();
         });
@@ -204,9 +171,7 @@
         return item;
     }
 
-    // Redesenha as duas listas a partir do estado (selecionadas + avaliacoes)
     function renderizar() {
-        /* --- músicas que estão na playlist --- */
         el.listaNa.innerHTML = '';
 
         selecionadas.forEach(function (id) {
@@ -217,7 +182,6 @@
         el.contador.textContent = '(' + selecionadas.length + ')';
         el.vazioNa.hidden = selecionadas.length > 0;
 
-        /* --- avaliações que ainda não estão na playlist (e combinam com o filtro) --- */
         const termo = normalizar(el.filtro.value);
 
         const disponiveis = avaliacoes.filter(function (av) {
@@ -237,10 +201,6 @@
 
     el.filtro.addEventListener('input', renderizar);
 
-    /* -----------------------------------------
-       SALVAR (criar ou editar)
-    ----------------------------------------- */
-
     form.addEventListener('submit', async function (evento) {
         evento.preventDefault();
         mostrarMensagem('');
@@ -259,10 +219,9 @@
             avaliacoes: selecionadas
         };
 
-        // só envia a capa se a pessoa mexeu nela (senão o servidor mantém a atual)
         if (capaPendente !== undefined) corpo.capa = capaPendente;
 
-        el.botaoSalvar.disabled = true; // evita enviar duas vezes
+        el.botaoSalvar.disabled = true;
 
         const resultado = editando
             ? await V.editarPlaylist(parametroId, corpo)
@@ -277,10 +236,6 @@
 
         location.href = 'playlists.html';
     });
-
-    /* -----------------------------------------
-       INÍCIO: carrega avaliações (e a playlist, se estiver editando)
-    ----------------------------------------- */
 
     async function iniciar() {
         const respostaAvaliacoes = await V.listarAvaliacoes();

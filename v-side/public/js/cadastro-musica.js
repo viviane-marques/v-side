@@ -1,10 +1,3 @@
-/* =========================================
-   V-SIDE | cadastro-musica.js
-   Cadastra a MÚSICA no catálogo compartilhado:
-   depois de cadastrada, todos os usuários poderão avaliá-la
-   (cada pessoa vê só as PRÓPRIAS avaliações).
-========================================= */
-
 (function () {
     'use strict';
 
@@ -22,19 +15,14 @@
     const campoNome = document.getElementById('nomeMusica');
     const campoAlbum = document.getElementById('albumMusica');
 
-    // Tamanho (px) da capa depois de reduzida, antes de enviar ao servidor
     const TAMANHO_CAPA = 240;
-
-    // capa escolhida ('data:image/...') ou null quando não há capa
     let capa = null;
 
-    // Mostra a capa escolhida; sem capa, mostra a inicial do álbum (ou da música)
+    // mostra a capa escolhida ou a inicial
     function atualizarPrevia() {
         previa.src = capa || V.capaPlaceholder(campoAlbum.value || campoNome.value || '♪');
     }
 
-    // Reduz a imagem para um quadrado de TAMANHO_CAPA px e devolve como texto
-    // (mesma técnica da capa de playlist: fica leve e cabe no banco)
     function reduzirImagem(arquivo) {
         return new Promise(function (resolve, reject) {
             if (!arquivo.type || arquivo.type.indexOf('image/') !== 0) {
@@ -54,11 +42,9 @@
 
                 const ctx = canvas.getContext('2d');
 
-                // fundo branco (PNG transparente viraria preto ao salvar em JPEG)
                 ctx.fillStyle = '#fff';
                 ctx.fillRect(0, 0, TAMANHO_CAPA, TAMANHO_CAPA);
 
-                // recorta o maior quadrado possível do centro da imagem
                 const lado = Math.min(imagem.width, imagem.height);
                 const origemX = (imagem.width - lado) / 2;
                 const origemY = (imagem.height - lado) / 2;
@@ -78,7 +64,7 @@
     }
 
     botaoEscolherCapa.addEventListener('click', function () {
-        inputCapa.click(); // abre a janela de escolher arquivo
+        inputCapa.click();
     });
 
     inputCapa.addEventListener('change', async function () {
@@ -92,7 +78,7 @@
             alert(erro.message);
         }
 
-        inputCapa.value = ''; // permite escolher o mesmo arquivo de novo
+        inputCapa.value = '';
     });
 
     botaoRemoverCapa.addEventListener('click', function () {
@@ -100,7 +86,7 @@
         atualizarPrevia();
     });
 
-    // Enquanto não há capa, a inicial do álbum/música aparece no quadrado
+    // se o usuario nao colocar capa a inicial do nome do artista ou nome do album vira a capa
     campoNome.addEventListener('input', atualizarPrevia);
     campoAlbum.addEventListener('input', atualizarPrevia);
 
@@ -113,13 +99,12 @@
         const artista = document.getElementById('artistaMusica').value.trim();
         const album = document.getElementById('albumMusica').value.trim();
 
-        // O servidor valida tudo de novo; aqui só avisamos rápido
         if (!titulo || !artista) {
             alert('Informe o nome da música e o artista.');
             return;
         }
 
-        botaoEnviar.disabled = true; // evita enviar duas vezes
+        botaoEnviar.disabled = true;
 
         const resultado = await V.cadastrarMusica({
             titulo: titulo,
@@ -130,13 +115,11 @@
 
         botaoEnviar.disabled = false;
 
-        // Cadastrou: leva a pessoa direto para avaliar a música que acabou de criar
         if (resultado.ok) {
             location.href = 'nova-avaliacao.html?musica=' + resultado.dados.id;
             return;
         }
 
-        // Já existia (alguém cadastrou antes): em vez de só recusar, leva para avaliar a existente
         if (resultado.status === 409 && resultado.dados && resultado.dados.id) {
             alert('Essa música já estava no catálogo! Vamos avaliá-la.');
             location.href = 'nova-avaliacao.html?musica=' + resultado.dados.id;

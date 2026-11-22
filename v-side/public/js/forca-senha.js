@@ -1,13 +1,4 @@
-/* =========================================
-   V-SIDE | forca-senha.js
-   Barra de força da senha + lista de critérios
-   na página de cadastro (cadastro.html).
-
-   Para mudar uma regra ou adicionar outra, mexa só
-   na lista "criterios": o FOR monta a lista na tela
-   e a barra conta quantos critérios foram cumpridos.
-========================================= */
-
+// animacão e validacao forca da senha
 (function () {
   "use strict";
 
@@ -19,12 +10,8 @@
 
   if (!campo || !barra || !trilho || !texto || !listaCriterios) return;
 
-  // 72 é o limite de bytes que o bcrypt (servidor) considera
+  // maximo de caracteres da senha
   campo.maxLength = 72;
-
-  /* -----------------------------------------
-       1. CRITÉRIOS (cada um tem um texto e um teste)
-    ----------------------------------------- */
 
   const criterios = [
     {
@@ -58,27 +45,19 @@
       },
     },
   ];
-
-  /* -----------------------------------------
-       2. MONTA A LISTA NA TELA COM FOR
-    ----------------------------------------- */
-
   const itens = [];
 
+  //monta a lista dos criterios na tela
   for (let i = 0; i < criterios.length; i++) {
     const item = document.createElement("li");
     item.className = "forca-criterio";
-    item.textContent = criterios[i].texto; // textContent: nunca interpreta HTML
+    item.textContent = criterios[i].texto;
 
     listaCriterios.appendChild(item);
     itens.push(item);
   }
 
-  /* -----------------------------------------
-       3. ATUALIZA BARRA, TEXTO E CRITÉRIOS
-    ----------------------------------------- */
-
-  // Quantos critérios a senha cumpre (0 a 5)
+  // atualiza a barra
   function contarCumpridos(senha) {
     let cumpridos = 0;
 
@@ -94,7 +73,7 @@
     const total = criterios.length;
     let cumpridos = 0;
 
-    // marca cada item da lista como cumprido ou pendente
+    // marca cada item da lista como validado ou nao ( v ou x)
     for (let i = 0; i < total; i++) {
       const ok = criterios[i].testar(senha);
 
@@ -103,7 +82,7 @@
       if (ok) cumpridos++;
     }
 
-    // nível da senha: nenhum | fraca | média | forte
+    // nível da senha
     let nivel = "vazia";
     let rotulo = "—";
 
@@ -120,7 +99,6 @@
       }
     }
 
-    // a largura da barra acompanha os critérios cumpridos
     barra.style.width =
       (senha.length > 0 ? (cumpridos / total) * 100 : 0) + "%";
     barra.className = "forca-barra-preenchida " + nivel;
@@ -134,12 +112,7 @@
   campo.addEventListener("input", atualizar);
   atualizar();
 
-  /* -----------------------------------------
-       4. USADO PELO global.js ANTES DE ENVIAR
-    ----------------------------------------- */
-
   window.VSideSenha = {
-    // true só quando a senha cumpre TODOS os critérios
     ehForte: function (senha) {
       return contarCumpridos(String(senha)) === criterios.length;
     },

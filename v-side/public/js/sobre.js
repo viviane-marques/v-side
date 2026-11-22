@@ -1,17 +1,5 @@
-/* =========================================
-   V-SIDE | sobre.js
-   Carrossel de fotos da página "Sobre".
-   Para adicionar uma foto nova, basta incluir
-   mais um objeto na lista "momentos" abaixo:
-   o FOR cria os slides e as bolinhas sozinho.
-========================================= */
-
 (function () {
     'use strict';
-
-    /* -----------------------------------------
-       1. DADOS: uma foto + textos por momento
-    ----------------------------------------- */
 
     const momentos = [
         {
@@ -40,10 +28,6 @@
         }
     ];
 
-    /* -----------------------------------------
-       2. ELEMENTOS DA TELA
-    ----------------------------------------- */
-
     const carrossel = document.getElementById('carrosselSobre');
     const trilho = document.getElementById('carrosselTrilho');
     const areaPontos = document.getElementById('carrosselPontos');
@@ -57,14 +41,10 @@
     const pontos = [];
     let atual = 0;
 
-    /* -----------------------------------------
-       3. CRIA SLIDES E BOLINHAS COM FOR
-    ----------------------------------------- */
-
+// for para o carrossel e as bolinhas em baixo
     for (let i = 0; i < momentos.length; i++) {
         const momento = momentos[i];
 
-        // --- slide: foto + título + descrição ---
         const slide = document.createElement('figure');
         slide.className = 'carrossel-slide';
 
@@ -83,7 +63,7 @@
         legenda.className = 'carrossel-legenda';
 
         const titulo = document.createElement('h3');
-        titulo.textContent = momento.titulo; // textContent: nunca interpreta HTML
+        titulo.textContent = momento.titulo;
 
         const descricao = document.createElement('p');
         descricao.textContent = momento.descricao;
@@ -96,14 +76,11 @@
         trilho.appendChild(slide);
         slides.push(slide);
 
-        // --- bolinha de navegação ---
         const ponto = document.createElement('button');
         ponto.type = 'button';
         ponto.className = 'carrossel-ponto';
         ponto.setAttribute('aria-label', 'Ir para a foto ' + (i + 1) + ': ' + momento.titulo);
 
-        // "let i" cria uma variável nova a cada volta do for,
-        // por isso cada bolinha lembra o próprio número
         ponto.addEventListener('click', function () {
             irPara(i);
         });
@@ -112,14 +89,9 @@
         pontos.push(ponto);
     }
 
-    /* -----------------------------------------
-       4. NAVEGAÇÃO
-    ----------------------------------------- */
-
     function irPara(indice) {
         const total = slides.length;
 
-        // volta ao começo depois da última foto (e vice-versa)
         atual = (indice + total) % total;
 
         trilho.style.transform = 'translateX(-' + (atual * 100) + '%)';
@@ -145,7 +117,6 @@
         irPara(atual + 1);
     });
 
-    // Setas do teclado quando o carrossel está em foco
     carrossel.addEventListener('keydown', function (evento) {
         if (evento.key === 'ArrowLeft') {
             irPara(atual - 1);
@@ -154,7 +125,6 @@
         }
     });
 
-    // Arrastar o dedo no celular
     let inicioX = null;
 
     carrossel.addEventListener('touchstart', function (evento) {
@@ -167,13 +137,11 @@
         const diferenca = evento.changedTouches[0].clientX - inicioX;
         inicioX = null;
 
-        // só conta se o dedo andou o bastante (evita confundir com um toque)
         if (Math.abs(diferenca) > 50) {
             irPara(diferenca < 0 ? atual + 1 : atual - 1);
         }
     }, { passive: true });
 
-    // Se só houver uma foto, esconde os controles
     if (slides.length < 2) {
         carrossel.classList.add('sem-controles');
     }

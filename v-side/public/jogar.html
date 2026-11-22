@@ -128,31 +128,18 @@
         </div>
 
     </header>
-
-    <!-- =========================================
-     PÁGINA JOGAR - V-SIDE
-========================================== -->
-
     <main class="pagina-jogar">
-
-        <!-- BANNER -->
 
         <section class="banner-jogo">
 
             <h1>Vamos jogar?</h1>
 
         </section>
-
-
-        <!-- ÁREA PRINCIPAL DO JOGO -->
-
         <section class="area-jogo">
 
             <!-- PARTE SUPERIOR -->
 
             <div class="jogo-cabecalho">
-
-                <!-- CAPA DA MÚSICA -->
 
                 <div class="capa-misterio" id="areaCapa">
 
@@ -161,9 +148,6 @@
                     <img src="" alt="Capa do álbum" id="capaAlbum" hidden>
 
                 </div>
-
-
-                <!-- ARTISTA -->
 
                 <div class="informacoes-misterio">
 
@@ -179,9 +163,6 @@
 
                 </div>
 
-
-                <!-- BOTÃO DE DICAS -->
-
                 <button type="button" class="botao-dica" id="botaoDica">
 
                     <span class="icone-dica" id="iconeDica">💡</span>
@@ -191,9 +172,6 @@
                 </button>
 
             </div>
-
-
-            <!-- CONTROLES DE ÁUDIO -->
 
             <div class="player-musica">
 
@@ -205,7 +183,6 @@
 
                     <div class="linha-tempo">
 
-                        <!-- cada rótulo fica no FIM da sua etapa; o JS acende os já liberados -->
                         <div class="marcadores-tempo" id="marcadoresTempo">
                             <span>0,5s</span>
                             <span>1s</span>
@@ -213,8 +190,6 @@
                             <span>10s</span>
                             <span>15s</span>
                         </div>
-
-                        <!-- a barra só MOSTRA o progresso (a pessoa não arrasta) -->
                         <div class="barra-wrapper" id="barraWrapper">
                             <input type="range" id="barraAudio" min="0" max="100" value="0" step="0.1" tabindex="-1"
                                 aria-label="Progresso do trecho">
@@ -244,10 +219,7 @@
 
             </div>
 
-            <!-- AS 5 TENTATIVAS (o JS preenche) -->
             <ol class="lista-tentativas" id="listaTentativas" aria-label="Tentativas"></ol>
-
-            <!-- CAMPO PARA ADIVINHAR A MÚSICA -->
 
             <form class="formulario-resposta" id="formResposta">
 
@@ -266,15 +238,9 @@
 
             </form>
 
-
-            <!-- MENSAGEM DO JOGO -->
-
             <div class="mensagem-jogo" id="mensagemJogo" aria-live="polite" hidden>
 
             </div>
-
-
-            <!-- RESULTADO -->
 
             <div class="resultado-jogo" id="resultadoJogo" hidden>
 
