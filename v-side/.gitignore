@@ -3,7 +3,3 @@ node_modules
 package-lock.json
 
 .github
-
-# credenciais do banco: nunca versionar!!
-.env
-.env.dev
