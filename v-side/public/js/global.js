@@ -181,9 +181,9 @@
   async function confirmarSessao() {
     const resposta = await requisitar("/usuarios/sessao");
 
-    if (resposta.ok) {
+    if (resposta.ok && resposta.dados && resposta.dados.logado) {
       guardarUsuario(resposta.dados);
-    } else if (resposta.status === 401) {
+    } else if (resposta.status === 401 || (resposta.ok && resposta.dados && resposta.dados.logado === false)) {
       esquecerUsuario();
 
       if (PAGINAS_PROTEGIDAS.indexOf(paginaAtual()) !== -1) {

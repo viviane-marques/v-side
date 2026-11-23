@@ -156,7 +156,7 @@ function autenticar(req, res) {
 
 function sessao(req, res) {
   if (!req.session.usuarioId) {
-    return res.status(401).json({ erro: "Não logado." });
+    return res.status(401).json({logado:false});
   }
 
   usuarioModel
@@ -164,10 +164,10 @@ function sessao(req, res) {
     .then(function (encontrados) {
       if (encontrados.length !== 1) {
         return req.session.destroy(function () {
-          res.status(401).json({ erro: "Não logado." });
+          res.json(401).json({logado:false});
         });
       }
-      res.json(encontrados[0]);
+      res.json(Object.assign({logado:true}, encontrados[0]));
     })
     .catch(function (erro) {
       console.log(erro);
