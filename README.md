@@ -65,7 +65,7 @@ Algumas melhorias previstas para a evolução do projeto:
 
 ## 📑 Documentação
 - [Trello](https://trello.com/b/CRoMt5KE)
-- [Diário de I.A](https://docs.google.com/spreadsheets/d/1jg0Y_J8oIhE-7-fK__mdWGquWNLIf4UuZJye78UNhmQ/edit?usp=sharing)
+- [Diário de I.A](https://docs.google.com/spreadsheets/d/1PBPW3rDtPnpcXLWCnY8MhMAYM70e_BKjT2jy-Q3Jj28/edit?usp=sharing)
 - [Documentação](https://1drv.ms/b/c/9bdff430dd90a246/IQA1reVAparKQobVxrTR_HlIAUCBRFYnQmcIIccc8lewyhc?e=N7PnDAa)
 
 ## 👩‍💻 Desenvolvido por
